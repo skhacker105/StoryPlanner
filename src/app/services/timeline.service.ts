@@ -21,8 +21,28 @@ export class TimelineService {
     this.endTime.next(time);
   }
 
-  reset(): void {
+  increaseTime(): void {
+    if (this.hasNextTime()) {
+      this.currentTime.next(this.currentTime.value + 1);
+    }
+  }
+
+  decreaseTime(): void {
+    if (this.currentTime.value > 0) {
+      this.currentTime.next(this.currentTime.value - 1);
+    }
+  }
+
+  timeToZero(): void {
     this.currentTime.next(0);
+  }
+
+  timeToEnd(): void {
+    this.currentTime.next(this.endTime.value);
+  }
+
+  hasNextTime(): boolean {
+    return this.currentTime.value < this.endTime.value;
   }
 
   play(): void {
@@ -32,9 +52,9 @@ export class TimelineService {
 
   runWhilePlaying(): void {
     if (this.playing) {
-      this.currentTime.next(this.currentTime.value + 1);
+      this.increaseTime();
 
-      if (this.currentTime.value < this.endTime.value) {
+      if (this.hasNextTime()) {
         setTimeout(() => {
           this.runWhilePlaying();
         }, 1000);

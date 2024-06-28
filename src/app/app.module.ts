@@ -7,12 +7,14 @@ import { PlayerComponent } from './component/player/player.component';
 import { TimeLineComponent } from './component/time-line/time-line.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TimelineKeyHandlerDirective } from './directives/timeline-key-handler.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlayerComponent,
-    TimeLineComponent
+    TimeLineComponent,
+    TimelineKeyHandlerDirective
   ],
   imports: [
     BrowserModule,
