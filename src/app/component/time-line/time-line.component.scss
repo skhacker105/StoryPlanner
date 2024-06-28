@@ -1,0 +1,39 @@
+@import '../../styles/style-constants.scss';
+
+.time-line-container {
+    width: 100%;
+    height: 100%;
+    font-size: $time-line-font-size !important;
+    overflow-x: auto;
+
+    .time-line {
+        width: 100%;
+        min-height: 50px;
+        position: relative;
+
+        .time {
+            height: 20px;
+            border-right: solid 1px #000000;
+            cursor: pointer;
+
+            .time-label {
+                position: absolute;
+                z-index: 1;
+                margin-top: 12px;
+            }
+
+            &.time-with-label {
+                border-width: 1px;
+                border-color: #ff0526;
+            }
+
+            &.current-time {
+                background-color: red;
+            }
+        }
+    }
+
+    .time-line-status {
+        position: absolute;
+    }
+}

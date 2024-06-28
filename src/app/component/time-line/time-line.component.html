@@ -1,0 +1,26 @@
+<div class="time-line-container">
+    <table class="time-line">
+        <tr>
+            @for (time of arrTime; track time) {
+                <td class="time" [ngClass]="{
+                    'time-with-label': time === 0 || time % minimumNumDisplayLength === 0,
+                    'current-time': timelineService.currentTime.value === time
+                }" (click)="changeCurrentTime(time)">
+                    @if (time === 0 || time % minimumNumDisplayLength === 0) {
+                        <span class="time-label">
+                            {{ time }}
+                        </span>
+                    }
+                </td>
+            }
+        </tr>
+        <tr>
+            <td [attr.colspan]="arrTime.length">
+            </td>
+        </tr>
+    </table>
+    <div class="time-line-status">
+        Current time = {{ timelineService.currentTime.value }}
+    </div>
+
+</div>

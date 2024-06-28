@@ -1,0 +1,32 @@
+@import '../../styles/style-constants.scss'; 
+
+.player {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .top-section {
+        height: calc(100% - $timeline-height);
+        width: 100%;
+        display: flex;
+
+        .canvas {
+            height: 100%;
+            width: calc(100% - $controller-width);
+        }
+
+        .control {
+            height: 100%;
+            width: $controller-width;
+            background: rgb(197, 226, 255);
+            background: linear-gradient(270deg, rgba(45,67,183,0) 25%, rgba(197, 226, 255, 0.891281512605042) 93%);
+        }
+    }
+
+    .time-line {
+        height: $timeline-height;
+        width: 100%;
+        background-color: #efefef;
+    }
+}
