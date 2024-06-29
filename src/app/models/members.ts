@@ -15,6 +15,7 @@ export class Member implements IMember {
     }
 
     updateDetails(memberData: IMember) {
+        console.log('memberData = ', JSON.parse(JSON.stringify(memberData)))
         this.name = memberData.name;
         this.image = memberData.image;
         this.options = memberData.options;

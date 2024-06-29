@@ -20,7 +20,8 @@ export class LayerControlComponent {
 
   loadAddMemberPopup() {
     const ref = this.dialog.open(AddEditMemberComponent, {
-      width: '350px'
+      width: '90%',
+      height: '90%'
     });
 
     ref.afterClosed()
@@ -38,7 +39,8 @@ export class LayerControlComponent {
 
   loadEditMemberPopup(member: IMember) {
     const ref = this.dialog.open(AddEditMemberComponent, {
-      width: '350px',
+      width: '90%',
+      height: '90%',
       data: member
     });
 

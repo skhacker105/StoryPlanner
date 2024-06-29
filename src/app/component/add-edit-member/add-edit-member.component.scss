@@ -9,13 +9,42 @@
 
         .member-form {
             width: 100%;
-            flex: 1 auto;
-    
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 56px);
+
             .name-field {
                 width: 100%;
             }
+
+            .options {
+                flex: 1 auto;
+                overflow-y: auto;
+                width: 100%;
+                background-color: #eff0ff;
+
+                .option {
+                    background-color: white;
+                }
+
+                .options-header {
+                    position: absolute;
+                    margin-top: -5px;
+                    font-weight: bold;
+                    text-decoration: underline;
+                    left: 10px;
+                    color: #3f51b5;
+                    background: white;
+                    padding: 3px;
+                    z-index: 10;
+                }
+
+                .option-form {
+                    display: flex;
+                }
+            }
         }
-    
+
         .member-action {
             padding: 10px;
             text-align: end;

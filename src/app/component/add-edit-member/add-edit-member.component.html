@@ -18,6 +18,41 @@
             </mat-form-field>
 
             <app-picture-upload [pictureFormControl]="imageCtrl"></app-picture-upload>
+
+            <div class="options" formArrayName="options">
+                <fieldset>
+                    <legend align="right">
+                        <span class="options-header">
+                            Options:
+                        </span>
+                        <button mat-icon-button type="button" (click)="addNewOption()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </legend>
+                    @for (optionControl of optionsFormArray.controls; track optionControl; let idx = $index) {
+                        <fieldset [formGroupName]="idx" class="option">
+                            <legend>{{ optionControl.value.name ? optionControl.value.name : ('Option ' + (idx + 1)) }}</legend>
+                            <legend align="right">
+                                <button mat-icon-button type="button" (click)="optionControl.value.optionId ? handleRemoveOptionClick(idx) : removeOption(idx)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </legend>
+
+                            <div class="option-form">
+
+                                <mat-form-field class="name-field">
+                                    <mat-label>Option Name</mat-label>
+                                    <input matInput type="text" formControlName="name">
+                                </mat-form-field>
+
+                                
+                                <app-picture-upload [pictureFormControl]="getImageControl(idx)"></app-picture-upload>
+
+                            </div>
+                        </fieldset>
+                    }
+                </fieldset>
+            </div>
         </div>
 
         <div class="member-action">

@@ -65,7 +65,7 @@ export class MemberService {
 
   updateMember(memberData: IMember): void {
     const members = this.members.value;
-    const member = members.find(member => member.memberId === memberData.memberId);
+    let member = members.find(member => member.memberId === memberData.memberId);
     if (!member) {
       console.log('No member found to update for ', memberData);
       return;
@@ -73,13 +73,13 @@ export class MemberService {
 
     if (member.options.length > 0) member.options = this.generateOptionIds(member.options);
     this.isMembersUpdated = true;
-    member.updateDetails(memberData);
+    member.updateDetails(member);
     this.members.next(members);
   }
 
   generateOptionIds(options: IMemberOption[]): IMemberOption[] {
     return options.map(option => {
-      if (option.optionId === '') option.optionId = this.utilService.generateNewId();
+      if (!option.optionId) option.optionId = this.utilService.generateNewId();
       return option
     });
   }

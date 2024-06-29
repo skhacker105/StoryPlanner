@@ -19,4 +19,12 @@ export class UtilService {
 
     return result;
   }
+
+  cloneDeep(value: any): any {
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (ex) {
+      return undefined;
+    }
+  }
 }
