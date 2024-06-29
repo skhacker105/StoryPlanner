@@ -1,0 +1,14 @@
+.layer-control-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .action-buttons {
+        padding: 5px;
+    }
+
+    .layers {
+        flex: 1 auto;
+    }
+}

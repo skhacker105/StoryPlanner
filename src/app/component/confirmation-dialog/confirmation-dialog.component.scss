@@ -1,0 +1,14 @@
+.confirmation-container {
+    width: 400px;
+    height: 150px;
+
+    .confirm-message {
+        width: calc(100% - 10px);
+        padding: 5px;
+    }
+
+    .confirm-action {
+        text-align: end;
+        padding: 5px;
+    }
+}

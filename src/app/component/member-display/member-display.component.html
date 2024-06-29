@@ -1,0 +1,20 @@
+<div class="member-display-container" *ngIf="member">
+    <div class="image-display">
+        <app-image-icon [image]="member.image"></app-image-icon>
+    </div>
+    <div class="member-name">
+        {{ member.name }}
+    </div>
+    <div class="action">
+        <button mat-icon-button (click)="onDelete.emit(member)">
+            <mat-icon>
+                delete
+            </mat-icon>
+        </button>
+        <button mat-icon-button (click)="onEdit.emit(member)">
+            <mat-icon>
+                edit
+            </mat-icon>
+        </button>
+    </div>
+</div>

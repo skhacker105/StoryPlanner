@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TimelineService } from '../../services/timeline.service';
-import { ComponentBase } from '../base/component-base';
+import { ComponentBase } from '../../base/component-base';
 import { takeUntil } from 'rxjs';
 
 @Component({

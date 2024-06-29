@@ -1,0 +1,29 @@
+<div class="add-edit-member">
+    <app-popup-header [title]="popupTitle" (onCloseTrigger)="dialogRef.close()">
+    </app-popup-header>
+    <br>
+
+    <form [formGroup]="memberForm" class="form" (ngSubmit)="onSubmit()">
+
+        <div class="member-form">
+
+            <mat-form-field class="name-field">
+                <mat-label>Member Name</mat-label>
+                <input matInput type="text" formControlName="name">
+                @if (memberNameCtrl.value) {
+                <button matSuffix mat-icon-button aria-label="Clear" (click)="memberNameCtrl.setValue('')">
+                    <mat-icon>close</mat-icon>
+                </button>
+                }
+            </mat-form-field>
+
+            <app-picture-upload [pictureFormControl]="imageCtrl"></app-picture-upload>
+        </div>
+
+        <div class="member-action">
+            <button mat-raised-button type="button" (click)="dialogRef.close()">Cancel</button>
+            &nbsp;
+            <button mat-raised-button type="submit" color="primary" [disabled]="!memberForm.valid">Save</button>
+        </div>
+    </form>
+</div>

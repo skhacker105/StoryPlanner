@@ -1,0 +1,24 @@
+.add-edit-member {
+    width: 100%;
+    height: 100%;
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 85px);
+
+        .member-form {
+            width: 100%;
+            flex: 1 auto;
+    
+            .name-field {
+                width: 100%;
+            }
+        }
+    
+        .member-action {
+            padding: 10px;
+            text-align: end;
+        }
+    }
+}

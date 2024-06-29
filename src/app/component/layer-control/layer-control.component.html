@@ -1,0 +1,18 @@
+<div class="layer-control-container">
+
+    <div class="action-buttons">
+        <button mat-mini-fab color="primary" (click)="loadAddMemberPopup()">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" [disabled]="!memberService.isMembersUpdated" (click)="handleSave()">
+            <mat-icon>save</mat-icon>
+        </button>
+    </div>
+    <div class="layers">
+        <mat-divider></mat-divider>
+        @for (member of memberService.members.value; track member) {
+            <app-member-display [member]="member" (onEdit)="loadEditMemberPopup($event)" (onDelete)="handleDeleteConfirmationPopup(member)">
+            </app-member-display>
+        }
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="confirmation-container">
+    <app-popup-header [title]="data ? data.title : 'Confirm Delete'" (onCloseTrigger)="dialogRef.close(false)">
+    </app-popup-header>
+
+    <div class="confirm-message">
+        {{ data ? data.message : 'Are you sure to delete this?' }}
+    </div>
+
+    <div class="confirm-action">
+        <button mat-raised-button (click)="dialogRef.close(false)">
+            {{ data ? data.cancelDisplay : 'Cancel' }}
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" (click)="dialogRef.close(true)">
+            {{ data ? data.okDisplay : 'Delete' }}
+        </button>
+    </div>
+
+</div>

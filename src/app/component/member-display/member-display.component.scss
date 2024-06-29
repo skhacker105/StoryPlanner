@@ -1,0 +1,16 @@
+.member-display-container {
+    width: 100%;
+    display: flex;
+
+    .image-display {
+        width: 25px;
+        height: 25px;
+        padding: 3px;
+        margin: auto;
+    }
+
+    .member-name {
+        flex: 1 auto;
+        margin: auto;
+    }
+}
