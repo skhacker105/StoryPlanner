@@ -10,7 +10,6 @@ export class TimelineKeyHandlerDirective {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    console.log('event = ', event)
     switch(event.key.toLowerCase()) {
       case '+': this.timelineService.increaseTime(); break;
       case '-': this.timelineService.decreaseTime(); break;
