@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SaveLoadControlComponent } from './save-load-control.component';
+import { SortingButtonComponent } from './sorting-button.component';
 
-describe('SaveLoadControlComponent', () => {
-  let component: SaveLoadControlComponent;
-  let fixture: ComponentFixture<SaveLoadControlComponent>;
+describe('SortingButtonComponent', () => {
+  let component: SortingButtonComponent;
+  let fixture: ComponentFixture<SortingButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SaveLoadControlComponent]
+      declarations: [SortingButtonComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(SaveLoadControlComponent);
+    fixture = TestBed.createComponent(SortingButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

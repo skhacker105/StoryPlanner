@@ -71,9 +71,9 @@ export class MemberService {
       return;
     }
 
-    if (member.options.length > 0) member.options = this.generateOptionIds(member.options);
+    if (memberData.options.length > 0) memberData.options = this.generateOptionIds(memberData.options);
     this.isMembersUpdated = true;
-    member.updateDetails(member);
+    member.updateDetails(memberData);
     this.members.next(members);
   }
 

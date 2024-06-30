@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditMemberComponent } from '../add-edit-member/add-edit-member.component';
 import { IMember } from '../../interfaces/member';
@@ -6,17 +6,24 @@ import { take } from 'rxjs';
 import { MemberService } from '../../services/member.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { Member } from '../../models/members';
+import { ComponentBase } from '../../base/component-base';
 
 @Component({
   selector: 'app-layer-control',
   templateUrl: './layer-control.component.html',
   styleUrl: './layer-control.component.scss'
 })
-export class LayerControlComponent {
+export class LayerControlComponent extends ComponentBase implements OnDestroy {
 
   readonly dialog = inject(MatDialog);
 
-  constructor(public memberService: MemberService) {}
+  constructor(public memberService: MemberService) {
+    super();
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy();
+  }
 
   loadAddMemberPopup() {
     const ref = this.dialog.open(AddEditMemberComponent, {

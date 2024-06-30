@@ -1,0 +1,7 @@
+<button mat-icon-button [color]="color" (click)="onClick.emit()" [matTooltip]="getTooltip()">
+    <mat-icon>
+        {{
+            getIconName()
+        }}
+    </mat-icon>
+</button>

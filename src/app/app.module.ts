@@ -10,7 +10,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TimelineKeyHandlerDirective } from './directives/timeline-key-handler.directive';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LayerControlComponent } from './component/layer-control/layer-control.component';
-import { SaveLoadControlComponent } from './component/save-load-control/save-load-control.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AddEditMemberComponent } from './component/add-edit-member/add-edit-member.component';
@@ -24,6 +23,10 @@ import { ImageIconComponent } from './component/image-icon/image-icon.component'
 import { MemberDisplayComponent } from './component/member-display/member-display.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { ConfirmationDialogComponent } from './component/confirmation-dialog/confirmation-dialog.component';
+import { MatRippleModule } from '@angular/material/core';
+import { SortPipe } from './pipes/sort.pipe';
+import { SortingButtonComponent } from './component/sorting-button/sorting-button.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -32,13 +35,14 @@ import { ConfirmationDialogComponent } from './component/confirmation-dialog/con
     TimeLineComponent,
     TimelineKeyHandlerDirective,
     LayerControlComponent,
-    SaveLoadControlComponent,
     AddEditMemberComponent,
     PopupHeaderComponent,
     PictureUploadComponent,
     ImageIconComponent,
     MemberDisplayComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    SortPipe,
+    SortingButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +57,9 @@ import { ConfirmationDialogComponent } from './component/confirmation-dialog/con
     MatDialogModule,
     MatToolbarModule,
     MatInputModule,
-    MatDividerModule
+    MatDividerModule,
+    MatRippleModule,
+    MatTooltipModule
   ],
   providers: [
     provideAnimationsAsync()

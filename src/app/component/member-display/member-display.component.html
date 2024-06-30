@@ -1,8 +1,9 @@
-<div class="member-display-container" *ngIf="member">
+<div class="member-display-container" *ngIf="member" matRipple>
     <div class="image-display">
         <app-image-icon [image]="member.image"></app-image-icon>
     </div>
     <div class="member-name">
+        <sub> ({{ member.options.length }}) </sub>
         {{ member.name }}
     </div>
     <div class="action">
