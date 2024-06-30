@@ -1,3 +1,11 @@
 $time-line-font-size: 10px;
 $timeline-height: 100px;
 $controller-width: 350px;
+
+$primary-background: linear-gradient(270deg, rgba(45,67,183,0) 25%, rgba(197, 226, 255, 0.891281512605042) 93%);
+$primary-hover: linear-gradient(270deg, rgba(163, 221, 248, 0.137780112) 15%, rgba(163, 221, 248, 0.8912815126) 100%);
+$primary-selected: rgb(228 237 255);
+$primary-border-color: rgb(46 115 255);
+
+$secondary-background: rgb(228 237 255);
+$secondary-hover: linear-gradient(270deg, rgba(130, 135, 227, 0.137780112) 15%, rgba(130, 135, 227, 0.8912815126) 100%);

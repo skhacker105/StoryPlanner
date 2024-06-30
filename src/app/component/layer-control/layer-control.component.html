@@ -19,8 +19,21 @@
     <div class="layers">
         <mat-divider></mat-divider>
         @for (member of memberService.members.value | sort:sortBy; track member) {
-            <app-member-display [member]="member" (onEdit)="loadEditMemberPopup($event)" (onDelete)="handleDeleteConfirmationPopup(member)">
+            <app-member-display [member]="member" [isSelected]="compareSelectedMembers(member)"
+                (onCLick)="handleMemberClick(member)"
+                (onEdit)="loadEditMemberPopup($event)" (onDelete)="handleDeleteConfirmationPopup(member)">
             </app-member-display>
         }
+    </div>
+
+    <div class="member-options" *ngIf="selectedMember">
+        <app-popup-header [title]="selectedMember.name" (onCloseTrigger)="resetSelectedRecord()">
+        </app-popup-header>
+        <div class="option-list-container">
+            @for (option of selectedMember.options; track option) {
+                <app-member-option-display [option]="option">
+                </app-member-option-display>
+            }
+        </div>
     </div>
 </div>

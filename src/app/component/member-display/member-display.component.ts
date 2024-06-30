@@ -8,6 +8,8 @@ import { Member } from '../../models/members';
 })
 export class MemberDisplayComponent {
   @Input() member?: Member;
+  @Input() isSelected = false;
   @Output() onEdit = new EventEmitter<Member>();
   @Output() onDelete = new EventEmitter<Member>();
+  @Output() onCLick = new EventEmitter<Member>();
 }

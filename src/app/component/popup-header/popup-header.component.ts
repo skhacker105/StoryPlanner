@@ -7,5 +7,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class PopupHeaderComponent {
   @Input() title = '';
+  @Input() color = 'primary';
   @Output() onCloseTrigger = new EventEmitter<void>();
 }

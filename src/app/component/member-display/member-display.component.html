@@ -1,4 +1,7 @@
-<div class="member-display-container" *ngIf="member" matRipple>
+<div class="member-display-container" *ngIf="member" matRipple (click)="onCLick.emit()"
+    [ngClass]="{
+        'selected': isSelected
+    }">
     <div class="image-display">
         <app-image-icon [image]="member.image"></app-image-icon>
     </div>

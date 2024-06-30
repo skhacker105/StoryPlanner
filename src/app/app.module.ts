@@ -27,6 +27,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { SortPipe } from './pipes/sort.pipe';
 import { SortingButtonComponent } from './component/sorting-button/sorting-button.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MemberOptionDisplayComponent } from './component/member-option-display/member-option-display.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MemberDisplayComponent,
     ConfirmationDialogComponent,
     SortPipe,
-    SortingButtonComponent
+    SortingButtonComponent,
+    MemberOptionDisplayComponent
   ],
   imports: [
     BrowserModule,

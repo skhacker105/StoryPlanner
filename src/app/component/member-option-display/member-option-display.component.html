@@ -1,0 +1,20 @@
+<div class="option-display-container" *ngIf="option" matRipple>
+    <div class="image-display">
+        <app-image-icon [image]="option.image"></app-image-icon>
+    </div>
+    <div class="option-name">
+        {{ option.name }}
+    </div>
+    <div class="action">
+        <button mat-icon-button>
+            <mat-icon>
+                more_time
+            </mat-icon>
+        </button>
+        <!-- <button mat-icon-button>
+            <mat-icon>
+                edit
+            </mat-icon>
+        </button> -->
+    </div>
+</div>

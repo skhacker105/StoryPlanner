@@ -25,7 +25,11 @@ export class LayerControlComponent extends ComponentBase implements OnDestroy {
     this.onDestroy();
   }
 
-  loadAddMemberPopup() {
+  compareSelectedMembers(member: IMember): boolean {
+    return member.memberId === this.selectedMember?.['memberId'];
+  }
+
+  loadAddMemberPopup(): void {
     const ref = this.dialog.open(AddEditMemberComponent, {
       width: '90%',
       height: '90%'
@@ -40,11 +44,11 @@ export class LayerControlComponent extends ComponentBase implements OnDestroy {
     });
   }
 
-  handleAddMember(member: IMember) {
+  handleAddMember(member: IMember): void {
     this.memberService.addNewMember(member);
   }
 
-  loadEditMemberPopup(member: IMember) {
+  loadEditMemberPopup(member: IMember): void {
     const ref = this.dialog.open(AddEditMemberComponent, {
       width: '90%',
       height: '90%',
@@ -60,11 +64,11 @@ export class LayerControlComponent extends ComponentBase implements OnDestroy {
     });
   }
 
-  handleEditMember(member: IMember) {
+  handleEditMember(member: IMember): void {
     this.memberService.updateMember(member);
   }
 
-  handleDeleteConfirmationPopup(member: Member) {
+  handleDeleteConfirmationPopup(member: Member): void {
     const ref = this.dialog.open(ConfirmationDialogComponent);
     ref.afterClosed()
     .pipe(take(1))
@@ -73,11 +77,19 @@ export class LayerControlComponent extends ComponentBase implements OnDestroy {
     });
   }
 
-  handleDeleteMember(member: Member) {
+  handleDeleteMember(member: Member): void {
     this.memberService.removeMember(member.memberId);
   }
 
-  handleSave() {
+  handleSave(): void {
     this.memberService.saveMembers();
+  }
+
+  handleMemberClick(member: Member): void {
+    if (!this.compareSelectedMembers(member)) {
+      this.selectRecord(member)
+    } else {
+      this.resetSelectedRecord();
+    }
   }
 }
