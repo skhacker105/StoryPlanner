@@ -8,11 +8,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
-  selector: 'app-movie-control',
-  templateUrl: './movie-control.component.html',
-  styleUrl: './movie-control.component.scss'
+  selector: 'app-layer-control',
+  templateUrl: './layer-control.component.html',
+  styleUrl: './layer-control.component.scss'
 })
-export class MovieControlComponent extends ComponentBase implements OnInit, OnDestroy {
+export class LayerControlComponent extends ComponentBase implements OnInit, OnDestroy {
 
   readonly dialog = inject(MatDialog);
 

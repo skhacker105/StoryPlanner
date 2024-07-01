@@ -30,8 +30,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MemberOptionDisplayComponent } from './component/member-option-display/member-option-display.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SpacePaddedPipe } from './pipes/space-padded.pipe';
-import { MovieControlComponent } from './component/movie-control/movie-control.component';
+import { LayerControlComponent } from './component/layer-control/layer-control.component';
 import { LayerDisplayComponent } from './component/layer-display/layer-display.component';
+import { LayerPropertiesComponent } from './component/layer-properties/layer-properties.component';
 
 @NgModule({
   declarations: [
@@ -39,19 +40,20 @@ import { LayerDisplayComponent } from './component/layer-display/layer-display.c
     PlayerComponent,
     TimeLineComponent,
     TimelineKeyHandlerDirective,
-    MemberControlComponent,
     AddEditMemberComponent,
     PopupHeaderComponent,
     PictureUploadComponent,
     ImageIconComponent,
+    MemberControlComponent,
     MemberDisplayComponent,
+    MemberOptionDisplayComponent,
     ConfirmationDialogComponent,
     SortPipe,
     SortingButtonComponent,
-    MemberOptionDisplayComponent,
     SpacePaddedPipe,
-    MovieControlComponent,
-    LayerDisplayComponent
+    LayerControlComponent,
+    LayerDisplayComponent,
+    LayerPropertiesComponent
   ],
   imports: [
     BrowserModule,

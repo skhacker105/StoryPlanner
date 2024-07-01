@@ -1,6 +1,24 @@
 
 <div class="movie-control-container" *ngIf="movieService.movie">
+
+    <div class="action-buttons">
+
+        <div class="spacer"></div>
+        
+        <!-- Download -->
+        <button mat-icon-button color="primary">
+            <mat-icon>download_2</mat-icon>
+        </button>
+
+        <!-- Upload -->
+        <button mat-icon-button color="primary">
+            <mat-icon>upload_2</mat-icon>
+        </button>
+    </div>
+
     <div class="movie-time-layers" *ngIf="movieService.movie.timeline[currentTime]">
+        <mat-divider></mat-divider>
+        
         @for (layer of movieService.movie.timeline[currentTime].layers; track layer;) {
             <app-layer-display [layer]="layer" [isSelected]="compareSelectedLayer(layer)"
             (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)">

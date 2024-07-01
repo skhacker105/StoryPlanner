@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MovieControlComponent } from './movie-control.component';
+import { LayerControlComponent } from './movie-control.component';
 
-describe('MovieControlComponent', () => {
-  let component: MovieControlComponent;
-  let fixture: ComponentFixture<MovieControlComponent>;
+describe('LayerControlComponent', () => {
+  let component: LayerControlComponent;
+  let fixture: ComponentFixture<LayerControlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MovieControlComponent]
+      declarations: [LayerControlComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MovieControlComponent);
+    fixture = TestBed.createComponent(LayerControlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

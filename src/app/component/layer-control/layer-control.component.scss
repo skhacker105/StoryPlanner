@@ -4,8 +4,16 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .action-buttons {
+        padding: 5px;
+        display: flex;
+    }
 
     .movie-time-layers {
+        flex: 1 auto;
         display: flex;
         height: 100%;
         width: 100%;

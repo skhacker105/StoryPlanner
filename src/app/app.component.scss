@@ -1,5 +1,9 @@
 @import './styles/style-constants.scss';
 
+.control-tab-group {
+    max-height: 100%;
+}
+
 .control-tab {
     font-size: $tab-heading-font-size;
     display: flex;
