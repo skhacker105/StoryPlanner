@@ -6,7 +6,7 @@
         {{ option.name }}
     </div>
     <div class="action">
-        <button mat-icon-button>
+        <button mat-icon-button (click)="addToTimeLine.emit(option)">
             <mat-icon>
                 more_time
             </mat-icon>

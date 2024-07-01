@@ -1,12 +1,14 @@
 import { Subject } from "rxjs";
 import { SortType } from "../types/sort.type";
 import { Member } from "../models/members";
+import { ILayer } from "../interfaces/movie-layer";
 
 export class ComponentBase {
 
     public isComponentActive = new Subject<boolean>();
     public sortBy: SortType = 'byName';
     public selectedMember?: Member;
+    public selectedLayer?: ILayer;
 
     constructor() { }
 
@@ -21,6 +23,10 @@ export class ComponentBase {
 
     selectRecord(record: Member): void {
         this.selectedMember = record;
+    }
+
+    selectLayer(layer: ILayer): void {
+        this.selectedLayer = layer;
     }
 
     onDestroy(): void {

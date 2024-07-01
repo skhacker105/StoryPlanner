@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IMemberOption } from '../../interfaces/member';
 
 @Component({
@@ -8,4 +8,5 @@ import { IMemberOption } from '../../interfaces/member';
 })
 export class MemberOptionDisplayComponent {
   @Input() option?: IMemberOption;
+  @Output() addToTimeLine = new EventEmitter<IMemberOption>();
 }

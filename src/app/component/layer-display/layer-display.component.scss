@@ -1,6 +1,6 @@
 @import '../../styles/style-constants.scss';
 
-.member-display-container {
+.layer-display-container {
     width: 100%;
     display: flex;
 
@@ -14,14 +14,13 @@
         cursor: pointer;
     }
 
-    .member-name {
+    .layer-option-name {
         flex: 1 auto;
         margin: auto;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: pointer;
-        padding-left: 3px;
     }
 
     .action {

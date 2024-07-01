@@ -3,9 +3,26 @@
   <app-time-line timeLine></app-time-line>
 
   <ng-container control>
-    <mat-tab-group animationDuration="0ms">
-      <mat-tab label="Layers"><app-layer-control></app-layer-control></mat-tab>
-      <mat-tab label="Time"></mat-tab>
+    <mat-tab-group animationDuration="500ms">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="control-tab">
+            <div>{{ memberService.memberBookName }}</div>
+            <div class="version">{{ memberService.versionNoString }}</div>
+          </div>
+        </ng-template>
+        <app-member-control></app-member-control>
+      </mat-tab>
+
+      <mat-tab label="Movie">
+        <ng-template mat-tab-label *ngIf="movieService.movie">
+          <div class="control-tab">
+            <div>{{ movieService.movie.movieName }}</div>
+            <div class="version">{{ movieService.versionNoString }}</div>
+          </div>
+        </ng-template>
+        <app-movie-control></app-movie-control>
+      </mat-tab>
     </mat-tab-group>
   </ng-container> 
 </app-player>

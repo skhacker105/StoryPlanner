@@ -9,7 +9,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TimelineKeyHandlerDirective } from './directives/timeline-key-handler.directive';
 import { MatTabsModule } from '@angular/material/tabs';
-import { LayerControlComponent } from './component/layer-control/layer-control.component';
+import { MemberControlComponent } from './component/member-control/member-control.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AddEditMemberComponent } from './component/add-edit-member/add-edit-member.component';
@@ -29,6 +29,9 @@ import { SortingButtonComponent } from './component/sorting-button/sorting-butto
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MemberOptionDisplayComponent } from './component/member-option-display/member-option-display.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { SpacePaddedPipe } from './pipes/space-padded.pipe';
+import { MovieControlComponent } from './component/movie-control/movie-control.component';
+import { LayerDisplayComponent } from './component/layer-display/layer-display.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     PlayerComponent,
     TimeLineComponent,
     TimelineKeyHandlerDirective,
-    LayerControlComponent,
+    MemberControlComponent,
     AddEditMemberComponent,
     PopupHeaderComponent,
     PictureUploadComponent,
@@ -45,7 +48,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     ConfirmationDialogComponent,
     SortPipe,
     SortingButtonComponent,
-    MemberOptionDisplayComponent
+    MemberOptionDisplayComponent,
+    SpacePaddedPipe,
+    MovieControlComponent,
+    LayerDisplayComponent
   ],
   imports: [
     BrowserModule,

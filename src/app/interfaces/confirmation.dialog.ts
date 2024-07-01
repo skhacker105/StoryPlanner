@@ -1,6 +1,6 @@
 export interface IConfirmationDialogData {
-    title: string;
-    message: string;
-    cancelDisplay: string;
-    okDisplay: string;
+    title?: string;
+    message?: string;
+    cancelDisplay?: string;
+    okDisplay?: string;
 }

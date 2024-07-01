@@ -12,4 +12,14 @@ export class MemberDisplayComponent {
   @Output() onEdit = new EventEmitter<Member>();
   @Output() onDelete = new EventEmitter<Member>();
   @Output() onCLick = new EventEmitter<Member>();
+
+  handleEditClick(member: Member, e: any) {
+    e.stopPropagation();
+    this.onEdit.emit(member);
+  }
+
+  handleDeleteClick(member: Member, e: any) {
+    e.stopPropagation();
+    this.onDelete.emit(member);
+  }
 }

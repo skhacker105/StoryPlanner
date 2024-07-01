@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LayerControlComponent } from './layer-control.component';
+import { MemberControlComponent } from './member-control.component';
 
-describe('LayerControlComponent', () => {
-  let component: LayerControlComponent;
-  let fixture: ComponentFixture<LayerControlComponent>;
+describe('MemberControlComponent', () => {
+  let component: MemberControlComponent;
+  let fixture: ComponentFixture<MemberControlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LayerControlComponent]
+      declarations: [MemberControlComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(LayerControlComponent);
+    fixture = TestBed.createComponent(MemberControlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

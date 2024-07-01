@@ -1,0 +1,21 @@
+<div class="layer-display-container" *ngIf="!hasNoMatch && layer && layerMember && layerOption" matRipple (click)="onCLick.emit()"
+    [ngClass]="{
+        'selected': isSelected
+    }">
+    <div class="image-display">
+        <!-- <app-image-icon [image]="member.image"></app-image-icon> -->
+    </div>
+    <div class="layer-option-name">
+        {{ layerOption.name }}
+    </div>
+    <div class="action">
+        <button mat-icon-button>
+            <mat-icon>
+                delete
+            </mat-icon>
+        </button>
+    </div>
+</div>
+<div class="layer-control-container" *ngIf="hasNoMatch">
+    Layer to Book connection looks broken.
+</div>

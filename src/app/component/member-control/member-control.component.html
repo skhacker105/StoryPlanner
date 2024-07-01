@@ -8,7 +8,7 @@
         <!-- Sorting Flip -->
         <app-sorting-button [sortBy]="sortBy" (onClick)="toggleSortBy()"></app-sorting-button>
         <!-- Download -->
-        <button mat-icon-button color="primary" [disabled]="!memberService.isMembersUpdated" (click)="handleSave()">
+        <button mat-icon-button color="primary">
             <mat-icon>download_2</mat-icon>
         </button>
         <!-- Upload -->
@@ -31,7 +31,7 @@
         </app-popup-header>
         <div class="option-list-container">
             @for (option of selectedMember.options; track option) {
-                <app-member-option-display [option]="option">
+                <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(selectedMember, option)">
                 </app-member-option-display>
             }
         </div>

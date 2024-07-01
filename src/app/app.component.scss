@@ -1,0 +1,13 @@
+@import './styles/style-constants.scss';
+
+.control-tab {
+    font-size: $tab-heading-font-size;
+    display: flex;
+    flex-direction: column;
+
+    .version {
+        border-top: solid 1px $primary-border-color;
+        padding-top: 2px;
+        font-size: $tab-sub-heading-font-size;
+    }
+}

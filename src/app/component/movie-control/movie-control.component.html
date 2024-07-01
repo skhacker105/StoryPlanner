@@ -1,0 +1,10 @@
+
+<div class="movie-control-container" *ngIf="movieService.movie">
+    <div class="movie-time-layers" *ngIf="movieService.movie.timeline[currentTime]">
+        @for (layer of movieService.movie.timeline[currentTime].layers; track layer;) {
+            <app-layer-display [layer]="layer" [isSelected]="compareSelectedLayer(layer)"
+            (onCLick)="handleLayerClick(layer)">
+            </app-layer-display>
+        }
+    </div>
+</div>

@@ -10,12 +10,12 @@
         {{ member.name }}
     </div>
     <div class="action">
-        <button mat-icon-button (click)="onDelete.emit(member)">
+        <button mat-icon-button (click)="handleDeleteClick(member, $event)">
             <mat-icon>
                 delete
             </mat-icon>
         </button>
-        <button mat-icon-button (click)="onEdit.emit(member)">
+        <button mat-icon-button (click)="handleEditClick(member, $event)">
             <mat-icon>
                 edit
             </mat-icon>

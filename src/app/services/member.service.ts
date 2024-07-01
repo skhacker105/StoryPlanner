@@ -2,49 +2,81 @@ import { Injectable } from '@angular/core';
 import { Member } from '../models/members';
 import { IMember, IMemberOption } from '../interfaces/member';
 import { UtilService } from './util.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { IVersion } from '../interfaces/version';
+import { IMemberStorage } from '../interfaces/member-storage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemberService {
 
-  membersLocalStorageKey = 'members'
-  membersAreUpdatedLocalStorageKey = 'membersAreUpdated'
-  isMembersUpdated = false;
+  membersLocalStorageKey = 'members';
+  memberBookName = 'MyBook';
+  version: IVersion = {
+    primary: 0,
+    major: 0,
+    minor: 1,
+  };
   members = new BehaviorSubject<Member[]>([]);
 
+  memberStorageUpdated = new Subject<IMemberStorage>();
+
   constructor(private utilService: UtilService) {
+    this.memberStorageUpdated.subscribe({
+      next: memberStorage => this.saveMembersToLocalStorage(memberStorage)
+    });
     this.loadSavedMembersFromLocalStorage();
-    this.loadMembersSavedStateFromStorage();
     this.members.subscribe({
-      next: members => {
-        this.saveMembersToLocalStorage();
-        this.saveMembersSavedStateToStorage();
-      }
+      next: members => this.fireMemberStorageUpdate()
     });
   }
 
-  loadMembersSavedStateFromStorage() {
-    const isupdated = localStorage.getItem(this.membersAreUpdatedLocalStorageKey);
-    this.isMembersUpdated = isupdated === 'true' ? true : false;
+  get versionNoString(): string {
+    const defaultPad = (val: number) => val.toString().padStart(2, '0');
+    return defaultPad(this.version.primary) + ':' + defaultPad(this.version.major) + ':' + defaultPad(this.version.minor);
   }
 
-  saveMembersSavedStateToStorage() {
-    localStorage.setItem(this.membersAreUpdatedLocalStorageKey, this.isMembersUpdated.toString())
+  set versionNoString(val: string) {
+    const versionParts = val.toString().split(':');
+    this.version.primary = +versionParts[0];
+    this.version.major = +versionParts[1];
+    this.version.minor = +versionParts[2];
   }
 
-  loadSavedMembersFromLocalStorage() {
-    const savedMembers = localStorage.getItem(this.membersLocalStorageKey);
-    if (savedMembers) {
-      const members: IMember[] = JSON.parse(savedMembers);
-      this.members.next(members.map(m => new Member(m)));
+  loadSavedMembersFromLocalStorage(): void {
+    const savedMemberBook = localStorage.getItem(this.membersLocalStorageKey);
+    if (savedMemberBook) {
+      const storedMemberBook: IMemberStorage = JSON.parse(savedMemberBook);
+      this.versionNoString = storedMemberBook.version;
+      this.memberBookName = storedMemberBook.name;
+      const members = storedMemberBook.members.map(m => new Member(m));
+      this.members.next(members);
     }
   }
 
-  saveMembersToLocalStorage() {
-    const members = JSON.stringify(this.members.value);
-    localStorage.setItem(this.membersLocalStorageKey, members);
+  saveMembersToLocalStorage(members: IMemberStorage) {
+    localStorage.setItem(this.membersLocalStorageKey, JSON.stringify(members));
+  }  
+
+  fireMemberStorageUpdate(): void {
+    setTimeout(() => {
+      this.memberStorageUpdated.next({
+        members: this.members.value,
+        name: this.memberBookName,
+        version: this.versionNoString
+      });
+    }, 10);
+  }
+
+  updateBookName(name: string): void {
+    this.memberBookName = name;
+    this.fireMemberStorageUpdate();
+  }
+
+  updateVersionNumber(version: IVersion): void {
+    this.version = version;
+    this.fireMemberStorageUpdate();
   }
 
   addNewMember(member: IMember): void {
@@ -53,13 +85,11 @@ export class MemberService {
 
     const members = this.members.value;
     members.push(new Member(member));
-    this.isMembersUpdated = true;
     this.members.next(members);
   }
 
   removeMember(memberId: string): void {
     const filteredMembers = this.members.value.filter(member => member.memberId !== memberId);
-    this.isMembersUpdated = true;
     this.members.next(filteredMembers);
   }
 
@@ -72,7 +102,6 @@ export class MemberService {
     }
 
     if (memberData.options.length > 0) memberData.options = this.generateOptionIds(memberData.options);
-    this.isMembersUpdated = true;
     member.updateDetails(memberData);
     this.members.next(members);
   }
@@ -93,7 +122,6 @@ export class MemberService {
     }
 
     member.addOption(option);
-    this.isMembersUpdated = true;
     this.members.next(members);
   }
 
@@ -106,7 +134,6 @@ export class MemberService {
     }
 
     member.updateOption(option);
-    this.isMembersUpdated = true;
     this.members.next(members);
   }
 
@@ -119,12 +146,6 @@ export class MemberService {
     }
 
     member.removeOption(optionId);
-    this.isMembersUpdated = true;
     this.members.next(members);
-  }
-
-  saveMembers() {
-    this.isMembersUpdated = false;
-    this.saveMembersSavedStateToStorage();
   }
 }

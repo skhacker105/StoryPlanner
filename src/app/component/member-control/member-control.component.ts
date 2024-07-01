@@ -1,23 +1,25 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditMemberComponent } from '../add-edit-member/add-edit-member.component';
-import { IMember } from '../../interfaces/member';
+import { IMember, IMemberOption } from '../../interfaces/member';
 import { take } from 'rxjs';
 import { MemberService } from '../../services/member.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { Member } from '../../models/members';
 import { ComponentBase } from '../../base/component-base';
+import { MovieService } from '../../services/movie.service';
+import { TimelineService } from '../../services/timeline.service';
 
 @Component({
-  selector: 'app-layer-control',
-  templateUrl: './layer-control.component.html',
-  styleUrl: './layer-control.component.scss'
+  selector: 'app-member-control',
+  templateUrl: './member-control.component.html',
+  styleUrl: './member-control.component.scss'
 })
-export class LayerControlComponent extends ComponentBase implements OnDestroy {
+export class MemberControlComponent extends ComponentBase implements OnDestroy {
 
   readonly dialog = inject(MatDialog);
 
-  constructor(public memberService: MemberService) {
+  constructor(public memberService: MemberService, public movieService: MovieService, private timeLineService: TimelineService) {
     super();
   }
 
@@ -36,12 +38,12 @@ export class LayerControlComponent extends ComponentBase implements OnDestroy {
     });
 
     ref.afterClosed()
-    .pipe(take(1))
-    .subscribe({
-      next: result => {
-        if (result) this.handleAddMember(result);
-      }
-    });
+      .pipe(take(1))
+      .subscribe({
+        next: result => {
+          if (result) this.handleAddMember(result);
+        }
+      });
   }
 
   handleAddMember(member: IMember): void {
@@ -56,12 +58,12 @@ export class LayerControlComponent extends ComponentBase implements OnDestroy {
     });
 
     ref.afterClosed()
-    .pipe(take(1))
-    .subscribe({
-      next: result => {
-        if (result) this.handleEditMember(result);
-      }
-    });
+      .pipe(take(1))
+      .subscribe({
+        next: result => {
+          if (result) this.handleEditMember(result);
+        }
+      });
   }
 
   handleEditMember(member: IMember): void {
@@ -71,18 +73,15 @@ export class LayerControlComponent extends ComponentBase implements OnDestroy {
   handleDeleteConfirmationPopup(member: Member): void {
     const ref = this.dialog.open(ConfirmationDialogComponent);
     ref.afterClosed()
-    .pipe(take(1))
-    .subscribe({
-      next: result => result ? this.handleDeleteMember(member) : null
-    });
+      .pipe(take(1))
+      .subscribe({
+        next: result => result ? this.handleDeleteMember(member) : null
+      });
   }
 
   handleDeleteMember(member: Member): void {
     this.memberService.removeMember(member.memberId);
-  }
-
-  handleSave(): void {
-    this.memberService.saveMembers();
+    if (this.selectedMember?.memberId === member.memberId) this.selectedMember = undefined;
   }
 
   handleMemberClick(member: Member): void {
@@ -91,5 +90,15 @@ export class LayerControlComponent extends ComponentBase implements OnDestroy {
     } else {
       this.resetSelectedRecord();
     }
+  }
+
+  addOptionToMovieTimeLine(member: Member, option: IMemberOption) {
+    this.timeLineService.currentTime
+      .pipe(take(1))
+      .subscribe({
+        next: time => {
+          this.movieService.addMemberOptionToTime(time, member.memberId, option.optionId)
+        }
+      });
   }
 }
