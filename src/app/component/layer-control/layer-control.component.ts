@@ -58,4 +58,8 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
   handleDeleteLayer(layer: ILayer): void {
     this.movieService.removeLayer(this.timelineService.currentTime.value, layer.layerId);
   }
+
+  handleUpdateLayer(updatedLayer: ILayer): void {
+    this.movieService.updateLayer(this.timelineService.currentTime.value, updatedLayer);
+  }
 }

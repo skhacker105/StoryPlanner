@@ -30,7 +30,9 @@
         <app-popup-header title="Properties" (onCloseTrigger)="resetSelectedLayer()">
         </app-popup-header>
         <div class="layer-list-container">
-            <app-layer-properties [layer]="selectedLayer" (cancelClicked)="resetSelectedLayer()">
+            <app-layer-properties [layer]="selectedLayer"
+            (onCancel)="resetSelectedLayer()"
+            (onSave)="handleUpdateLayer($event)">
             </app-layer-properties>
         </div>
     </div>

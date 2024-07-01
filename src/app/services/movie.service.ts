@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { IVersion } from '../interfaces/version';
 import { UtilService } from './util.service';
 import { MemberService } from './member.service';
-import { IMovie, IMovieMemberBook } from '../interfaces/timeline-movie';
+import { IMovie } from '../interfaces/timeline-movie';
 import { Subject } from 'rxjs';
 import { IMemberStorage } from '../interfaces/member-storage';
 import { Movie } from '../models/movie';
-import { Member } from '../models/members';
 import { ILayer } from '../interfaces/movie-layer';
 
 @Injectable({
@@ -16,7 +14,7 @@ export class MovieService {
 
   movieLocalStorageKey = 'movie';
 
-  movie?: IMovie;
+  movie?: Movie;
   movieUpdated = new Subject<IMovie>();
 
   constructor(private utilService: UtilService, private memberService: MemberService) {
@@ -114,16 +112,17 @@ export class MovieService {
     this.movieUpdated.next(this.movie);
   }
 
+  updateLayer(time: number, newLayer: ILayer): void {
+    if (!this.movie) return;
+
+    this.movie.updateLayer(time, newLayer);
+    this.movieUpdated.next(this.movie);
+  }
+
   removeLayer(time: number, layerId: string): void {
     if (!this.movie) return;
 
-    const timeLine = this.movie.timeline[time];
-    if (!timeLine) return;
-
-    const layerIndex = timeLine.layers.findIndex(l => l.layerId === layerId);
-    if (layerIndex < 0) return;
-
-    timeLine.layers.splice(layerIndex, 1);
+    this.movie.removeLayer(time, layerId);
     this.movieUpdated.next(this.movie);
   }
 }
