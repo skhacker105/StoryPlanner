@@ -1,1 +1,64 @@
-<p>layer-properties works!</p>
+<div class="properties-container">
+
+    <form [formGroup]="propertyForm">
+
+        <div class="fields">
+
+            <!-- In View / Fullscreen -->
+            <div class="property-box">
+                <mat-checkbox class="property-box-half" formControlName="isInView">In View</mat-checkbox>
+                <mat-checkbox class="property-box-half" formControlName="isFullScreen">Is Fullscreen</mat-checkbox>
+            </div>
+
+
+            <!-- Dimension -->
+            <div class="property-header-box">
+                Dimension
+            </div>
+            <div class="property-box">
+
+                <mat-form-field class="property-box-half">
+                    <mat-label>Relative Width</mat-label>
+                    <input matInput type="text" formControlName="relativeWidth">
+                </mat-form-field>
+
+                <mat-form-field class="property-box-half">
+                    <mat-label>Relative Height</mat-label>
+                    <input matInput type="text" formControlName="relativeHeight">
+                </mat-form-field>
+
+            </div>
+
+
+            <!-- Dimension -->
+            <div class="property-header-box">
+                Position
+            </div>
+            <div class="property-box">
+
+                <mat-form-field class="property-box-half">
+                    <mat-label>Relative Left</mat-label>
+                    <input matInput type="text" formControlName="relativeLeft">
+                </mat-form-field>
+
+                <mat-form-field class="property-box-half">
+                    <mat-label>Relative Top</mat-label>
+                    <input matInput type="text" formControlName="relativeLeft">
+                </mat-form-field>
+
+            </div>
+
+        </div>
+
+        <div class="action">
+            <button mat-raised-button (click)="cancelClicked.emit()">
+                Cancel
+            </button>
+            &nbsp;
+            <button mat-raised-button color="primary" [disabled]="!propertyForm.dirty || !propertyForm.valid">
+                Save
+            </button>
+        </div>
+
+    </form>
+</div>

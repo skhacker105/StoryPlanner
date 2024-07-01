@@ -6,9 +6,9 @@ export interface ILayer extends
     layerId: string;
     memberId: string;
     memberOptionId: string;
-    stackPosition: number;
 
     // Properties
+    stackPosition: number;
     isInView: boolean;
     isFullScreen: boolean;
 }

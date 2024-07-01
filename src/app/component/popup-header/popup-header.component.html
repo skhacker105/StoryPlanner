@@ -3,6 +3,7 @@
         {{ title }}
     </span>
     <span class="spacer"></span>
+    <ng-content select="[otherActions]"></ng-content>
     <button mat-icon-button (click)="onCloseTrigger.emit()">
         <mat-icon>close</mat-icon>
     </button>

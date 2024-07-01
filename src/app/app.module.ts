@@ -33,6 +33,7 @@ import { SpacePaddedPipe } from './pipes/space-padded.pipe';
 import { LayerControlComponent } from './component/layer-control/layer-control.component';
 import { LayerDisplayComponent } from './component/layer-display/layer-display.component';
 import { LayerPropertiesComponent } from './component/layer-properties/layer-properties.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { LayerPropertiesComponent } from './component/layer-properties/layer-pro
     MatDividerModule,
     MatRippleModule,
     MatTooltipModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatCheckboxModule
   ],
   providers: [
     provideAnimationsAsync()
