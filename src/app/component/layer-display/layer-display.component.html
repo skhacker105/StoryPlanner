@@ -3,13 +3,13 @@
         'selected': isSelected
     }">
     <div class="image-display">
-        <!-- <app-image-icon [image]="member.image"></app-image-icon> -->
+        <app-image-icon [image]="layerOption.image"></app-image-icon>
     </div>
     <div class="layer-option-name">
         {{ layerOption.name }}
     </div>
     <div class="action">
-        <button mat-icon-button>
+        <button mat-icon-button (click)="handleDeleteClick(layer, $event)">
             <mat-icon>
                 delete
             </mat-icon>

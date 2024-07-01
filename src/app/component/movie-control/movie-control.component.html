@@ -3,8 +3,15 @@
     <div class="movie-time-layers" *ngIf="movieService.movie.timeline[currentTime]">
         @for (layer of movieService.movie.timeline[currentTime].layers; track layer;) {
             <app-layer-display [layer]="layer" [isSelected]="compareSelectedLayer(layer)"
-            (onCLick)="handleLayerClick(layer)">
+            (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)">
             </app-layer-display>
         }
+    </div>
+
+    <div class="layer-option" *ngIf="selectedLayer">
+        <app-popup-header title="Properties" (onCloseTrigger)="resetSelectedLayer()">
+        </app-popup-header>
+        <div class="layer-list-container">
+        </div>
     </div>
 </div>

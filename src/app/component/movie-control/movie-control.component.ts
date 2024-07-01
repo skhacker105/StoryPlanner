@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { TimelineService } from '../../services/timeline.service';
 import { ComponentBase } from '../../base/component-base';
-import { takeUntil } from 'rxjs';
+import { take, takeUntil } from 'rxjs';
 import { ILayer } from '../../interfaces/movie-layer';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-movie-control',
@@ -11,6 +13,8 @@ import { ILayer } from '../../interfaces/movie-layer';
   styleUrl: './movie-control.component.scss'
 })
 export class MovieControlComponent extends ComponentBase implements OnInit, OnDestroy {
+
+  readonly dialog = inject(MatDialog);
 
   currentTime: number = 0;
 
@@ -38,7 +42,20 @@ export class MovieControlComponent extends ComponentBase implements OnInit, OnDe
     if (!this.compareSelectedLayer(layer)) {
       this.selectLayer(layer)
     } else {
-      this.resetSelectedRecord();
+      this.resetSelectedLayer();
     }
+  }
+
+  handleDeleteConfirmationPopup(layer: ILayer): void {
+    const ref = this.dialog.open(ConfirmationDialogComponent);
+    ref.afterClosed()
+      .pipe(take(1))
+      .subscribe({
+        next: result => result ? this.handleDeleteLayer(layer) : null
+      });
+  }
+
+  handleDeleteLayer(layer: ILayer): void {
+    this.movieService.removeLayer(this.timelineService.currentTime.value, layer.layerId);
   }
 }

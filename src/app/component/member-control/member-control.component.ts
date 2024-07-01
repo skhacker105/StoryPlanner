@@ -93,12 +93,6 @@ export class MemberControlComponent extends ComponentBase implements OnDestroy {
   }
 
   addOptionToMovieTimeLine(member: Member, option: IMemberOption) {
-    this.timeLineService.currentTime
-      .pipe(take(1))
-      .subscribe({
-        next: time => {
-          this.movieService.addMemberOptionToTime(time, member.memberId, option.optionId)
-        }
-      });
+    this.movieService.addMemberOptionToTime(this.timeLineService.currentTime.value, member.memberId, option.optionId);
   }
 }

@@ -113,4 +113,17 @@ export class MovieService {
     this.movie.timeline[time].layers.push(newLayer);
     this.movieUpdated.next(this.movie);
   }
+
+  removeLayer(time: number, layerId: string): void {
+    if (!this.movie) return;
+
+    const timeLine = this.movie.timeline[time];
+    if (!timeLine) return;
+
+    const layerIndex = timeLine.layers.findIndex(l => l.layerId === layerId);
+    if (layerIndex < 0) return;
+
+    timeLine.layers.splice(layerIndex, 1);
+    this.movieUpdated.next(this.movie);
+  }
 }

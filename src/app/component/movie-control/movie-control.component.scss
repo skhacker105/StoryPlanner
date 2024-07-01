@@ -1,0 +1,33 @@
+@import '../../styles/style-constants.scss';
+
+.movie-control-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .movie-time-layers {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .layer-option {
+        position: fixed;
+        border-left: solid 1px black;
+        background: $secondary-background;
+        height: calc(100% - $timeline-height);
+        width: $controller-width;
+        right: $controller-width;
+        z-index: 100;
+        top: 0px;
+        display: flex;
+        flex-direction: column;
+
+        .layer-list-container {
+            flex: 1 auto;
+            max-height: calc(100% - 64px);
+            overflow-y: auto;
+        }
+    }
+}

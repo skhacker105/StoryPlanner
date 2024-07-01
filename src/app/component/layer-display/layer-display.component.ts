@@ -56,4 +56,9 @@ export class LayerDisplayComponent extends ComponentBase implements OnInit, OnDe
     this.layerOption = member.options.find(o => o.optionId === this.layer?.memberOptionId);
     if (!this.layerOption) this.hasNoMatch = true;
   }
+
+  handleDeleteClick(layer: ILayer, e: any) {
+    e.stopPropagation();
+    this.onDelete.emit(layer);
+  }
 }

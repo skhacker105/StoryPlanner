@@ -21,6 +21,10 @@ export class ComponentBase {
         this.selectedMember = undefined;
     }
 
+    resetSelectedLayer(): void {
+        this.selectedLayer = undefined;
+    }
+
     selectRecord(record: Member): void {
         this.selectedMember = record;
     }
