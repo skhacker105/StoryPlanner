@@ -28,6 +28,7 @@ import { SortPipe } from './pipes/sort.pipe';
 import { SortingButtonComponent } from './component/sorting-button/sorting-button.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MemberOptionDisplayComponent } from './component/member-option-display/member-option-display.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { MemberOptionDisplayComponent } from './component/member-option-display/
     MatInputModule,
     MatDividerModule,
     MatRippleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonToggleModule
   ],
   providers: [
     provideAnimationsAsync()

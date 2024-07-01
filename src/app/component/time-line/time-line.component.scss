@@ -35,5 +35,50 @@
 
     .time-line-status {
         position: absolute;
+        display: flex;
+        width: 100%;
+
+        .status-blocks {
+            margin: auto;
+            display: flex;
+
+            .stat-block {
+                display: flex;
+                padding-left: 10px;
+                padding-right: 10px;
+                font-size: $time-line-font-size;
+
+                .label {
+                    font-size: $time-line-font-size;
+                    font-weight: bold;
+                    padding: 2px;
+                    margin: auto;
+                }
+
+                .value {
+                    font-size: $time-line-font-size;
+                    padding: 2px;
+                    margin: auto;
+                }
+
+                .mat-button-toggle-group {
+                    height: 20px;
+                    margin: auto;
+
+                    .play-back-speed {
+                        font-size: $time-line-font-size;
+                        height: 20px;
+    
+                        ::ng-deep .mat-button-toggle-button {
+                            height: 20px;
+
+                            .mat-button-toggle-label-content {
+                                line-height: 20px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

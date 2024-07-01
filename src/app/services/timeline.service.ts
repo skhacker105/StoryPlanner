@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { IPlaySpeed } from '../interfaces/play-speed';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,18 @@ export class TimelineService {
   currentTime = new BehaviorSubject<number>(0);
   endTime = new BehaviorSubject<number>(600);
 
+  standardSpeed = 1000;
+  speedRange: IPlaySpeed[] = [
+    { key: '0.25', multiple: 1 / 0.25 },
+    { key: '0.5', multiple: 1 / 0.5 },
+    { key: '0.75', multiple: 1 / 0.75 },
+    { key: 'Normal', multiple: 1 },
+    { key: '1.25', multiple: 1 / 1.25 },
+    { key: '1.5', multiple: 1 / 1.5 },
+    { key: '1.75', multiple: 1 / 1.75 },
+    { key: '2', multiple: 1 / 2 }
+  ];
+  selectedSpeed: IPlaySpeed = this.speedRange[3];
   playing = false;
 
   constructor() { }
@@ -57,7 +70,7 @@ export class TimelineService {
       if (this.hasNextTime()) {
         setTimeout(() => {
           this.runWhilePlaying();
-        }, 1000);
+        }, this.standardSpeed * this.selectedSpeed.multiple);
       } else {
         this.pause();
       }
@@ -66,5 +79,9 @@ export class TimelineService {
 
   pause(): void {
     this.playing = false;
+  }
+
+  setPlaybackSpeed(speed: IPlaySpeed) {
+    this.selectedSpeed = speed;
   }
 }

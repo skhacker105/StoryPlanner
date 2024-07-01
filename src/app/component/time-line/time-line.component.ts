@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TimelineService } from '../../services/timeline.service';
 import { ComponentBase } from '../../base/component-base';
 import { takeUntil } from 'rxjs';
+import { IPlaySpeed } from '../../interfaces/play-speed';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-time-line',
@@ -35,5 +37,9 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
 
   changeCurrentTime(time: number) {
     this.timelineService.setNewTime(time);
+  }
+
+  changePlaybackSpeed(speedChange: MatButtonToggleChange) {
+    this.timelineService.setPlaybackSpeed(speedChange.value);
   }
 }
