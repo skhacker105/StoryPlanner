@@ -83,7 +83,7 @@ export class AddEditMemberComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.memberForm.valid) console.log('Invalid Form');
+    if (!this.memberForm.valid) console.log('Invalid Form');
     else this.dialogRef.close(this.memberForm.value);
   }
 }

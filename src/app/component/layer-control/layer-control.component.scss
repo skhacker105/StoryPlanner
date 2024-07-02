@@ -10,6 +10,12 @@
     .action-buttons {
         padding: 5px;
         display: flex;
+        font-size: $tab-heading-font-size;
+
+        .time {
+            margin: auto;
+            padding-left: 3px;
+        }
     }
 
     .movie-time-layers {

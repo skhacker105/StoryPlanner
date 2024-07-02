@@ -2,6 +2,9 @@
 <div class="movie-control-container" *ngIf="movieService.movie">
 
     <div class="action-buttons">
+        <div class="time">
+            <pre class="time-display">{{ timelineService.currentTime.value | spacePadded:4 }}</pre>
+        </div>
 
         <div class="spacer"></div>
         

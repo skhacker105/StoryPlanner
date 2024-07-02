@@ -18,7 +18,7 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
 
   currentTime: number = 0;
 
-  constructor(public movieService: MovieService, private timelineService: TimelineService) {
+  constructor(public movieService: MovieService, public timelineService: TimelineService) {
     super();
   }
 
@@ -26,7 +26,12 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
     this.timelineService.currentTime
     .pipe(takeUntil(this.isComponentActive))
     .subscribe({
-      next: time => this.currentTime = time
+      next: time => {
+        if (this.currentTime !== time) {
+          this.currentTime = time;
+          this.resetSelectedLayer();
+        }
+      }
     });
   }
 

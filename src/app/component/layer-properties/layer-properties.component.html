@@ -50,7 +50,7 @@
 
             <!-- Play Length -->
             <div class="property-header-box">
-                Play Length ({{ propertyForm.controls['duration'].value }})
+                Play Length ({{ propertyForm.controls['endTime'].value }})
             </div>
             <div class="property-box">
                 <mat-slider
@@ -59,7 +59,7 @@
                     [min]="timelineService.currentTime.value"
                     [step]="1"
                     [discrete]="true">
-                <input matSliderThumb formControlName="duration" #slider>
+                <input matSliderThumb formControlName="endTime" #slider>
                 </mat-slider>
             </div>
 

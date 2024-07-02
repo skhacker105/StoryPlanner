@@ -5,6 +5,7 @@ export interface ILayer extends
 
     // Fields
     layerId: string;
+    isProjected: boolean;
     memberId: string;
     memberOptionId: string;
 
@@ -25,5 +26,5 @@ export interface ILayerPosition {
 }
 
 export interface ILayerPlayTime {
-    duration: number;
+    endTime: number;
 }

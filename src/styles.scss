@@ -1,8 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+@import '../src/app/styles/style-constants.scss';
 
 html, body { margin: 0px; height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .spacer {
     flex: 1 auto;
+}
+
+.time-display {
+    font-size: $time-number-font-size !important;
+    border: solid 1px #1c06ff61 !important;
+    padding-right: 5px !important;
+    padding-left: 5px !important;
 }

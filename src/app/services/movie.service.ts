@@ -86,20 +86,14 @@ export class MovieService {
       return;
     }
 
-    if (!this.movie.timeline[time]) {
-      this.movie.timeline[time] = {
-        time,
-        layers: []
-      }
-    }
-
     const newLayer: ILayer = {
       layerId: this.utilService.generateNewId(),
       memberId,
       memberOptionId,
-      stackPosition: this.movie.timeline[time].layers.length + 1,
+      stackPosition: 0,
       isInView: true,
       isFullScreen: false,
+      isProjected: false,
 
       relativeWidth: 100,
       relativeHeight: 100,
@@ -107,10 +101,10 @@ export class MovieService {
       relativeLeft: 0,
       relativeTop: 0,
 
-      duration: 0
+      endTime: time
     }
 
-    this.movie.timeline[time].layers.push(newLayer);
+    this.movie.addMemberOptionToTime(time, memberId, memberOptionId, newLayer);
     this.movieUpdated.next(this.movie);
   }
 

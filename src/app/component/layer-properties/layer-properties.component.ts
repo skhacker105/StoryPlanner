@@ -21,13 +21,16 @@ export class LayerPropertiesComponent implements OnInit {
     relativeHeight: new FormControl<number>(10, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d+$/)]),
     relativeLeft: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d+$/)]),
     relativeTop: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d+$/)]),
-    duration: new FormControl<number>(1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)])
+    endTime: new FormControl<number>(1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)])
   });
 
   constructor(public timelineService: TimelineService) {}
 
   ngOnInit(): void {
-    if (this.layer) this.propertyForm.patchValue(this.layer);
+    if (this.layer) {
+      this.propertyForm.patchValue(this.layer);
+      if (this.layer.isProjected) this.propertyForm.disable();
+    }
   }
 
   submitForm() {

@@ -1,6 +1,7 @@
 <div class="layer-display-container" *ngIf="!hasNoMatch && layer && layerMember && layerOption" matRipple (click)="onCLick.emit()"
     [ngClass]="{
-        'selected': isSelected
+        'selected': isSelected,
+        'isProjected': layer.isProjected
     }">
     <div class="image-display">
         <app-image-icon [image]="layerOption.image"></app-image-icon>
