@@ -2,8 +2,12 @@
 <app-player>
   <app-time-line timeLine></app-time-line>
 
+  <app-canvas canvas></app-canvas>
+
   <ng-container control>
     <mat-tab-group animationDuration="500ms" class="control-tab-group">
+
+      <!-- My Book tab -->
       <mat-tab>
         <ng-template mat-tab-label>
           <div class="control-tab">
@@ -14,6 +18,7 @@
         <app-member-control></app-member-control>
       </mat-tab>
 
+      <!-- Layers of My Movie for Selected Time -->
       <mat-tab label="Movie">
         <ng-template mat-tab-label *ngIf="movieService.movie">
           <div class="control-tab">

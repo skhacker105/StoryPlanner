@@ -2,6 +2,9 @@
 <div class="movie-control-container" *ngIf="movieService.movie">
 
     <div class="action-buttons">
+        <button mat-icon-button color="primary">
+            <mat-icon>shutter_speed_add</mat-icon>
+        </button>
         <div class="time">
             <pre class="time-display">{{ timelineService.currentTime.value | spacePadded:4 }}</pre>
         </div>

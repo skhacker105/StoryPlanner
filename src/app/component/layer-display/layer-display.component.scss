@@ -3,6 +3,7 @@
 .layer-display-container {
     width: 100%;
     display: flex;
+    font-size: $tab-heading-font-size;
 
     .image-display {
         width: 25px;
@@ -21,6 +22,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: pointer;
+        padding-left: 5px;
     }
 
     .action {
