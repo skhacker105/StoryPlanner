@@ -6,18 +6,9 @@ import { take, takeUntil } from 'rxjs';
 import { ILayer } from '../../interfaces/movie-layer';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
-import { MemberService } from '../../services/member.service';
-import { Member } from '../../models/members';
-import { IMemberOption } from '../../interfaces/member';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
-interface IMemberBookDictionary {
-  [key: string]: { member: Member, option: IMemberOptionDictionary }
-}
 
-interface IMemberOptionDictionary {
-  [key: string]: IMemberOption
-}
 
 @Component({
   selector: 'app-layer-control',
@@ -29,9 +20,8 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
   readonly dialog = inject(MatDialog);
 
   currentTime: number = 0;
-  dictionaryMemberBook: IMemberBookDictionary = {};
 
-  constructor(public movieService: MovieService, public timelineService: TimelineService, private memberService: MemberService) {
+  constructor(public movieService: MovieService, public timelineService: TimelineService) {
     super();
   }
 
@@ -46,11 +36,6 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
           }
         }
       });
-    this.memberService.members
-      .pipe(takeUntil(this.isComponentActive))
-      .subscribe({
-        next: members => this.dictionaryMemberBook = this.getMemberOptionDictionary(members)
-    });
   }
 
   ngOnDestroy(): void {
@@ -59,24 +44,6 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
 
   compareSelectedLayer(layer: ILayer): boolean {
     return layer.layerId === this.selectedLayer?.['layerId'];
-  }
-
-  getMemberOptionDictionary(members: Member[]): IMemberBookDictionary {
-    return members.reduce(
-      (objMember: IMemberBookDictionary, member: Member) => {
-
-        if (!objMember[member.memberId]) objMember[member.memberId] = { member, option: {} }
-
-        member.options.reduce(
-          (objOption: IMemberOptionDictionary, option: IMemberOption) => {
-
-            if (!objOption[option.optionId]) objOption[option.optionId] = option;
-            return objOption;
-          },
-          objMember[member.memberId].option)
-        return objMember;
-      },
-      {} as IMemberBookDictionary)
   }
 
   handleLayerClick(layer: ILayer): void {

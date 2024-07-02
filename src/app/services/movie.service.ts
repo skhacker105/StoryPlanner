@@ -7,6 +7,9 @@ import { IMemberStorage } from '../interfaces/member-storage';
 import { Movie } from '../models/movie';
 import { ILayer } from '../interfaces/movie-layer';
 import { ServiceBase } from '../base/service-base';
+import { IMemberBookDictionary, IMemberOptionDictionary } from '../interfaces/member-dictionary';
+import { Member } from '../models/members';
+import { IMemberOption } from '../interfaces/member';
 
 @Injectable({
   providedIn: 'root'
@@ -17,17 +20,25 @@ export class MovieService extends ServiceBase implements OnDestroy {
 
   movie?: Movie;
   movieUpdated = new Subject<IMovie>();
+  dictionaryMemberBook: IMemberBookDictionary = {};
 
   constructor(private utilService: UtilService, private memberService: MemberService) {
     super();
 
     this.movieUpdated
-    .pipe(takeUntil(this.isServiceActive))
+      .pipe(takeUntil(this.isServiceActive))
       .subscribe({
         next: movie => this.saveMovieToLocalStorage(movie)
       });
 
+    this.memberService.members
+      .pipe(takeUntil(this.isServiceActive))
+      .subscribe({
+        next: members => this.dictionaryMemberBook = this.getMemberOptionDictionary(members)
+      });
+
     this.memberService.memberStorageUpdated
+      .pipe(takeUntil(this.isServiceActive))
       .subscribe({
         next: memberStorage => {
           if (!this.movie) this.loadMovieFromLocalStorage(memberStorage);
@@ -49,6 +60,24 @@ export class MovieService extends ServiceBase implements OnDestroy {
 
   ngOnDestroy(): void {
     this.onDestroy();
+  }
+
+  getMemberOptionDictionary(members: Member[]): IMemberBookDictionary {
+    return members.reduce(
+      (objMember: IMemberBookDictionary, member: Member) => {
+
+        if (!objMember[member.memberId]) objMember[member.memberId] = { member, options: {} }
+
+        member.options.reduce(
+          (objOption: IMemberOptionDictionary, option: IMemberOption) => {
+
+            if (!objOption[option.optionId]) objOption[option.optionId] = option;
+            return objOption;
+          },
+          objMember[member.memberId].options)
+        return objMember;
+      },
+      {} as IMemberBookDictionary)
   }
 
   createDefaultMovie(memberBook: IMemberStorage): void {

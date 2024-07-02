@@ -36,6 +36,7 @@ import { LayerPropertiesComponent } from './component/layer-properties/layer-pro
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
 import { CanvasComponent } from './component/canvas/canvas.component';
+import { LayerStyleStringPipe } from './pipes/layer-style-string.pipe';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { CanvasComponent } from './component/canvas/canvas.component';
     LayerControlComponent,
     LayerDisplayComponent,
     LayerPropertiesComponent,
-    CanvasComponent
+    CanvasComponent,
+    LayerStyleStringPipe
   ],
   imports: [
     BrowserModule,

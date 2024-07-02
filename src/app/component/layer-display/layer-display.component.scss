@@ -49,5 +49,9 @@
         .image-display {
             opacity: 0.5;
         }
+
+        &:hover {
+            background: #cec9c9;
+        }
     }
 }

@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'spacePadded'
+  name: 'spacePadded',
+  pure: true
 })
 export class SpacePaddedPipe implements PipeTransform {
 

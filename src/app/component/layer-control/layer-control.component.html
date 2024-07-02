@@ -29,8 +29,8 @@
         
         @for (layer of movieService.movie.timeline[currentTime].layers; track layer;) {
             <app-layer-display cdkDrag [layer]="layer" [isSelected]="compareSelectedLayer(layer)"
-            [layerMember]="dictionaryMemberBook[layer.memberId].member" 
-            [layerOption]="dictionaryMemberBook[layer.memberId].option[layer.memberOptionId]"
+            [layerMember]="movieService.dictionaryMemberBook[layer.memberId].member" 
+            [layerOption]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId]"
             (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)">
             </app-layer-display>
         }
@@ -41,8 +41,8 @@
         </app-popup-header>
         <div class="layer-list-container">
             <app-layer-properties [layer]="selectedLayer"
-            [layerMember]="dictionaryMemberBook[selectedLayer.memberId].member" 
-            [layerOption]="dictionaryMemberBook[selectedLayer.memberId].option[selectedLayer.memberOptionId]"
+            [layerMember]="movieService.dictionaryMemberBook[selectedLayer.memberId].member" 
+            [layerOption]="movieService.dictionaryMemberBook[selectedLayer.memberId].options[selectedLayer.memberOptionId]"
             (onCancel)="resetSelectedLayer()"
             (onSave)="handleUpdateLayer($event)">
             </app-layer-properties>
