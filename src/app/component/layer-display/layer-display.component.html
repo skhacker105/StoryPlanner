@@ -6,9 +6,7 @@
     <div class="image-display">
         <app-image-icon [image]="layerOption.image"></app-image-icon>
     </div>
-    <div class="layer-option-name">
-        {{ layerOption.name }}
-    </div>
+    <div class="layer-option-name">{{ layerOption.name }}</div>
     <div class="action">
         <button mat-icon-button (click)="handleDeleteClick(layer, $event)">
             <mat-icon>
@@ -18,5 +16,5 @@
     </div>
 </div>
 <div class="layer-control-container" *ngIf="hasNoMatch">
-    Layer to Book connection looks broken.
+    Layer to Book connection is broken.
 </div>

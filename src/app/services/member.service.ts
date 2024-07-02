@@ -65,7 +65,7 @@ export class MemberService extends ServiceBase implements OnDestroy {
     }
   }
 
-  saveMembersToLocalStorage(members: IMemberStorage) {
+  saveMembersToLocalStorage(members: IMemberStorage): void {
     localStorage.setItem(this.membersLocalStorageKey, JSON.stringify(members));
   }  
 

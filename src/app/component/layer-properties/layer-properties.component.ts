@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ILayer } from '../../interfaces/movie-layer';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TimelineService } from '../../services/timeline.service';
+import { Member } from '../../models/members';
+import { IMemberOption } from '../../interfaces/member';
 
 @Component({
   selector: 'app-layer-properties',
@@ -11,6 +13,8 @@ import { TimelineService } from '../../services/timeline.service';
 export class LayerPropertiesComponent implements OnInit {
 
   @Input() layer?: ILayer;
+  @Input() layerMember?: Member;
+  @Input() layerOption?: IMemberOption;
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<ILayer>();
 

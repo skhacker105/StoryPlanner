@@ -39,7 +39,10 @@
 
     &.isProjected {
         background-color: #d6d6d6;
-        color: gray;
+
+        .layer-option-name {
+            color: gray;
+        }
 
         .image-display {
             opacity: 0.5;

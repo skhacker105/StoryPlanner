@@ -128,4 +128,11 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.movie.removeLayer(time, layerId);
     this.movieUpdated.next(this.movie);
   }
+
+  moveLayers(time: number, previousIndex: number, newIndex: number) {
+    if (!this.movie) return;
+
+    this.movie.moveLayers(time, previousIndex, newIndex);
+    this.movieUpdated.next(this.movie);
+  }
 }

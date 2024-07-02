@@ -1,3 +1,4 @@
+import { moveItemInArray } from "@angular/cdk/drag-drop";
 import { ILayer } from "../interfaces/movie-layer";
 import { IMovie, IMovieMemberBook, IMovieTime } from "../interfaces/timeline-movie";
 import { IVersion } from "../interfaces/version";
@@ -135,6 +136,20 @@ export class Movie implements IMovie {
             {
                 stackPosition: holdStackPositionUpdate ? prevStackPosition : newLayer.stackPosition
             })
+    }
+
+    public moveLayers(time: number, previousIndex: number, newIndex: number) {
+
+        const timeLine = this.timeline[time];
+        if (!timeLine) {
+            console.log('No Timeline found to update');
+            return;
+        }
+
+        moveItemInArray(timeLine.layers, previousIndex, newIndex);
+        timeLine.layers.forEach((l, i) => {
+            l.stackPosition = i + 1;
+        });
     }
 
 }

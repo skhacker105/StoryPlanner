@@ -19,21 +19,27 @@
         </button>
     </div>
 
-    <div class="movie-time-layers" *ngIf="movieService.movie.timeline[currentTime]">
+    <div class="movie-time-layers" *ngIf="movieService.movie.timeline[currentTime]" cdkDropList (cdkDropListDropped)="drop($event)">
         <mat-divider></mat-divider>
+
+        <div class="place-holder-layer" *cdkDragPlaceholder></div>
         
         @for (layer of movieService.movie.timeline[currentTime].layers; track layer;) {
-            <app-layer-display [layer]="layer" [isSelected]="compareSelectedLayer(layer)"
+            <app-layer-display cdkDrag [layer]="layer" [isSelected]="compareSelectedLayer(layer)"
+            [layerMember]="dictionaryMemberBook[layer.memberId].member" 
+            [layerOption]="dictionaryMemberBook[layer.memberId].option[layer.memberOptionId]"
             (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)">
             </app-layer-display>
         }
     </div>
 
     <div class="layer-option" *ngIf="selectedLayer">
-        <app-popup-header title="Properties" (onCloseTrigger)="resetSelectedLayer()">
+        <app-popup-header [title]="'Layer ' + selectedLayer.stackPosition" (onCloseTrigger)="resetSelectedLayer()">
         </app-popup-header>
         <div class="layer-list-container">
             <app-layer-properties [layer]="selectedLayer"
+            [layerMember]="dictionaryMemberBook[selectedLayer.memberId].member" 
+            [layerOption]="dictionaryMemberBook[selectedLayer.memberId].option[selectedLayer.memberOptionId]"
             (onCancel)="resetSelectedLayer()"
             (onSave)="handleUpdateLayer($event)">
             </app-layer-properties>
