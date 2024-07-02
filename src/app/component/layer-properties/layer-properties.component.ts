@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ILayer } from '../../interfaces/movie-layer';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TimelineService } from '../../services/timeline.service';
 
 @Component({
   selector: 'app-layer-properties',
@@ -19,8 +20,11 @@ export class LayerPropertiesComponent implements OnInit {
     relativeWidth: new FormControl<number>(10, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d+$/)]),
     relativeHeight: new FormControl<number>(10, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d+$/)]),
     relativeLeft: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d+$/)]),
-    relativeTop: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d+$/)])
+    relativeTop: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d+$/)]),
+    duration: new FormControl<number>(1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)])
   });
+
+  constructor(public timelineService: TimelineService) {}
 
   ngOnInit(): void {
     if (this.layer) this.propertyForm.patchValue(this.layer);

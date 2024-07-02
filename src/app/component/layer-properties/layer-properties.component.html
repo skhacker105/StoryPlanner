@@ -48,6 +48,21 @@
 
             </div>
 
+            <!-- Play Length -->
+            <div class="property-header-box">
+                Play Length ({{ propertyForm.controls['duration'].value }})
+            </div>
+            <div class="property-box">
+                <mat-slider
+                    class="property-item-full"
+                    [max]="timelineService.endTime.value"
+                    [min]="timelineService.currentTime.value"
+                    [step]="1"
+                    [discrete]="true">
+                <input matSliderThumb formControlName="duration" #slider>
+                </mat-slider>
+            </div>
+
         </div>
 
         <div class="action">

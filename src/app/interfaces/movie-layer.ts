@@ -1,6 +1,7 @@
 export interface ILayer extends
     ILayerDimension,
-    ILayerPosition {
+    ILayerPosition,
+    ILayerPlayTime {
 
     // Fields
     layerId: string;
@@ -21,4 +22,8 @@ export interface ILayerDimension {
 export interface ILayerPosition {
     relativeLeft: number;
     relativeTop: number;
+}
+
+export interface ILayerPlayTime {
+    duration: number;
 }

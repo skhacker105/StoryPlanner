@@ -16,7 +16,7 @@
 
             .property-header-box {
                 font-size: $tab-heading-font-size;
-                padding-left: 16px;
+                padding-top: 7px;
                 text-decoration: underline;
                 font-weight: bold;
                 letter-spacing: 1px;
@@ -30,6 +30,10 @@
     
                 .property-box-half {
                     width: 50%;
+                }
+    
+                .property-item-full {
+                    width: calc(100% - 20px);
                 }
             }
         }

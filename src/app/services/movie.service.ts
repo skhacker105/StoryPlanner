@@ -105,7 +105,9 @@ export class MovieService {
       relativeHeight: 100,
 
       relativeLeft: 0,
-      relativeTop: 0
+      relativeTop: 0,
+
+      duration: 0
     }
 
     this.movie.timeline[time].layers.push(newLayer);

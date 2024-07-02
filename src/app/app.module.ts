@@ -34,6 +34,7 @@ import { LayerControlComponent } from './component/layer-control/layer-control.c
 import { LayerDisplayComponent } from './component/layer-display/layer-display.component';
 import { LayerPropertiesComponent } from './component/layer-properties/layer-properties.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatRippleModule,
     MatTooltipModule,
     MatButtonToggleModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSliderModule
   ],
   providers: [
     provideAnimationsAsync()
