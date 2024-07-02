@@ -1,15 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Member } from '../models/members';
 import { IMember, IMemberOption } from '../interfaces/member';
 import { UtilService } from './util.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { IVersion } from '../interfaces/version';
 import { IMemberStorage } from '../interfaces/member-storage';
+import { ServiceBase } from '../base/service-base';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MemberService {
+export class MemberService extends ServiceBase implements OnDestroy {
 
   membersLocalStorageKey = 'members';
   memberBookName = 'MyBook';
@@ -23,11 +24,16 @@ export class MemberService {
   memberStorageUpdated = new Subject<IMemberStorage>();
 
   constructor(private utilService: UtilService) {
-    this.memberStorageUpdated.subscribe({
+    super();
+    this.memberStorageUpdated
+    .pipe(takeUntil(this.isServiceActive))
+    .subscribe({
       next: memberStorage => this.saveMembersToLocalStorage(memberStorage)
     });
     this.loadSavedMembersFromLocalStorage();
-    this.members.subscribe({
+    this.members
+    .pipe(takeUntil(this.isServiceActive))
+    .subscribe({
       next: members => this.fireMemberStorageUpdate()
     });
   }
@@ -42,6 +48,10 @@ export class MemberService {
     this.version.primary = +versionParts[0];
     this.version.major = +versionParts[1];
     this.version.minor = +versionParts[2];
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy();
   }
 
   loadSavedMembersFromLocalStorage(): void {

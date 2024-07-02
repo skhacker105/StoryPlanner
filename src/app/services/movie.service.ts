@@ -1,16 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { UtilService } from './util.service';
 import { MemberService } from './member.service';
 import { IMovie } from '../interfaces/timeline-movie';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { IMemberStorage } from '../interfaces/member-storage';
 import { Movie } from '../models/movie';
 import { ILayer } from '../interfaces/movie-layer';
+import { ServiceBase } from '../base/service-base';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MovieService {
+export class MovieService extends ServiceBase implements OnDestroy {
 
   movieLocalStorageKey = 'movie';
 
@@ -18,8 +19,10 @@ export class MovieService {
   movieUpdated = new Subject<IMovie>();
 
   constructor(private utilService: UtilService, private memberService: MemberService) {
+    super();
 
     this.movieUpdated
+    .pipe(takeUntil(this.isServiceActive))
       .subscribe({
         next: movie => this.saveMovieToLocalStorage(movie)
       });
@@ -42,6 +45,10 @@ export class MovieService {
 
     const defaultPad = (val: number) => val.toString().padStart(2, '0');
     return defaultPad(this.movie.version.primary) + ':' + defaultPad(this.movie.version.major) + ':' + defaultPad(this.movie.version.minor);
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy();
   }
 
   createDefaultMovie(memberBook: IMemberStorage): void {
