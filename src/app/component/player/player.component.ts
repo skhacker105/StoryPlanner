@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-player',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrl: './player.component.scss'
 })
 export class PlayerComponent {
-
+  @Input() openSecondLayer = false;
 }

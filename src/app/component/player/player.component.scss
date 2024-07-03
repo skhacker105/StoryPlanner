@@ -16,6 +16,11 @@
             width: calc(100% - $controller-width);
         }
 
+        .canvas-2 {
+            height: 100%;
+            width: calc(100% - ($controller-width * 2));
+        }
+
         .control {
             height: 100%;
             width: $controller-width;

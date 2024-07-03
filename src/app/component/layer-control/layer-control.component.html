@@ -36,17 +36,4 @@
             </app-layer-display>
         }
     </div>
-
-    <div class="layer-option" *ngIf="selectedLayer">
-        <app-popup-header [title]="'Layer ' + selectedLayer.stackPosition" (onCloseTrigger)="resetSelectedLayer()">
-        </app-popup-header>
-        <div class="layer-list-container">
-            <app-layer-properties [layer]="selectedLayer"
-            [layerMember]="movieService.dictionaryMemberBook[selectedLayer.memberId].member" 
-            [layerOption]="movieService.dictionaryMemberBook[selectedLayer.memberId].options[selectedLayer.memberOptionId]"
-            (onCancel)="resetSelectedLayer()"
-            (onSave)="handleUpdateLayer($event)">
-            </app-layer-properties>
-        </div>
-    </div>
 </div>

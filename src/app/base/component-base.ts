@@ -8,7 +8,6 @@ export class ComponentBase {
     public isComponentActive = new Subject<boolean>();
     public sortBy: SortType = 'byName';
     public selectedMember?: Member;
-    public selectedLayer?: ILayer;
 
     constructor() { }
 
@@ -21,19 +20,8 @@ export class ComponentBase {
         this.selectedMember = undefined;
     }
 
-    resetSelectedLayer(): void {
-        this.selectedLayer = undefined;
-    }
-
     selectRecord(record: Member): void {
         this.selectedMember = record;
-    }
-
-    selectLayer(layer: ILayer): void {
-        this.selectedLayer = undefined;
-        setTimeout(() => {
-            this.selectedLayer = layer;
-        }, 1);
     }
 
     onDestroy(): void {

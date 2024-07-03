@@ -32,7 +32,7 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
         next: time => {
           if (this.currentTime !== time) {
             this.currentTime = time;
-            this.resetSelectedLayer();
+            this.movieService.resetSelectedLayer();
           }
         }
       });
@@ -43,14 +43,14 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
   }
 
   compareSelectedLayer(layer: ILayer): boolean {
-    return layer.layerId === this.selectedLayer?.['layerId'];
+    return layer.layerId === this.movieService.selectedLayer?.['layerId'];
   }
 
   handleLayerClick(layer: ILayer): void {
     if (!this.compareSelectedLayer(layer)) {
-      this.selectLayer(layer);
+      this.movieService.selectLayer(layer);
     } else {
-      this.resetSelectedLayer();
+      this.movieService.resetSelectedLayer();
     }
   }
 
@@ -67,10 +67,6 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
     this.movieService.removeLayer(this.timelineService.currentTime.value, layer.layerId);
   }
 
-  handleUpdateLayer(updatedLayer: ILayer): void {
-    this.movieService.updateLayer(this.timelineService.currentTime.value, updatedLayer);
-  }
-
   drop(event: CdkDragDrop<string[]>): void {
     if (!this.movieService.movie) return;
     this.movieService.moveLayers(this.timelineService.currentTime.value, event.previousIndex, event.currentIndex);
@@ -81,6 +77,6 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
 
     this.timelineService.setNewTime(layer.projectionStartTime);
     const projectionStartLayerRef = this.movieService.movie.timeline[layer.projectionStartTime].layers.find(l => l.layerId === layer.layerId);
-    if (projectionStartLayerRef) this.selectLayer(projectionStartLayerRef)
+    if (projectionStartLayerRef) this.movieService.selectLayer(projectionStartLayerRef)
   }
 }

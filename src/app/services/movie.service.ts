@@ -21,6 +21,8 @@ export class MovieService extends ServiceBase implements OnDestroy {
   movie?: Movie;
   movieUpdated = new Subject<IMovie>();
   dictionaryMemberBook: IMemberBookDictionary = {};
+  
+  public selectedLayer?: ILayer;
 
   constructor(private utilService: UtilService, private memberService: MemberService) {
     super();
@@ -178,5 +180,16 @@ export class MovieService extends ServiceBase implements OnDestroy {
 
     this.movie.moveLayers(time, previousIndex, newIndex);
     this.movieUpdated.next(this.movie);
+  }
+
+  resetSelectedLayer(): void {
+      this.selectedLayer = undefined;
+  }
+
+  selectLayer(layer: ILayer): void {
+      this.resetSelectedLayer()
+      setTimeout(() => {
+          this.selectedLayer = layer;
+      }, 1);
   }
 }

@@ -2,8 +2,12 @@
 
     <div class="top-section">
 
-        <div class="canvas">
+        <div class="canvas" [ngClass]="{ 'canvas-2': openSecondLayer }">
             <ng-content select="[canvas]"></ng-content>
+        </div>
+
+        <div class="control" *ngIf="openSecondLayer">
+            <ng-content select="[control2]"></ng-content>
         </div>
 
         <div class="control">

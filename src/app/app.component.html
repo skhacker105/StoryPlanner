@@ -1,11 +1,11 @@
 
-<app-player>
+<app-player [openSecondLayer]="movieService.selectedLayer ? true : false">
   <app-time-line timeLine></app-time-line>
 
   <app-canvas canvas></app-canvas>
 
   <ng-container control>
-    <mat-tab-group animationDuration="500ms" class="control-tab-group">
+    <mat-tab-group animationDuration="500ms" class="control-tab-group" (selectedTabChange)="handleTabChange($event)">
 
       <!-- My Book tab -->
       <mat-tab>
@@ -38,6 +38,19 @@
         </ng-template>
       </mat-tab>
     </mat-tab-group>
-  </ng-container> 
+  </ng-container>
+
+  <ng-container control2 *ngIf="movieService.selectedLayer">
+    <app-popup-header [title]="'Layer ' + movieService.selectedLayer.stackPosition" (onCloseTrigger)="movieService.resetSelectedLayer()">
+    </app-popup-header>
+    <div class="layer-list-container">
+        <app-layer-properties [layer]="movieService.selectedLayer"
+        [layerMember]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].member" 
+        [layerOption]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].options[movieService.selectedLayer.memberOptionId]"
+        (onCancel)="movieService.resetSelectedLayer()"
+        (onSave)="saveLayer($event)">
+        </app-layer-properties>
+    </div>
+  </ng-container>
 </app-player>
 <!-- <router-outlet /> -->
