@@ -1,19 +1,15 @@
 <div class="layer-control-container">
 
     <div class="action-buttons">
-        <button mat-icon-button color="primary" (click)="loadAddMemberPopup()">
-            <mat-icon>add_circle</mat-icon>
-        </button>
-        <div class="spacer"></div>
+        
         <!-- Sorting Flip -->
         <app-sorting-button [sortBy]="sortBy" (onClick)="toggleSortBy()"></app-sorting-button>
-        <!-- Download -->
-        <button mat-icon-button color="primary">
-            <mat-icon>download_2</mat-icon>
-        </button>
-        <!-- Upload -->
-        <button mat-icon-button color="primary">
-            <mat-icon>upload_2</mat-icon>
+
+        <div class="spacer"></div>
+
+        <!-- Add -->
+        <button mat-icon-button color="primary" (click)="loadAddMemberPopup()">
+            <mat-icon>add_circle</mat-icon>
         </button>
     </div>
     <div class="layers">

@@ -2,24 +2,18 @@
 <div class="movie-control-container" *ngIf="movieService.movie">
 
     <div class="action-buttons">
+
+        <!-- Movie Setting -->
         <button mat-icon-button color="primary">
             <mat-icon>shutter_speed_add</mat-icon>
         </button>
-        <div class="time">
-            <pre class="time-display">{{ timelineService.currentTime.value | spacePadded:4 }}</pre>
-        </div>
 
         <div class="spacer"></div>
         
-        <!-- Download -->
-        <button mat-icon-button color="primary">
-            <mat-icon>download_2</mat-icon>
-        </button>
-
-        <!-- Upload -->
-        <button mat-icon-button color="primary">
-            <mat-icon>upload_2</mat-icon>
-        </button>
+        <!-- Time -->
+        <div class="time">
+            <pre class="time-display">{{ timelineService.currentTime.value | spacePadded:4 }}</pre>
+        </div>
     </div>
 
     <div class="movie-time-layers" *ngIf="movieService.movie.timeline[currentTime]" cdkDropList (cdkDropListDropped)="drop($event)">
