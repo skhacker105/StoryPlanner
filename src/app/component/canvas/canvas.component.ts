@@ -26,7 +26,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     .pipe(takeUntil(this.isComponentActive))
     .subscribe({
       next: currentTime => {
-        this.paintedLayers = this.movieService.movie ? this.movieService.movie.timeline[currentTime].layers : [];
+        this.paintedLayers = this.movieService.movie?.timeline[currentTime]?.layers ? this.movieService.movie.timeline[currentTime].layers : [];
         this.currentTime = currentTime
       }
     });
@@ -36,7 +36,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
       next: movie => {
         this.paintedLayers = [];
         setTimeout(() => {
-          this.paintedLayers = this.movieService.movie ? this.movieService.movie.timeline[this.currentTime].layers : [];
+          this.paintedLayers = this.movieService.movie?.timeline[this.currentTime]?.layers ? this.movieService.movie.timeline[this.currentTime].layers : [];
         }, 1);
       }
     });
@@ -46,7 +46,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
       next: members => {
         this.paintedLayers = [];
         setTimeout(() => {
-          this.paintedLayers = this.movieService.movie ? this.movieService.movie.timeline[this.currentTime].layers : [];
+          this.paintedLayers = this.movieService.movie?.timeline[this.currentTime]?.layers ? this.movieService.movie.timeline[this.currentTime].layers : [];
         }, 1);
       }
     });

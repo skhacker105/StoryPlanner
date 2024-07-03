@@ -39,7 +39,7 @@
 
             <!-- Play / Pause -->
             <div class="stat-block">
-                <button mat-icon-button color="primary" (click)="timelineService.playing ? timelineService.pause() : timelineService.play()">
+                <button mat-icon-button color="primary" (click)="playPause()">
                     <mat-icon>
                         {{
                             timelineService.playing ? 'pause_circle' : 'not_started'

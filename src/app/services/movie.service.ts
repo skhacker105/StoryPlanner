@@ -58,6 +58,20 @@ export class MovieService extends ServiceBase implements OnDestroy {
     return defaultPad(this.movie.version.primary) + ':' + defaultPad(this.movie.version.major) + ':' + defaultPad(this.movie.version.minor);
   }
 
+  get maxPlayTime(): number {
+    if (!this.movie) return -1;
+
+    let maxTime: number = -1;
+    const timelineKeys = Object.keys(this.movie.timeline);
+    for (let i = timelineKeys.length - 1; i >= 0; i--) {
+      if (this.movie.timeline[+timelineKeys[i]].layers.length > 0) {
+        maxTime = +timelineKeys[i];
+        break;
+      }
+    }
+    return maxTime;
+  }
+
   ngOnDestroy(): void {
     this.onDestroy();
   }

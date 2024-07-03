@@ -42,4 +42,8 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
   changePlaybackSpeed(speedChange: MatButtonToggleChange) {
     this.timelineService.setPlaybackSpeed(speedChange.value);
   }
+
+  playPause() {
+    this.timelineService.playing ? this.timelineService.pause() : this.timelineService.play()
+  }
 }

@@ -24,6 +24,8 @@ export class TimelineService {
   selectedSpeed: IPlaySpeed = this.speedRange[3];
   playing = false;
 
+  private maxPlayTime = -1;
+
   constructor() { }
 
   setNewTime(time: number): void {
@@ -55,7 +57,15 @@ export class TimelineService {
   }
 
   hasNextTime(): boolean {
-    return this.currentTime.value < this.endTime.value;
+    return this.currentTime.value < (this.maxPlayTime !== -1 ? this.maxPlayTime : this.endTime.value);
+  }
+
+  setMaxPlayTime(maxTime: number): void {
+    this.maxPlayTime = maxTime;
+  }
+
+  resetMaxPlayTime(): void {
+    this.maxPlayTime = -1;
   }
 
   play(): void {
@@ -79,6 +89,7 @@ export class TimelineService {
 
   pause(): void {
     this.playing = false;
+    this.resetMaxPlayTime();
   }
 
   setPlaybackSpeed(speed: IPlaySpeed) {
