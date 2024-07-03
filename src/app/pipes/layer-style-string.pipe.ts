@@ -18,6 +18,7 @@ export class LayerStyleStringPipe implements PipeTransform {
     styleString += this.getDimensionStyles(layer);
     styleString += this.getPositionStyles(layer);
     styleString += this.getZIndex(layer);
+    styleString += this.getOpacity(layer);
 
     return styleString;
   }
@@ -29,17 +30,27 @@ export class LayerStyleStringPipe implements PipeTransform {
     if (layer.isFullScreen) {
       r += 'widht: 100%; height: 100%; ';
     } else {
-      r += `widht: ${layer.relativeWidth}%; height: ${layer.relativeHeight}%; `;
+      if (layer.relativeWidth) r += `widht: ${layer.relativeWidth}%; `;
+      if (layer.relativeHeight) r += `height: ${layer.relativeHeight}%; `;
     }
     return r;
   }
 
   getPositionStyles(layer: ILayer): string {
-    return `left: ${layer.relativeLeft}%; top: ${layer.relativeTop}%; `;
+    let r='';
+    if (layer.relativeLeft) r += `left: ${layer.relativeWidth}%; `;
+    if (layer.relativeTop) r += `top: ${layer.relativeTop}%; `;
+    return r;
   }
 
   getZIndex(layer: ILayer): string {
     return `z-index: ${(layer.stackPosition * 10)}; `
+  }
+
+  getOpacity(layer: ILayer):string {
+    let r='';
+    if (layer.opacity) r += `opacity: ${layer.opacity}; `;
+    return r;
   }
 
 }

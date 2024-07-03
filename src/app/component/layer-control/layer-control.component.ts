@@ -48,7 +48,7 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
 
   handleLayerClick(layer: ILayer): void {
     if (!this.compareSelectedLayer(layer)) {
-      this.movieService.selectLayer(layer);
+      this.movieService.selectLayer(this.timelineService.currentTime.value, layer);
     } else {
       this.movieService.resetSelectedLayer();
     }
@@ -77,6 +77,6 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
 
     this.timelineService.setNewTime(layer.projectionStartTime);
     const projectionStartLayerRef = this.movieService.movie.timeline[layer.projectionStartTime].layers.find(l => l.layerId === layer.layerId);
-    if (projectionStartLayerRef) this.movieService.selectLayer(projectionStartLayerRef)
+    if (projectionStartLayerRef) this.movieService.selectLayer(this.timelineService.currentTime.value, projectionStartLayerRef)
   }
 }

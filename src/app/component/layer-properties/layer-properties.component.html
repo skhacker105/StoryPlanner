@@ -55,8 +55,8 @@
             <div class="property-box">
                 <mat-slider
                     class="property-item-full"
-                    [max]="timelineService.endTime.value"
-                    [min]="timelineService.currentTime.value"
+                    [max]="endTime"
+                    [min]="time"
                     [step]="1"
                     [discrete]="true">
                 <input matSliderThumb [formControl]="propertyForm.controls['endTime']" [value]="propertyForm.controls['endTime'].value" #slider>

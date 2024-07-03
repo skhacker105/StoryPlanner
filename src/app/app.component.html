@@ -44,7 +44,10 @@
     <app-popup-header [title]="'Layer ' + movieService.selectedLayer.stackPosition" (onCloseTrigger)="movieService.resetSelectedLayer()">
     </app-popup-header>
     <div class="layer-list-container">
-        <app-layer-properties [layer]="movieService.selectedLayer"
+        <app-layer-properties
+        [time]="movieService.selectedLayerTime ? movieService.selectedLayerTime : timelineService.endTime.value"
+        [endTime]="timelineService.endTime.value"
+        [layer]="movieService.selectedLayer"
         [layerMember]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].member" 
         [layerOption]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].options[movieService.selectedLayer.memberOptionId]"
         (onCancel)="movieService.resetSelectedLayer()"

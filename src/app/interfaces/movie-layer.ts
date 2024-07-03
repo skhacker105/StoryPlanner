@@ -1,7 +1,8 @@
 export interface ILayer extends
     ILayerDimension,
     ILayerPosition,
-    ILayerPlayTime {
+    ILayerPlayTime,
+    ILayerGeneric {
 
     // Fields
     layerId: string;
@@ -14,6 +15,10 @@ export interface ILayer extends
     stackPosition: number;
     isInView: boolean;
     isFullScreen: boolean;
+}
+
+export interface ILayerGeneric {
+    opacity: number;
 }
 
 export interface ILayerDimension {
