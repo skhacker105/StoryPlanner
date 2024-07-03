@@ -1,0 +1,83 @@
+<div class="properties-container">
+
+    <form [formGroup]="propertyForm" (ngSubmit)="submitForm()">
+
+        <div class="fields">
+
+            <!-- In View / Fullscreen -->
+            <div class="property-box">
+                <mat-checkbox class="property-box-half" formControlName="isInView">In View</mat-checkbox>
+                <mat-checkbox class="property-box-half" formControlName="isFullScreen">Is Fullscreen</mat-checkbox>
+            </div>
+
+
+            <!-- Dimension -->
+            <div class="property-header-box">
+                Dimension
+            </div>
+            <div class="property-box">
+
+                <mat-form-field class="property-box-half">
+                    <mat-label>Relative Width</mat-label>
+                    <input matInput type="number" formControlName="relativeWidth">
+                </mat-form-field>
+
+                <mat-form-field class="property-box-half">
+                    <mat-label>Relative Height</mat-label>
+                    <input matInput type="number" formControlName="relativeHeight">
+                </mat-form-field>
+
+            </div>
+
+
+            <!-- Position -->
+            <div class="property-header-box">
+                Position
+            </div>
+            <div class="property-box">
+
+                <mat-form-field class="property-box-half">
+                    <mat-label>Relative Left</mat-label>
+                    <input matInput type="number" formControlName="relativeLeft">
+                </mat-form-field>
+
+                <mat-form-field class="property-box-half">
+                    <mat-label>Relative Top</mat-label>
+                    <input matInput type="number" formControlName="relativeTop">
+                </mat-form-field>
+
+            </div>
+
+            <!-- Play Length -->
+            <div class="property-header-box">
+                Play End Time ({{ propertyForm.controls['endTime'].value }})
+            </div>
+            <div class="property-box">
+                <mat-slider
+                    class="property-item-full"
+                    [max]="endTime"
+                    [min]="time"
+                    [step]="1"
+                    [discrete]="true">
+                <input matSliderThumb [formControl]="propertyForm.controls['endTime']" [value]="propertyForm.controls['endTime'].value" #slider>
+                </mat-slider>
+                
+                <mat-form-field class="property-mini-half">
+                    <input matInput type="number" formControlName="endTime" [value]="propertyForm.controls['endTime'].value">
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <div class="action">
+            <button mat-raised-button type="button" (click)="onCancel.emit()">
+                Cancel
+            </button>
+            &nbsp;
+            <button mat-raised-button color="primary" [disabled]="!propertyForm.dirty || !propertyForm.valid">
+                Save
+            </button>
+        </div>
+
+    </form>
+</div>

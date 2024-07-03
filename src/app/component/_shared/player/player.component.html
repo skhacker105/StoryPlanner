@@ -2,11 +2,11 @@
 
     <div class="top-section">
 
-        <div class="canvas" [ngClass]="{ 'canvas-2': openSecondLayer }">
+        <div class="canvas">
             <ng-content select="[canvas]"></ng-content>
         </div>
 
-        <div class="control" *ngIf="openSecondLayer">
+        <div class="control level-2" *ngIf="openSecondLayer" cdkDrag>
             <ng-content select="[control2]"></ng-content>
         </div>
 

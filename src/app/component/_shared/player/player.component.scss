@@ -16,17 +16,20 @@
             width: calc(100% - $controller-width);
         }
 
-        .canvas-2 {
-            height: 100%;
-            width: calc(100% - ($controller-width * 2));
-        }
-
         .control {
             height: 100%;
             width: $controller-width;
             background: rgb(197, 226, 255);
             background: $primary-background;
             overflow: auto;
+
+            &.level-2 {
+                position: absolute;
+                top: 0px;
+                z-index: 1000000;
+                right:  $controller-width;
+                background: white;
+            }
         }
     }
 

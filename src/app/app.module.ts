@@ -37,6 +37,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
 import { CanvasComponent } from './component/canvas/canvas.component';
 import { LayerStyleStringPipe } from './pipes/layer-style-string.pipe';
+import { StylesComponent } from './component/layer-control/layer-properties/styles/styles.component';
+import { AnimationsComponent } from './component/layer-control/layer-properties/animations/animations.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import { LayerStyleStringPipe } from './pipes/layer-style-string.pipe';
     LayerDisplayComponent,
     LayerPropertiesComponent,
     CanvasComponent,
-    LayerStyleStringPipe
+    LayerStyleStringPipe,
+    StylesComponent,
+    AnimationsComponent
   ],
   imports: [
     BrowserModule,

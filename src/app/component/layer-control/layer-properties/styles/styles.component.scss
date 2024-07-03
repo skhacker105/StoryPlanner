@@ -1,0 +1,49 @@
+@import '../../../../styles/style-constants.scss';
+
+.properties-container {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    padding: 10px;
+
+    form {
+        width: 100%;
+        height: calc(100% - 10px);
+        display: flex;
+        flex-direction: column;
+
+        .fields {
+            flex: 1 auto;
+
+            .property-header-box {
+                font-size: $tab-heading-font-size;
+                padding-top: 7px;
+                text-decoration: underline;
+                font-weight: bold;
+                letter-spacing: 1px;
+                color: #0207e9;
+            }
+    
+            .property-box {
+                display: flex;
+                padding-top: 5px;
+                padding-bottom: 5px;
+    
+                .property-box-half {
+                    width: 50%;
+                }
+    
+                .property-item-full {
+                    width: calc(100% - 20px);
+                }
+
+                .property-mini-half {
+                    width: 120px;
+                }
+            }
+        }
+
+        .action {
+            text-align: end;
+        }
+    }
+}
