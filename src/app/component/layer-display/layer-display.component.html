@@ -8,6 +8,13 @@
     </div>
     <div class="layer-option-name"> {{ layerMember.name }} - {{ layerOption.name }}</div>
     <div class="action">
+        <button mat-icon-button *ngIf="layer.isProjected"
+        matTooltip="{{ 'Got to time ' + layer.projectionStartTime + ' to view start of projection' }}"
+        (click)="onGoToProjectionStart.emit()">
+            <mat-icon>
+                link
+            </mat-icon>
+        </button>
         <button mat-icon-button (click)="handleDeleteClick(layer, $event)">
             <mat-icon>
                 delete

@@ -31,7 +31,8 @@
             <app-layer-display cdkDrag [layer]="layer" [isSelected]="compareSelectedLayer(layer)"
             [layerMember]="movieService.dictionaryMemberBook[layer.memberId].member" 
             [layerOption]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId]"
-            (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)">
+            (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)"
+            (onGoToProjectionStart)="gotoProjectionStart(layer)">
             </app-layer-display>
         }
     </div>

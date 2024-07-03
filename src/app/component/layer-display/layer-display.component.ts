@@ -18,6 +18,7 @@ export class LayerDisplayComponent extends ComponentBase implements OnInit, OnDe
   @Output() onEdit = new EventEmitter<ILayer>();
   @Output() onDelete = new EventEmitter<ILayer>();
   @Output() onCLick = new EventEmitter<ILayer>();
+  @Output() onGoToProjectionStart = new EventEmitter<ILayer>();
 
   hasNoMatch = false;
 

@@ -30,7 +30,10 @@ export class ComponentBase {
     }
 
     selectLayer(layer: ILayer): void {
-        this.selectedLayer = layer;
+        this.selectedLayer = undefined;
+        setTimeout(() => {
+            this.selectedLayer = layer;
+        }, 1);
     }
 
     onDestroy(): void {

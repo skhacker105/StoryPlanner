@@ -6,38 +6,39 @@ import { ILayer } from '../interfaces/movie-layer';
 })
 export class LayerStyleStringPipe implements PipeTransform {
 
-  transform(layer: ILayer, screenWidth: number, screenHeight: number): string {
+  transform(layer: ILayer): string {
     let styleString = 'position: absolute; ';
 
     // If not in view then set display: none
     if (!layer.isInView) {
-      styleString = 'diaplay: none; ';
+      styleString += 'display: none; ';
       return styleString;
     }
 
-    styleString += this.getDimensionStyles(layer, screenWidth, screenHeight);
-    styleString += this.getPositionStyles(layer, screenWidth, screenHeight);
+    styleString += this.getDimensionStyles(layer);
+    styleString += this.getPositionStyles(layer);
     styleString += this.getZIndex(layer);
+
+    // if (layer.layerId === 'w9UxsONNtsse6eaUnETFlYfkw1CDZAD6')
+      console.log('styleString = ', styleString)
 
     return styleString;
   }
 
-  getDimensionStyles(layer: ILayer, screenWidth: number, screenHeight: number): string {
+  getDimensionStyles(layer: ILayer): string {
     // If full screen se set width and height as 100 %
 
     let r = '';
     if (layer.isFullScreen) {
       r += 'widht: 100%; height: 100%; ';
     } else {
-      const width = Math.floor((layer.relativeWidth / 100) * screenWidth);
-      const height = Math.floor((layer.relativeHeight / 100) * screenHeight);
-      r += `widht: ${width}px; height: ${height}px; `;
+      r += `widht: ${layer.relativeWidth}%; height: ${layer.relativeHeight}%; `;
     }
     return r;
   }
 
-  getPositionStyles(layer: ILayer, screenWidth: number, screenHeight: number): string {
-    return `left: 0; top: 0; `;
+  getPositionStyles(layer: ILayer): string {
+    return `left: ${layer.relativeLeft}%; top: ${layer.relativeTop}%; `;
   }
 
   getZIndex(layer: ILayer): string {

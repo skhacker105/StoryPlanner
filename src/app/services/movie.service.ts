@@ -130,6 +130,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
       isInView: true,
       isFullScreen: false,
       isProjected: false,
+      projectionStartTime: 0,
 
       relativeWidth: 100,
       relativeHeight: 100,

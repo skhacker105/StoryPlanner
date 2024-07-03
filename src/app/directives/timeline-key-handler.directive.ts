@@ -15,6 +15,7 @@ export class TimelineKeyHandlerDirective {
       case '-': this.timelineService.decreaseTime(); break;
       case 'home': this.timelineService.timeToZero(); break;
       case 'end': this.timelineService.timeToEnd(); break;
+      case ' ': this.timelineService.playing ? this.timelineService.pause() : this.timelineService.play();
     }
   }
 }

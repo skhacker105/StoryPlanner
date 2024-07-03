@@ -48,7 +48,7 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
 
   handleLayerClick(layer: ILayer): void {
     if (!this.compareSelectedLayer(layer)) {
-      this.selectLayer(layer)
+      this.selectLayer(layer);
     } else {
       this.resetSelectedLayer();
     }
@@ -71,8 +71,16 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
     this.movieService.updateLayer(this.timelineService.currentTime.value, updatedLayer);
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<string[]>): void {
     if (!this.movieService.movie) return;
     this.movieService.moveLayers(this.timelineService.currentTime.value, event.previousIndex, event.currentIndex);
+  }
+
+  gotoProjectionStart(layer: ILayer): void {
+    if (!layer.isProjected || !this.movieService.movie) return;
+
+    this.timelineService.setNewTime(layer.projectionStartTime);
+    const projectionStartLayerRef = this.movieService.movie.timeline[layer.projectionStartTime].layers.find(l => l.layerId === layer.layerId);
+    if (projectionStartLayerRef) this.selectLayer(projectionStartLayerRef)
   }
 }

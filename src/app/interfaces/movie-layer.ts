@@ -8,6 +8,7 @@ export interface ILayer extends
     isProjected: boolean;
     memberId: string;
     memberOptionId: string;
+    projectionStartTime: number;
 
     // Properties
     stackPosition: number;

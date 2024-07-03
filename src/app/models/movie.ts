@@ -30,7 +30,7 @@ export class Movie implements IMovie {
     private addMemberProjetedOption(time: number, memberId: string, memberOptionId: string, newLayer: ILayer): void {
         let newTime = time + 1;
         while (newTime <= newLayer.endTime) {
-            this.addMemberOptionToTime(newTime, memberId, memberOptionId, newLayer, true);
+            this.addMemberOptionToTime(newTime, memberId, memberOptionId, newLayer, true, time);
             newTime++;
         }
     }
@@ -57,7 +57,7 @@ export class Movie implements IMovie {
 
             } else if (!existProjectedLayerInTimeline || (!oldInRange && newInRange)) {
                 // add new projected data
-                this.addMemberOptionToTime(newTime, updatedNewLayer.memberId, updatedNewLayer.memberOptionId, updatedNewLayer, true);
+                this.addMemberOptionToTime(newTime, updatedNewLayer.memberId, updatedNewLayer.memberOptionId, updatedNewLayer, true, time);
             }
             newTime++;
         }
@@ -72,7 +72,7 @@ export class Movie implements IMovie {
     }
 
     // PUBLIC Members
-    public addMemberOptionToTime(time: number, memberId: string, memberOptionId: string, newLayer: ILayer, isProjected: boolean = false): void {
+    public addMemberOptionToTime(time: number, memberId: string, memberOptionId: string, newLayer: ILayer, isProjected: boolean = false, projectedTime = 0): void {
         this.checkAndCreateTimeline(time);
 
         newLayer.stackPosition = this.timeline[time].layers.length + 1;
@@ -80,6 +80,7 @@ export class Movie implements IMovie {
         else {
             const newLayerCopy = cloneDeep(newLayer);
             newLayerCopy.isProjected = true;
+            newLayerCopy.projectionStartTime = projectedTime;
             this.timeline[time].layers.push(newLayerCopy);
         }
 

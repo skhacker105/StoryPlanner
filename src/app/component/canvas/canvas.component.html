@@ -1,8 +1,8 @@
-<div class="canvas-container" *ngIf="movieService.movie && movieService.movie.timeline[currentTime]">
-    @for (layer of movieService.movie.timeline[currentTime].layers; track layer;) {
+<div class="canvas-container">
+    @for (layer of paintedLayers; track layer;) {
         <img 
             [src]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId].image"
-            [style]="(layer | layerStyleString:500:500  )"
+            [style]="(layer | layerStyleString)"
         >
     }
 </div>
