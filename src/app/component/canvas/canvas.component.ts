@@ -5,6 +5,7 @@ import { TimelineService } from '../../services/timeline.service';
 import { takeUntil } from 'rxjs';
 import { MovieService } from '../../services/movie.service';
 import { ILayer } from '../../interfaces/movie-layer';
+import { MemberService } from '../../services/member.service';
 
 @Component({
   selector: 'app-canvas',
@@ -16,7 +17,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
   currentTime = 0;
   paintedLayers: ILayer[] = [];
 
-  constructor(private timelineService: TimelineService, public movieService: MovieService) {
+  constructor(private timelineService: TimelineService, public movieService: MovieService, private memberService: MemberService) {
     super();
   }
 
@@ -25,7 +26,6 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     .pipe(takeUntil(this.isComponentActive))
     .subscribe({
       next: currentTime => {
-        console.log('layers = ', this.movieService.movie?.timeline[currentTime].layers);
         this.paintedLayers = this.movieService.movie ? this.movieService.movie.timeline[currentTime].layers : [];
         this.currentTime = currentTime
       }
@@ -34,7 +34,16 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     .pipe(takeUntil(this.isComponentActive))
     .subscribe({
       next: movie => {
-        console.log('layers = ', this.movieService.movie?.timeline[this.currentTime].layers);
+        this.paintedLayers = [];
+        setTimeout(() => {
+          this.paintedLayers = this.movieService.movie ? this.movieService.movie.timeline[this.currentTime].layers : [];
+        }, 1);
+      }
+    });
+    this.memberService.members
+    .pipe(takeUntil(this.isComponentActive))
+    .subscribe({
+      next: members => {
         this.paintedLayers = [];
         setTimeout(() => {
           this.paintedLayers = this.movieService.movie ? this.movieService.movie.timeline[this.currentTime].layers : [];

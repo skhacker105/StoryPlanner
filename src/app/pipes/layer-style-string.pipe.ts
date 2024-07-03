@@ -19,9 +19,6 @@ export class LayerStyleStringPipe implements PipeTransform {
     styleString += this.getPositionStyles(layer);
     styleString += this.getZIndex(layer);
 
-    // if (layer.layerId === 'w9UxsONNtsse6eaUnETFlYfkw1CDZAD6')
-      console.log('styleString = ', styleString)
-
     return styleString;
   }
 

@@ -45,7 +45,6 @@ export class Movie implements IMovie {
             const newInRange = updatedNewLayer.endTime >= newTime;
             const existProjectedLayerInTimeline = !!this.timeline[newTime]?.layers?.some(l => l.layerId === updatedNewLayer.layerId);
 
-            // console.log('newTime = ', newTime, '\t existProjectedLayerInTimeline = ', existProjectedLayerInTimeline)
 
             if (existProjectedLayerInTimeline && oldInRange && newInRange) {
                 // update old from new
