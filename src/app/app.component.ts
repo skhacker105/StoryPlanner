@@ -23,7 +23,6 @@ export class AppComponent {
   }
 
   saveLayer(updatedLayer: ILayer): void {
-    this.movieService.resetSelectedLayer();
     this.movieService.updateLayer(this.timelineService.currentTime.value, updatedLayer);
   }
 

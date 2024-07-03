@@ -45,7 +45,7 @@
     </app-popup-header>
     <div class="layer-list-container">
         <app-layer-properties
-        [time]="movieService.selectedLayerTime ? movieService.selectedLayerTime : timelineService.endTime.value"
+        [time]="movieService.selectedLayerTime || movieService.selectedLayerTime === 0 ? movieService.selectedLayerTime : timelineService.endTime.value"
         [endTime]="timelineService.endTime.value"
         [layer]="movieService.selectedLayer"
         [layerMember]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].member" 

@@ -1,15 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ILayer } from '../../interfaces/movie-layer';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Member } from '../../models/members';
 import { IMemberOption } from '../../interfaces/member';
+import { debounceTime, takeUntil } from 'rxjs';
+import { ComponentBase } from '../../base/component-base';
 
 @Component({
   selector: 'app-layer-properties',
   templateUrl: './layer-properties.component.html',
   styleUrl: './layer-properties.component.scss'
 })
-export class LayerPropertiesComponent implements OnInit {
+export class LayerPropertiesComponent extends ComponentBase implements OnInit, OnDestroy {
 
   @Input() time: number = 0;
   @Input() endTime: number = 0;
@@ -29,7 +31,9 @@ export class LayerPropertiesComponent implements OnInit {
     endTime: new FormControl<number>(1, [Validators.pattern(/^\d+$/)])
   });
 
-  constructor() {}
+  constructor() {
+    super();
+  }
 
   ngOnInit(): void {
     if (this.layer) {
@@ -38,10 +42,20 @@ export class LayerPropertiesComponent implements OnInit {
       this.propertyForm.controls.endTime.addValidators(Validators.min(this.time));
       this.propertyForm.controls.endTime.addValidators(Validators.max(this.endTime));
     }
+
+    this.propertyForm.valueChanges
+    .pipe(takeUntil(this.isComponentActive), debounceTime(500))
+    .subscribe({
+      next:val => this.submitForm()
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy();
   }
 
   submitForm() {
-    if (!this.layer) return;
+    if (!this.layer || !this.propertyForm.dirty) return;
 
     if (this.propertyForm.invalid) console.log('Invalid Form');
     else {

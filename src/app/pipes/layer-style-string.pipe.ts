@@ -30,7 +30,7 @@ export class LayerStyleStringPipe implements PipeTransform {
     if (layer.isFullScreen) {
       r += 'widht: 100%; height: 100%; ';
     } else {
-      if (layer.relativeWidth) r += `widht: ${layer.relativeWidth}%; `;
+      if (layer.relativeWidth) r += `width: ${layer.relativeWidth}%; `;
       if (layer.relativeHeight) r += `height: ${layer.relativeHeight}%; `;
     }
     return r;
@@ -38,7 +38,7 @@ export class LayerStyleStringPipe implements PipeTransform {
 
   getPositionStyles(layer: ILayer): string {
     let r='';
-    if (layer.relativeLeft) r += `left: ${layer.relativeWidth}%; `;
+    if (layer.relativeLeft) r += `left: ${layer.relativeLeft}%; `;
     if (layer.relativeTop) r += `top: ${layer.relativeTop}%; `;
     return r;
   }
