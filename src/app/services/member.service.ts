@@ -21,6 +21,7 @@ export class MemberService extends ServiceBase implements OnDestroy {
   };
   members = new BehaviorSubject<Member[]>([]);
 
+  public selectedMember?: Member;
   memberStorageUpdated = new Subject<IMemberStorage>();
 
   constructor(private utilService: UtilService) {
@@ -157,5 +158,13 @@ export class MemberService extends ServiceBase implements OnDestroy {
 
     member.removeOption(optionId);
     this.members.next(members);
+  }
+
+  resetSelectedRecord(): void {
+      this.selectedMember = undefined;
+  }
+
+  selectRecord(record: Member): void {
+      this.selectedMember = record;
   }
 }

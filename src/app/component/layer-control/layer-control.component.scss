@@ -32,23 +32,4 @@
             transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
         }
     }
-
-    .layer-option {
-        position: fixed;
-        border-left: solid 1px black;
-        background: $secondary-background;
-        height: calc(100% - $timeline-height);
-        width: $controller-width;
-        right: $controller-width;
-        z-index: 100;
-        top: 0px;
-        display: flex;
-        flex-direction: column;
-
-        .layer-list-container {
-            flex: 1 auto;
-            max-height: calc(100% - 64px);
-            overflow-y: auto;
-        }
-    }
 }

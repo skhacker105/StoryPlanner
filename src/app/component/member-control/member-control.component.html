@@ -25,15 +25,4 @@
             </app-member-display>
         }
     </div>
-
-    <div class="member-options" *ngIf="selectedMember">
-        <app-popup-header [title]="selectedMember.name" (onCloseTrigger)="resetSelectedRecord()">
-        </app-popup-header>
-        <div class="option-list-container">
-            @for (option of selectedMember.options; track option) {
-                <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(selectedMember, option)">
-                </app-member-option-display>
-            }
-        </div>
-    </div>
 </div>

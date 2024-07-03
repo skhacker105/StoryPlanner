@@ -1,5 +1,5 @@
 
-<app-player [openSecondLayer]="movieService.selectedLayer ? true : false">
+<app-player [openSecondLayer]="movieService.selectedLayer || memberService.selectedMember ? true : false">
   <app-time-line timeLine></app-time-line>
 
   <app-canvas canvas></app-canvas>
@@ -50,6 +50,17 @@
         (onCancel)="movieService.resetSelectedLayer()"
         (onSave)="saveLayer($event)">
         </app-layer-properties>
+    </div>
+  </ng-container>
+
+  <ng-container control2 *ngIf="memberService.selectedMember">
+    <app-popup-header [title]="memberService.selectedMember.name" (onCloseTrigger)="memberService.resetSelectedRecord()">
+    </app-popup-header>
+    <div class="option-list-container">
+        @for (option of memberService.selectedMember.options; track option) {
+            <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(memberService.selectedMember, option)">
+            </app-member-option-display>
+        }
     </div>
   </ng-container>
 </app-player>

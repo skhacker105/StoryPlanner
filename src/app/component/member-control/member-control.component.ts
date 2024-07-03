@@ -28,7 +28,7 @@ export class MemberControlComponent extends ComponentBase implements OnDestroy {
   }
 
   compareSelectedMembers(member: IMember): boolean {
-    return member.memberId === this.selectedMember?.['memberId'];
+    return member.memberId === this.memberService.selectedMember?.['memberId'];
   }
 
   loadAddMemberPopup(): void {
@@ -81,18 +81,14 @@ export class MemberControlComponent extends ComponentBase implements OnDestroy {
 
   handleDeleteMember(member: Member): void {
     this.memberService.removeMember(member.memberId);
-    if (this.selectedMember?.memberId === member.memberId) this.selectedMember = undefined;
+    if (this.memberService.selectedMember?.memberId === member.memberId) this.memberService.selectedMember = undefined;
   }
 
   handleMemberClick(member: Member): void {
     if (!this.compareSelectedMembers(member)) {
-      this.selectRecord(member)
+      this.memberService.selectRecord(member)
     } else {
-      this.resetSelectedRecord();
+      this.memberService.resetSelectedRecord();
     }
-  }
-
-  addOptionToMovieTimeLine(member: Member, option: IMemberOption) {
-    this.movieService.addMemberOptionToTime(this.timeLineService.currentTime.value, member.memberId, option.optionId);
   }
 }

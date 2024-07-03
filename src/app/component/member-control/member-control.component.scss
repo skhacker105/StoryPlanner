@@ -14,23 +14,4 @@
     .layers {
         flex: 1 auto;
     }
-
-    .member-options {
-        position: fixed;
-        border-left: solid 1px black;
-        background: $secondary-background;
-        height: calc(100% - $timeline-height);
-        width: $controller-width;
-        right: $controller-width;
-        z-index: 100;
-        top: 0px;
-        display: flex;
-        flex-direction: column;
-
-        .option-list-container {
-            flex: 1 auto;
-            max-height: calc(100% - 64px);
-            overflow-y: auto;
-        }
-    }
 }
