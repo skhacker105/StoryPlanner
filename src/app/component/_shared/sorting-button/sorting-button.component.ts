@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SortType } from '../../types/sort.type';
+import { SortType } from '../../../types/sort.type';
 
 @Component({
   selector: 'app-sorting-button',

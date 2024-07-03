@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ILayer } from '../../interfaces/movie-layer';
+import { ILayer } from '../../../interfaces/movie-layer';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Member } from '../../models/members';
-import { IMemberOption } from '../../interfaces/member';
+import { Member } from '../../../models/members';
+import { IMemberOption } from '../../../interfaces/member';
 import { debounceTime, takeUntil } from 'rxjs';
-import { ComponentBase } from '../../base/component-base';
+import { ComponentBase } from '../../../base/component-base';
 
 @Component({
   selector: 'app-layer-properties',

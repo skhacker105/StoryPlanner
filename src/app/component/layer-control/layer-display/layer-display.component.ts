@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ILayer } from '../../interfaces/movie-layer';
-import { Member } from '../../models/members';
-import { IMemberOption } from '../../interfaces/member';
-import { ComponentBase } from '../../base/component-base';
+import { ILayer } from '../../../interfaces/movie-layer';
+import { Member } from '../../../models/members';
+import { IMemberOption } from '../../../interfaces/member';
+import { ComponentBase } from '../../../base/component-base';
 
 @Component({
   selector: 'app-layer-display',

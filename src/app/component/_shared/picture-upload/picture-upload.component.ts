@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ImageControl } from '../../types/picture.type';
+import { ImageControl } from '../../../types/picture.type';
 
 @Component({
   selector: 'app-picture-upload',

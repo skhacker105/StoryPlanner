@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IMemberOption } from '../../interfaces/member';
+import { IMemberOption } from '../../../interfaces/member';
 
 @Component({
   selector: 'app-member-option-display',

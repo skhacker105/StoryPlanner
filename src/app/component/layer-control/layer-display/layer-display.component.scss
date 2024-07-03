@@ -1,6 +1,6 @@
-@import '../../styles/style-constants.scss';
+@import '../../../styles/style-constants.scss';
 
-.member-display-container {
+.layer-display-container {
     width: 100%;
     display: flex;
     font-size: $tab-heading-font-size;
@@ -15,14 +15,13 @@
         cursor: pointer;
     }
 
-    .member-name {
+    .layer-option-name {
         flex: 1 auto;
         margin: auto;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: pointer;
-        padding-left: 3px;
         padding-left: 5px;
     }
 
@@ -38,5 +37,21 @@
         background: $primary-selected;
         border-color: $primary-border-color;
         border-bottom: dashed 1px $primary-border-color;
+    }
+
+    &.isProjected {
+        background-color: #d6d6d6;
+
+        .layer-option-name {
+            color: gray;
+        }
+
+        .image-display {
+            opacity: 0.5;
+        }
+
+        &:hover {
+            background: #cec9c9;
+        }
     }
 }

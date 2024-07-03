@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ImageControl } from '../../types/picture.type';
+import { ImageControl } from '../../../types/picture.type';
 
 @Component({
   selector: 'app-image-icon',

@@ -1,9 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { IMember, IMemberOption } from '../../interfaces/member';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ImageControl } from '../../types/picture.type';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { IMember, IMemberOption } from '../../../interfaces/member';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ImageControl } from '../../../types/picture.type';
+import { ConfirmationDialogComponent } from '../../_shared/confirmation-dialog/confirmation-dialog.component';
 import { take } from 'rxjs';
 
 @Component({

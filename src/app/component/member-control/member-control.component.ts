@@ -1,10 +1,10 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AddEditMemberComponent } from '../add-edit-member/add-edit-member.component';
+import { AddEditMemberComponent } from './add-edit-member/add-edit-member.component';
 import { IMember, IMemberOption } from '../../interfaces/member';
 import { take } from 'rxjs';
 import { MemberService } from '../../services/member.service';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../_shared/confirmation-dialog/confirmation-dialog.component';
 import { Member } from '../../models/members';
 import { ComponentBase } from '../../base/component-base';
 import { MovieService } from '../../services/movie.service';
