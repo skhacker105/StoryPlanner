@@ -25,6 +25,7 @@
 
             &.level-2 {
                 position: absolute;
+                height: calc(100% - $timeline-height - 30px);
                 top: 0px;
                 z-index: 1000000;
                 right:  $controller-width;

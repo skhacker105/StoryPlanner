@@ -19,6 +19,7 @@ export class LayerStyleStringPipe implements PipeTransform {
     styleString += this.getPositionStyles(layer);
     styleString += this.getZIndex(layer);
     styleString += this.getOpacity(layer);
+    styleString += this.getTransform(layer);
 
     return styleString;
   }
@@ -49,8 +50,28 @@ export class LayerStyleStringPipe implements PipeTransform {
 
   getOpacity(layer: ILayer):string {
     let r='';
-    if (layer.opacity) r += `opacity: ${layer.opacity}; `;
+    if (layer.opacity || layer.opacity === 0) r += `opacity: ${layer.opacity}; `;
     return r;
   }
 
+  getTransform(layer: ILayer): string {
+    let r = '';
+    r += this.generateTransformFunction(layer, 'rotateX', 'deg')
+    + this.generateTransformFunction(layer, 'rotateY', 'deg')
+    + this.generateTransformFunction(layer, 'rotateZ', 'deg')
+    + this.generateTransformFunction(layer, 'translateX', 'px')
+    + this.generateTransformFunction(layer, 'translateY', 'px')
+    + this.generateTransformFunction(layer, 'translateZ', 'px')
+    + this.generateTransformFunction(layer, 'scaleX', '')
+    + this.generateTransformFunction(layer, 'scaleY', '')
+    + this.generateTransformFunction(layer, 'skewX', 'deg')
+    + this.generateTransformFunction(layer, 'skewY', 'deg')
+    return r ? `transform: ${r}; ` : '';
+  }
+
+  generateTransformFunction(layer: any, key: string, unit: string) {
+    if (layer[key]) return `${key}(${layer[key]}${unit}) `;
+    return '';
+  }
+ 
 }

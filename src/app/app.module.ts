@@ -39,6 +39,7 @@ import { CanvasComponent } from './component/canvas/canvas.component';
 import { LayerStyleStringPipe } from './pipes/layer-style-string.pipe';
 import { StylesComponent } from './component/layer-control/layer-properties/styles/styles.component';
 import { AnimationsComponent } from './component/layer-control/layer-properties/animations/animations.component';
+import { FormFieldComponent } from './component/_shared/form-field/form-field.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { AnimationsComponent } from './component/layer-control/layer-properties/
     CanvasComponent,
     LayerStyleStringPipe,
     StylesComponent,
-    AnimationsComponent
+    AnimationsComponent,
+    FormFieldComponent
   ],
   imports: [
     BrowserModule,

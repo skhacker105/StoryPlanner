@@ -5,7 +5,9 @@
   <app-canvas canvas></app-canvas>
 
   <ng-container control>
-    <mat-tab-group animationDuration="500ms" class="control-tab-group" (selectedTabChange)="handleTabChange($event)">
+    <mat-tab-group [selectedIndex]="selectedIndex"
+    animationDuration="500ms" class="control-tab-group"
+    (selectedTabChange)="handleTabChange($event)">
 
       <!-- My Book tab -->
       <mat-tab>
@@ -43,7 +45,7 @@
   <ng-container control2 *ngIf="movieService.selectedLayer">
     <app-popup-header [title]="'Layer ' + movieService.selectedLayer.stackPosition" (onCloseTrigger)="movieService.resetSelectedLayer()">
     </app-popup-header>
-    <div class="layer-list-container">
+    <div class="list-container">
         <app-layer-properties
         [time]="movieService.selectedLayerTime || movieService.selectedLayerTime === 0 ? movieService.selectedLayerTime : timelineService.endTime.value"
         [endTime]="timelineService.endTime.value"
@@ -59,7 +61,7 @@
   <ng-container control2 *ngIf="memberService.selectedMember">
     <app-popup-header [title]="memberService.selectedMember.name" (onCloseTrigger)="memberService.resetSelectedRecord()">
     </app-popup-header>
-    <div class="option-list-container">
+    <div class="list-container">
         @for (option of memberService.selectedMember.options; track option) {
             <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(memberService.selectedMember, option)">
             </app-member-option-display>

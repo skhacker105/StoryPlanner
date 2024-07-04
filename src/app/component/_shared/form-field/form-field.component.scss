@@ -1,0 +1,27 @@
+@import '../../../styles/style-constants.scss';
+
+.form-field-container {
+    width: 100%;
+    font-size: $form-control-label;
+    display: flex;
+    flex-direction: column;
+
+    .label {
+        color: gray;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: 10px;
+        padding-top: 7px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 3px;
+        line-height: 10px;
+
+        ::ng-deep input {
+            max-width: 90%;
+        }
+    }
+}

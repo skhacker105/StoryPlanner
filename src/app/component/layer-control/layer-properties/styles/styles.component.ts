@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ILayer } from '../../../../interfaces/movie-layer';
+import { ILayer, ILayerProperties } from '../../../../interfaces/movie-layer';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Member } from '../../../../models/members';
 import { IMemberOption } from '../../../../interfaces/member';
@@ -18,16 +18,42 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
   @Input() layerMember?: Member;
   @Input() layerOption?: IMemberOption;
   @Output() onCancel = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<ILayer>();
+  @Output() onSave = new EventEmitter<ILayerProperties>();
 
   propertyForm = new FormGroup({
-    isInView: new FormControl(true),
-    isFullScreen: new FormControl(false),
+
+    // Generic
+    isInView: new FormControl<boolean>(true),
+    isFullScreen: new FormControl<boolean>(false),
+    opacity: new FormControl<number>(1.0, Validators.required),
+    endTime: new FormControl<number>(1, [Validators.pattern(/^\d+$/)]),
+
+    // Dimension
     relativeWidth: new FormControl<number>(10, [Validators.min(0), Validators.pattern(/^\d+$/)]),
     relativeHeight: new FormControl<number>(10, [Validators.min(0), Validators.pattern(/^\d+$/)]),
+
+    // Position
     relativeLeft: new FormControl<number>(0, [Validators.pattern(/^\d+$/)]),
     relativeTop: new FormControl<number>(0, [Validators.pattern(/^\d+$/)]),
-    endTime: new FormControl<number>(1, [Validators.pattern(/^\d+$/)])
+
+    // Rotate
+    rotateX: new FormControl<number>(0, Validators.required),
+    rotateY: new FormControl<number>(0, Validators.required),
+    rotateZ: new FormControl<number>(0, Validators.required),
+
+    // Translate
+    translateX: new FormControl<number>(0, Validators.required),
+    translateY: new FormControl<number>(0, Validators.required),
+    translateZ: new FormControl<number>(0, Validators.required),
+
+    // Scale
+    scaleX: new FormControl<number>(0, Validators.required),
+    scaleY: new FormControl<number>(0, Validators.required),
+
+    // Skew
+    skewX: new FormControl<number>(0, Validators.required),
+    skewY: new FormControl<number>(0, Validators.required),
+
   });
 
   constructor() {
@@ -58,10 +84,8 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
 
     if (this.propertyForm.invalid) console.log('Invalid Form');
     else {
-      const formValue = this.propertyForm.value;
-      const updatedLayer: ILayer = Object.assign({}, this.layer, formValue);
+      this.onSave.emit(this.propertyForm.value as ILayerProperties);
       this.propertyForm.markAsPristine();
-      this.onSave.emit(updatedLayer);
     }
   }
 }

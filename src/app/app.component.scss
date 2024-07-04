@@ -15,3 +15,7 @@
         font-size: $tab-sub-heading-font-size;
     }
 }
+
+.list-container {
+    height: calc(100% - 64px);
+}

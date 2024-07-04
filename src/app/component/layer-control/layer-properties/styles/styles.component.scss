@@ -11,22 +11,19 @@
         display: flex;
         flex-direction: column;
 
-        .fields {
+        .fields-container {
             flex: 1 auto;
 
             .property-header-box {
-                font-size: $tab-heading-font-size;
-                padding-top: 7px;
-                text-decoration: underline;
-                font-weight: bold;
+                font-size: $form-control-header;
+                padding-top: 15px;
                 letter-spacing: 1px;
                 color: #0207e9;
+                line-height: 10px;
             }
     
             .property-box {
                 display: flex;
-                padding-top: 5px;
-                padding-bottom: 5px;
     
                 .property-box-half {
                     width: 50%;
@@ -37,7 +34,28 @@
                 }
 
                 .property-mini-half {
-                    width: 120px;
+                    width: 50px;
+                }
+            }
+
+            .property-group-box {
+                display: flex;
+
+                .group-property {
+                    display: flex;
+                    flex-direction: column;
+
+                    &.group-by-2 {
+                        width: 50%;
+                    }
+    
+                    &.group-by-3 {
+                        width: 30%;
+                    }
+
+                    .property-box {
+                        flex-direction: column;
+                    }
                 }
             }
         }

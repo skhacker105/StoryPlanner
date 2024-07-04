@@ -2,72 +2,232 @@
 
     <form [formGroup]="propertyForm" (ngSubmit)="submitForm()">
 
-        <div class="fields">
+        <div class="fields-container">
 
             <!-- In View / Fullscreen -->
             <div class="property-box">
-                <mat-checkbox class="property-box-half" formControlName="isInView">In View</mat-checkbox>
-                <mat-checkbox class="property-box-half" formControlName="isFullScreen">Is Fullscreen</mat-checkbox>
-            </div>
 
+                <app-form-field label="In View" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input type="checkbox" formControlName="isInView">
+                    </ng-container>
+                </app-form-field>
 
-            <!-- Dimension -->
-            <div class="property-header-box">
-                Dimension
-            </div>
-            <div class="property-box">
-
-                <mat-form-field class="property-box-half">
-                    <mat-label>Relative Width</mat-label>
-                    <input matInput type="number" formControlName="relativeWidth">
-                </mat-form-field>
-
-                <mat-form-field class="property-box-half">
-                    <mat-label>Relative Height</mat-label>
-                    <input matInput type="number" formControlName="relativeHeight">
-                </mat-form-field>
+                <app-form-field label="Is Fullscreen" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input type="checkbox" formControlName="isFullScreen">
+                    </ng-container>
+                </app-form-field>
 
             </div>
 
+            <!-- Dimension, Position -->
+            <div class="property-group-box">
 
-            <!-- Position -->
-            <div class="property-header-box">
-                Position
-            </div>
-            <div class="property-box">
+                <!-- Dimension -->
+                 <div class="group-property group-by-2">
+                    <div class="property-header-box">
+                        Dimension
+                    </div>
+                    <div class="property-box">
 
-                <mat-form-field class="property-box-half">
-                    <mat-label>Relative Left</mat-label>
-                    <input matInput type="number" formControlName="relativeLeft">
-                </mat-form-field>
+                        <app-form-field label="Relative Width" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="relativeWidth">
+                            </ng-container>
+                        </app-form-field>
 
-                <mat-form-field class="property-box-half">
-                    <mat-label>Relative Top</mat-label>
-                    <input matInput type="number" formControlName="relativeTop">
-                </mat-form-field>
+                        <app-form-field label="Relative Height" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="relativeHeight">
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
+
+
+                <!-- Position -->
+                 <div class="group-property group-by-2">
+                    <div class="property-header-box">
+                        Position
+                    </div>
+                    <div class="property-box">
+
+                        <app-form-field label="Relative Left" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="relativeLeft">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Relative Top" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="relativeTop">
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
 
             </div>
 
             <!-- Play Length -->
             <div class="property-header-box">
-                Play End Time ({{ propertyForm.controls['endTime'].value }})
+                Play End Time
             </div>
             <div class="property-box">
                 <mat-slider
-                    class="property-item-full"
+                    class="spacer"
                     [max]="endTime"
                     [min]="time"
                     [step]="1"
                     [discrete]="true">
                 <input matSliderThumb [formControl]="propertyForm.controls['endTime']" [value]="propertyForm.controls['endTime'].value" #slider>
                 </mat-slider>
-                
-                <mat-form-field class="property-mini-half">
-                    <input matInput type="number" formControlName="endTime" [value]="propertyForm.controls['endTime'].value">
-                </mat-form-field>
+
+                <app-form-field label=" ">
+                    <ng-container formFieldControl>
+                        <input type="number" class="property-mini-half" formControlName="endTime" [value]="propertyForm.controls['endTime'].value">
+                    </ng-container>
+                </app-form-field>
+            </div>
+
+            <!-- Translate, Rotate -> X,Y,Z -->
+            <div class="property-group-box">
+
+                <!-- Translate X,Y,Z -->
+                 <div class="group-property group-by-2">
+                    <div class="property-header-box">
+                        Translate
+                    </div>
+                    <div class="property-box">
+
+                        <app-form-field label="X Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="translateX">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Y Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="translateY">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Z Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="translateZ">
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
+
+
+                <!-- Rotate X,Y,Z -->
+                 <div class="group-property group-by-2">
+                    <div class="property-header-box">
+                        Rotate
+                    </div>
+                    <div class="property-box">
+
+                        <app-form-field label="X Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="rotateX">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Y Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="rotateY">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Z Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="rotateZ">
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Opacity -->
+            <div class="property-header-box">
+                Opacity
+            </div>
+            <div class="property-box">
+                <mat-slider
+                    class="spacer"
+                    [max]="1"
+                    [min]="0"
+                    [step]="0.1"
+                    [discrete]="true">
+                <input matSliderThumb [formControl]="propertyForm.controls['opacity']" [value]="propertyForm.controls['opacity'].value" #slider>
+                </mat-slider>
+
+                <app-form-field label=" ">
+                    <ng-container formFieldControl>
+                        <input type="number" class="property-mini-half" formControlName="opacity" [value]="propertyForm.controls['opacity'].value">
+                    </ng-container>
+                </app-form-field>
+            </div>
+
+            <!-- Skew, Scale -->
+            <div class="property-group-box">
+
+                <!-- Skew -->
+                 <div class="group-property group-by-2">
+                    <div class="property-header-box">
+                        Skew
+                    </div>
+                    <div class="property-box">
+
+                        <app-form-field label="X Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="skewX">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Y Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="skewY">
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
+
+
+                <!-- Scale X,Y,Z -->
+                 <div class="group-property group-by-2">
+                    <div class="property-header-box">
+                        Scale
+                    </div>
+                    <div class="property-box">
+
+                        <app-form-field label="X Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="scaleX">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Y Axis" class="property-box-half">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="scaleY">
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>
+
+        <br>
 
         <div class="action">
             <button mat-raised-button type="button" (click)="onCancel.emit()">

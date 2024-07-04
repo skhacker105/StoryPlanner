@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ComponentBase } from '../../../base/component-base';
-import { ILayer } from '../../../interfaces/movie-layer';
+import { ILayer, ILayerProperties } from '../../../interfaces/movie-layer';
 import { Member } from '../../../models/members';
 import { IMemberOption } from '../../../interfaces/member';
 
@@ -28,5 +28,10 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   
   ngOnDestroy(): void {
     this.onDestroy();
+  }
+
+  handleOnSave(updatedProperties: ILayerProperties) {
+    const updatedLayer: ILayer = Object.assign({}, this.layer, updatedProperties);
+    this.onSave.emit(updatedLayer);
   }
 }

@@ -7,7 +7,8 @@
             [endTime]="endTime" [layer]="layer"
             [layerMember]="layerMember"
             [layerOption]="layerOption"
-            (onCancel)="onCancel.emit()" (onSave)="onSave.emit($event)">
+            (onCancel)="onCancel.emit()"
+            (onSave)="handleOnSave($event)">
         </app-styles>
     </mat-tab>
 
