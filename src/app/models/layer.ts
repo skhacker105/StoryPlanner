@@ -40,6 +40,9 @@ export function createLayerWithDefaultProperties(layerId: string, time: number, 
 
         // Skew
         skewX: 0,
-        skewY: 0
+        skewY: 0,
+
+        // Animation
+        animation: undefined
       } as ILayer
 }

@@ -7,13 +7,19 @@
             <!-- In View / Fullscreen -->
             <div class="property-box">
 
-                <app-form-field label="In View" class="property-box-half">
+                <app-form-field label="Auto Save" class="property-box-by-3">
+                    <ng-container formFieldControl>
+                        <input [ngModelOptions]="{standalone: true}" type="checkbox" [(ngModel)]="autoSave">
+                    </ng-container>
+                </app-form-field>
+
+                <app-form-field label="In View" class="property-box-by-3">
                     <ng-container formFieldControl>
                         <input type="checkbox" formControlName="isInView">
                     </ng-container>
                 </app-form-field>
 
-                <app-form-field label="Is Fullscreen" class="property-box-half">
+                <app-form-field label="Fullscreen" class="property-box-by-3">
                     <ng-container formFieldControl>
                         <input type="checkbox" formControlName="isFullScreen">
                     </ng-container>
@@ -31,13 +37,13 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="Relative Width" class="property-box-half">
+                        <app-form-field label="Relative Width">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="relativeWidth">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Relative Height" class="property-box-half">
+                        <app-form-field label="Relative Height">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="relativeHeight">
                             </ng-container>
@@ -54,13 +60,13 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="Relative Left" class="property-box-half">
+                        <app-form-field label="Relative Left">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="relativeLeft">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Relative Top" class="property-box-half">
+                        <app-form-field label="Relative Top">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="relativeTop">
                             </ng-container>
@@ -102,19 +108,19 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="X Axis" class="property-box-half">
+                        <app-form-field label="X Axis">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="translateX">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Y Axis" class="property-box-half">
+                        <app-form-field label="Y Axis">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="translateY">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Z Axis" class="property-box-half">
+                        <app-form-field label="Z Axis">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="translateZ">
                             </ng-container>
@@ -131,19 +137,19 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="X Axis" class="property-box-half">
+                        <app-form-field label="X Axis">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="rotateX">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Y Axis" class="property-box-half">
+                        <app-form-field label="Y Axis">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="rotateY">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Z Axis" class="property-box-half">
+                        <app-form-field label="Z Axis">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="rotateZ">
                             </ng-container>
@@ -178,28 +184,6 @@
             <!-- Skew, Scale -->
             <div class="property-group-box">
 
-                <!-- Skew -->
-                 <div class="group-property group-by-2">
-                    <div class="property-header-box">
-                        Skew
-                    </div>
-                    <div class="property-box">
-
-                        <app-form-field label="X Axis" class="property-box-half">
-                            <ng-container formFieldControl>
-                                <input type="number" formControlName="skewX">
-                            </ng-container>
-                        </app-form-field>
-
-                        <app-form-field label="Y Axis" class="property-box-half">
-                            <ng-container formFieldControl>
-                                <input type="number" formControlName="skewY">
-                            </ng-container>
-                        </app-form-field>
-
-                    </div>
-                </div>
-
 
                 <!-- Scale X,Y,Z -->
                  <div class="group-property group-by-2">
@@ -208,15 +192,37 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="X Axis" class="property-box-half">
+                        <app-form-field label="X Axis">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="scaleX">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Y Axis" class="property-box-half">
+                        <app-form-field label="Y Axis">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="scaleY">
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
+
+                <!-- Skew -->
+                 <div class="group-property group-by-2">
+                    <div class="property-header-box">
+                        Skew
+                    </div>
+                    <div class="property-box">
+
+                        <app-form-field label="X Axis">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="skewX">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Y Axis">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="skewY">
                             </ng-container>
                         </app-form-field>
 

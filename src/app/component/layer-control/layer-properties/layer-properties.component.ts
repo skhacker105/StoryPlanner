@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ComponentBase } from '../../../base/component-base';
-import { ILayer, ILayerProperties } from '../../../interfaces/movie-layer';
+import { ILayer } from '../../../interfaces/movie-layer';
 import { Member } from '../../../models/members';
 import { IMemberOption } from '../../../interfaces/member';
+import { ILayerProperties } from '../../../interfaces/movie-properties';
 
 @Component({
   selector: 'app-layer-properties',
@@ -30,7 +31,7 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
     this.onDestroy();
   }
 
-  handleOnSave(updatedProperties: ILayerProperties) {
+  handleOnSave(updatedProperties: ILayerProperties): void {
     const updatedLayer: ILayer = Object.assign({}, this.layer, updatedProperties);
     this.onSave.emit(updatedLayer);
   }

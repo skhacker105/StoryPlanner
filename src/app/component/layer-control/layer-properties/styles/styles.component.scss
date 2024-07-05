@@ -25,6 +25,10 @@
             .property-box {
                 display: flex;
     
+                .property-box-by-3 {
+                    width: 33%;
+                }
+    
                 .property-box-half {
                     width: 50%;
                 }

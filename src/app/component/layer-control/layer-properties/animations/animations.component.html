@@ -1,1 +1,140 @@
-<p>animations works!</p>
+<div class="animation-container">
+
+    <form [formGroup]="animationForm" (ngSubmit)="submitForm()">
+
+        <div class="fields-container">
+
+            <!-- Auto Save, Include Animation -->
+            <div class="property-box">
+
+                <app-form-field label="Include Animation" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input [ngModelOptions]="{standalone: true}" type="checkbox" [(ngModel)]="includeAnimation" (change)="handleIncludeAnimation()">
+                    </ng-container>
+                </app-form-field>
+
+                <app-form-field label="Auto Save" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input [ngModelOptions]="{standalone: true}" type="checkbox" [(ngModel)]="autoSave"
+                        [disabled]="animationForm.disabled">
+                    </ng-container>
+                </app-form-field>
+
+            </div>
+
+            <!-- Animation Properties -->
+            <div class="property-header-box">
+                Settings
+            </div>
+            <div class="property-group-box">
+
+                <!--  -->
+                 <div class="group-property group-by-2">
+                    <div class="property-box">
+
+                        <app-form-field label="Duration">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="duration">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Delay">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="delay">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Direction">
+                            <ng-container formFieldControl>
+                                <select formControlName="direction">
+                                    @for(cssDirection of CssDirections; track cssDirection;) {
+                                        <option>
+                                            {{ cssDirection }}
+                                        </option>
+                                    }
+                                </select>
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
+
+                <!--  -->
+                 <div class="group-property group-by-2">
+                    <div class="property-box">
+
+                        <app-form-field label="Fill Mode">
+                            <ng-container formFieldControl>
+                                <select formControlName="fillMode">
+                                    @for(cssFillMode of CssFillModes; track cssFillMode;) {
+                                        <option>
+                                            {{ cssFillMode }}
+                                        </option>
+                                    }
+                                </select>
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Iterations">
+                            <ng-container formFieldControl>
+                                <input type="number" formControlName="iterationCount">
+                            </ng-container>
+                        </app-form-field>
+
+                        <app-form-field label="Timing Function">
+                            <ng-container formFieldControl>
+                                <select formControlName="timingFunction">
+                                    @for(cssTimingFunction of CssTimingFunctions; track cssTimingFunction;) {
+                                        <option>
+                                            {{ cssTimingFunction }}
+                                        </option>
+                                    }
+                                </select>
+                            </ng-container>
+                        </app-form-field>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Animation Frame Types -->
+            <div class="property-header-box">
+                Key Frames
+            </div>
+            <div class="property-box">
+
+                <app-form-field label="From-To animation" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input [ngModelOptions]="{standalone: true}" type="radio" value="fromTo"
+                        [disabled]="animationForm.disabled"
+                        name="animationFrameType" [(ngModel)]="animationFrameType">
+                    </ng-container>
+                </app-form-field>
+
+                <app-form-field label="By Percent" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input [ngModelOptions]="{standalone: true}" type="radio" value="percent"
+                        [disabled]="animationForm.disabled"
+                        name="animationFrameType" [(ngModel)]="animationFrameType">
+                    </ng-container>
+                </app-form-field>
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <div class="action">
+            <button mat-raised-button type="button" (click)="onCancel.emit()">
+                Cancel
+            </button>
+            &nbsp;
+            <button mat-raised-button color="primary" [disabled]="!animationForm.dirty || !animationForm.valid">
+                Save
+            </button>
+        </div>
+
+    </form>
+</div>

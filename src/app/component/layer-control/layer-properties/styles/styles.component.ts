@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ILayer, ILayerProperties } from '../../../../interfaces/movie-layer';
+import { ILayer, } from '../../../../interfaces/movie-layer';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Member } from '../../../../models/members';
 import { IMemberOption } from '../../../../interfaces/member';
 import { debounceTime, takeUntil } from 'rxjs';
 import { ComponentBase } from '../../../../base/component-base';
+import { ILayerProperties } from '../../../../interfaces/movie-properties';
 
 @Component({
   selector: 'app-styles',
@@ -20,12 +21,14 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<ILayerProperties>();
 
+  autoSave = true;
+
   propertyForm = new FormGroup({
 
     // Generic
     isInView: new FormControl<boolean>(true),
     isFullScreen: new FormControl<boolean>(false),
-    opacity: new FormControl<number>(1.0, Validators.required),
+    opacity: new FormControl<number>(1.0, [Validators.required, Validators.min(0), Validators.max(1), Validators.pattern(/^\d*\.?\d*$/)]),
     endTime: new FormControl<number>(1, [Validators.pattern(/^\d+$/)]),
 
     // Dimension
@@ -37,22 +40,22 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
     relativeTop: new FormControl<number>(0, [Validators.pattern(/^\d+$/)]),
 
     // Rotate
-    rotateX: new FormControl<number>(0, Validators.required),
-    rotateY: new FormControl<number>(0, Validators.required),
-    rotateZ: new FormControl<number>(0, Validators.required),
+    rotateX: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
+    rotateY: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
+    rotateZ: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
 
     // Translate
-    translateX: new FormControl<number>(0, Validators.required),
-    translateY: new FormControl<number>(0, Validators.required),
-    translateZ: new FormControl<number>(0, Validators.required),
+    translateX: new FormControl<number>(0, [Validators.required, Validators.pattern(/^\d+$/)]),
+    translateY: new FormControl<number>(0, [Validators.required, Validators.pattern(/^\d+$/)]),
+    translateZ: new FormControl<number>(0, [Validators.required, Validators.pattern(/^\d+$/)]),
 
     // Scale
-    scaleX: new FormControl<number>(0, Validators.required),
-    scaleY: new FormControl<number>(0, Validators.required),
+    scaleX: new FormControl<number>(0, [Validators.required, Validators.pattern(/^\d+$/)]),
+    scaleY: new FormControl<number>(0, [Validators.required, Validators.pattern(/^\d+$/)]),
 
     // Skew
-    skewX: new FormControl<number>(0, Validators.required),
-    skewY: new FormControl<number>(0, Validators.required),
+    skewX: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
+    skewY: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
 
   });
 
@@ -69,20 +72,20 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
     }
 
     this.propertyForm.valueChanges
-    .pipe(takeUntil(this.isComponentActive), debounceTime(500))
-    .subscribe({
-      next:val => this.submitForm()
-    })
+      .pipe(takeUntil(this.isComponentActive), debounceTime(500))
+      .subscribe({
+        next: val => this.autoSave ? this.submitForm() : null
+      })
   }
 
   ngOnDestroy(): void {
     this.onDestroy();
   }
 
-  submitForm() {
+  submitForm(): void {
     if (!this.layer || !this.propertyForm.dirty) return;
 
-    if (this.propertyForm.invalid) console.log('Invalid Form');
+    if (this.propertyForm.invalid) console.log('Invalid Form ');
     else {
       this.onSave.emit(this.propertyForm.value as ILayerProperties);
       this.propertyForm.markAsPristine();

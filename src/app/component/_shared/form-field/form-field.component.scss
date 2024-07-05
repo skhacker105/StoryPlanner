@@ -17,11 +17,17 @@
 
     .form-control {
         width: 100%;
-        padding: 3px;
+        padding-bottom: 3px;
         line-height: 10px;
+        text-align: left;
 
         ::ng-deep input {
             max-width: 90%;
+        }
+
+        ::ng-deep select {
+            max-width: 90%;
+            width: 90%;
         }
     }
 }

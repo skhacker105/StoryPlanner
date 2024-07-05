@@ -23,6 +23,11 @@
             background: $primary-background;
             overflow: auto;
 
+            .control-header {
+                width: 100%;
+                height: 60px;
+            }
+
             &.level-2 {
                 position: absolute;
                 height: calc(100% - $timeline-height - 30px);

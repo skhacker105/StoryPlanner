@@ -7,6 +7,9 @@
         </div>
 
         <div class="control level-2" *ngIf="openSecondLayer" cdkDrag>
+            <div class="control-header" cdkDragHandle>
+                <ng-content select="[controlHeader]"></ng-content>
+            </div>
             <ng-content select="[control2]"></ng-content>
         </div>
 

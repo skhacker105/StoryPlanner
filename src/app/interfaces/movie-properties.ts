@@ -1,3 +1,17 @@
+export interface ILayerProperties extends
+ILayerDimension,
+ILayerPosition,
+ILayerPlayTime,
+ILayerGeneric,
+IRotate,
+ITranslate,
+IScale,
+ISkew {
+    stackPosition: number;
+    isInView: boolean;
+    isFullScreen: boolean;
+}
+
 export interface ILayerGeneric {
     opacity: number;
 }
