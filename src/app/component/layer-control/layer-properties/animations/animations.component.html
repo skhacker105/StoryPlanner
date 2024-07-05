@@ -7,13 +7,13 @@
             <!-- Auto Save, Include Animation -->
             <div class="property-box">
 
-                <app-form-field label="Include Animation" class="property-box-half">
+                <app-form-field label="Include Animation" class="non-form-control property-box-half">
                     <ng-container formFieldControl>
                         <input [ngModelOptions]="{standalone: true}" type="checkbox" [(ngModel)]="includeAnimation" (change)="handleIncludeAnimation()">
                     </ng-container>
                 </app-form-field>
 
-                <app-form-field label="Auto Save" class="property-box-half">
+                <app-form-field label="Auto Save" class="non-form-control property-box-half">
                     <ng-container formFieldControl>
                         <input [ngModelOptions]="{standalone: true}" type="checkbox" [(ngModel)]="autoSave"
                         [disabled]="animationForm.disabled">
