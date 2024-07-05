@@ -1,12 +1,12 @@
-<mat-tab-group animationDuration="500ms" class="control-tab-group">
+<mat-tab-group animationDuration="500ms" class="control-tab-group" *ngIf="layer">
 
     <!--  Styles-->
     <mat-tab label="Styles">
         <app-styles
             [time]="time"
-            [endTime]="endTime" [layer]="layer"
-            [layerMember]="layerMember"
-            [layerOption]="layerOption"
+            [properties]="layer.properties"
+            [isProjected]="layer.isProjected"
+            [endTime]="endTime"
             (onCancel)="onCancel.emit()"
             (onSave)="handleOnSave($event)">
         </app-styles>
@@ -16,9 +16,7 @@
     <mat-tab label="Animations">
         <app-animations
         [time]="time"
-        [endTime]="endTime" [layer]="layer"
-        [layerMember]="layerMember"
-        [layerOption]="layerOption"
+        [endTime]="endTime"
         (onCancel)="onCancel.emit()">
     </app-animations>
     </mat-tab>

@@ -11,6 +11,7 @@ import { IMemberBookDictionary, IMemberOptionDictionary } from '../interfaces/me
 import { Member } from '../models/members';
 import { IMemberOption } from '../interfaces/member';
 import { createLayerWithDefaultProperties } from '../models/layer';
+import { ILayerProperties } from '../interfaces/movie-properties';
 
 @Injectable({
   providedIn: 'root'
@@ -149,6 +150,13 @@ export class MovieService extends ServiceBase implements OnDestroy {
     if (!this.movie) return;
 
     this.movie.updateLayer(time, newLayer);
+    this.movieUpdated.next(this.movie);
+  }
+
+  updateProperties(time: number, layerId: string, newProperties: ILayerProperties): void {
+    if (!this.movie) return;
+
+    this.movie.updateProperties(time, layerId, newProperties);
     this.movieUpdated.next(this.movie);
   }
 

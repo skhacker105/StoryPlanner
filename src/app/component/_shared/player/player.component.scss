@@ -28,13 +28,22 @@
                 height: 60px;
             }
 
-            &.level-2 {
-                position: absolute;
-                height: calc(100% - $timeline-height - 30px);
+            &.level-2, &.level-3, &.level-4 {
+                position: fixed;
+                height: calc(100% - $timeline-height);
                 top: 0px;
                 z-index: 1000000;
-                right:  $controller-width;
                 background: white;
+            }
+
+            &.level-2 {
+                right:  $controller-width;
+            }
+            &.level-3 {
+                right:  $controller-width * 2;
+            }
+            &.level-4 {
+                right:  $controller-width * 3;
             }
         }
     }

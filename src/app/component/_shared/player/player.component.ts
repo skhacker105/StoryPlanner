@@ -6,5 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './player.component.scss'
 })
 export class PlayerComponent {
-  @Input() openSecondLayer = false;
+  @Input() layer2 = false;
+  @Input() layer3 = false;
+  @Input() layer4 = false;
 }

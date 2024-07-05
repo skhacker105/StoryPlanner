@@ -18,7 +18,7 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   @Input() layerMember?: Member;
   @Input() layerOption?: IMemberOption;
   @Output() onCancel = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<ILayer>();
+  @Output() onSave = new EventEmitter<ILayerProperties>();
   
   constructor() {
     super();
@@ -32,7 +32,6 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   }
 
   handleOnSave(updatedProperties: ILayerProperties): void {
-    const updatedLayer: ILayer = Object.assign({}, this.layer, updatedProperties);
-    this.onSave.emit(updatedLayer);
+    this.onSave.emit(updatedProperties);
   }
 }

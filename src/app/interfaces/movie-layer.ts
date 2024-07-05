@@ -1,7 +1,7 @@
 import { ILayerAnimation } from "./movie-animations";
 import { ILayerProperties } from "./movie-properties";
 
-export interface ILayer extends ILayerProperties {
+export interface ILayer {
 
     // :Fields
     layerId: string;
@@ -9,5 +9,6 @@ export interface ILayer extends ILayerProperties {
     memberId: string;
     memberOptionId: string;
     projectionStartTime: number;
+    properties: ILayerProperties
     animation?: ILayerAnimation;
 }

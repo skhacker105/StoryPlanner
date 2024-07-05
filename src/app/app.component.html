@@ -1,6 +1,10 @@
 
-<app-player [openSecondLayer]="movieService.selectedLayer || memberService.selectedMember ? true : false">
-  <app-time-line timeLine></app-time-line>
+<app-player
+  [layer2]="memberService.selectedMember ? true : false"
+  [layer3]="movieService.selectedLayer ? true : false">
+
+  <app-time-line timeLine>
+  </app-time-line>
 
   <app-canvas canvas></app-canvas>
 
@@ -42,36 +46,30 @@
     </mat-tab-group>
   </ng-container>
 
-  <ng-container controlHeader *ngIf="movieService.selectedLayer">
-    <app-popup-header controlHeader [title]="'Layer ' + movieService.selectedLayer.stackPosition" (onCloseTrigger)="movieService.resetSelectedLayer()">
-    </app-popup-header>
-  </ng-container>
-  <ng-container control2 *ngIf="movieService.selectedLayer">
-      <div class="list-container">
-          <app-layer-properties
-          [time]="movieService.selectedLayerTime || movieService.selectedLayerTime === 0 ? movieService.selectedLayerTime : timelineService.endTime.value"
-          [endTime]="timelineService.endTime.value"
-          [layer]="movieService.selectedLayer"
-          [layerMember]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].member" 
-          [layerOption]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].options[movieService.selectedLayer.memberOptionId]"
-          (onCancel)="movieService.resetSelectedLayer()"
-          (onSave)="saveLayer($event)">
-          </app-layer-properties>
-      </div>
 
-  </ng-container>
+  <app-popup-header controlHeader2 *ngIf="memberService.selectedMember"
+  [title]="memberService.selectedMember.name" (onCloseTrigger)="memberService.resetSelectedRecord()">
+  </app-popup-header>
+  <div  class="list-container" control2 *ngIf="memberService.selectedMember">
+      @for (option of memberService.selectedMember.options; track option) {
+          <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(memberService.selectedMember, option)">
+          </app-member-option-display>
+      }
+  </div>
 
-  <ng-container controlHeader *ngIf="memberService.selectedMember">
-    <app-popup-header controlHeader [title]="memberService.selectedMember.name" (onCloseTrigger)="memberService.resetSelectedRecord()">
-    </app-popup-header>
-  </ng-container>
-  <ng-container control2 *ngIf="memberService.selectedMember">
-    <div  class="list-container">
-        @for (option of memberService.selectedMember.options; track option) {
-            <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(memberService.selectedMember, option)">
-            </app-member-option-display>
-        }
-    </div>
-  </ng-container>
+  <app-popup-header controlHeader3 *ngIf="movieService.selectedLayer"
+  [title]="'Layer ' + movieService.selectedLayer.properties.stackPosition" (onCloseTrigger)="movieService.resetSelectedLayer()">
+  </app-popup-header>
+  <div class="list-container" control3 *ngIf="movieService.selectedLayer">
+      <app-layer-properties
+      [time]="movieService.selectedLayerTime || movieService.selectedLayerTime === 0 ? movieService.selectedLayerTime : timelineService.endTime.value"
+      [endTime]="timelineService.endTime.value"
+      [layer]="movieService.selectedLayer"
+      [layerMember]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].member" 
+      [layerOption]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].options[movieService.selectedLayer.memberOptionId]"
+      (onCancel)="movieService.resetSelectedLayer()"
+      (onSave)="saveLayer(movieService.selectedLayer, $event)">
+      </app-layer-properties>
+  </div>
 </app-player>
 <!-- <router-outlet /> -->

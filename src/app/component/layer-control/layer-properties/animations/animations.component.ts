@@ -16,9 +16,8 @@ import { CssDirection, CssDirections, CssFillMode, CssFillModes, CssTimingFuncti
 export class AnimationsComponent extends ComponentBase implements OnInit, OnDestroy {
   @Input() time: number = 0;
   @Input() endTime: number = 0;
-  @Input() layer?: ILayer;
-  @Input() layerMember?: Member;
-  @Input() layerOption?: IMemberOption;
+  @Input() animation?: ILayerAnimation;
+  @Input() isProjected = false;
   @Output() onRemoveAnimation = new EventEmitter<void>();
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<ILayerAnimation>();
@@ -45,10 +44,10 @@ export class AnimationsComponent extends ComponentBase implements OnInit, OnDest
   }
 
   ngOnInit(): void {
-    if (this.layer && this.layer.animation) {
+    if (this.animation) {
       this.includeAnimation = true;
-      this.animationForm.patchValue(this.layer.animation);
-      if (this.layer.isProjected) this.animationForm.disable();
+      this.animationForm.patchValue(this.animation);
+      if (this.isProjected) this.animationForm.disable();
     } else {
       this.animationForm.disable();
     }
@@ -74,7 +73,7 @@ export class AnimationsComponent extends ComponentBase implements OnInit, OnDest
   }
 
   submitForm(): void {
-    if (!this.layer || !this.layer.animation || !this.animationForm.dirty) return;
+    if (!this.animation || !this.animationForm.dirty) return;
 
     if (this.animationForm.invalid) console.log('Invalid Form');
     else {

@@ -10,7 +10,7 @@ export class LayerStyleStringPipe implements PipeTransform {
     let styleString = 'position: absolute; ';
 
     // If not in view then set display: none
-    if (!layer.isInView) {
+    if (!layer.properties.isInView) {
       styleString += 'display: none; ';
       return styleString;
     }
@@ -28,29 +28,29 @@ export class LayerStyleStringPipe implements PipeTransform {
     // If full screen se set width and height as 100 %
 
     let r = '';
-    if (layer.isFullScreen) {
+    if (layer.properties.isFullScreen) {
       r += 'widht: 100%; height: 100%; ';
     } else {
-      if (layer.relativeWidth) r += `width: ${layer.relativeWidth}%; `;
-      if (layer.relativeHeight) r += `height: ${layer.relativeHeight}%; `;
+      if (layer.properties.relativeWidth) r += `width: ${layer.properties.relativeWidth}%; `;
+      if (layer.properties.relativeHeight) r += `height: ${layer.properties.relativeHeight}%; `;
     }
     return r;
   }
 
   getPositionStyles(layer: ILayer): string {
     let r='';
-    if (layer.relativeLeft) r += `left: ${layer.relativeLeft}%; `;
-    if (layer.relativeTop) r += `top: ${layer.relativeTop}%; `;
+    if (layer.properties.relativeLeft) r += `left: ${layer.properties.relativeLeft}%; `;
+    if (layer.properties.relativeTop) r += `top: ${layer.properties.relativeTop}%; `;
     return r;
   }
 
   getZIndex(layer: ILayer): string {
-    return `z-index: ${(layer.stackPosition * 10)}; `
+    return `z-index: ${(layer.properties.stackPosition * 10)}; `
   }
 
   getOpacity(layer: ILayer):string {
     let r='';
-    if (layer.opacity || layer.opacity === 0) r += `opacity: ${layer.opacity}; `;
+    if (layer.properties.opacity || layer.properties.opacity === 0) r += `opacity: ${layer.properties.opacity}; `;
     return r;
   }
 

@@ -15,9 +15,8 @@ import { ILayerProperties } from '../../../../interfaces/movie-properties';
 export class StylesComponent extends ComponentBase implements OnInit, OnDestroy {
   @Input() time: number = 0;
   @Input() endTime: number = 0;
-  @Input() layer?: ILayer;
-  @Input() layerMember?: Member;
-  @Input() layerOption?: IMemberOption;
+  @Input() properties?: ILayerProperties;
+  @Input() isProjected = false;
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<ILayerProperties>();
 
@@ -64,9 +63,9 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
   }
 
   ngOnInit(): void {
-    if (this.layer) {
-      this.propertyForm.patchValue(this.layer);
-      if (this.layer.isProjected) this.propertyForm.disable();
+    if (this.properties) {
+      this.propertyForm.patchValue(this.properties);
+      if (this.isProjected) this.propertyForm.disable();
       this.propertyForm.controls.endTime.addValidators(Validators.min(this.time));
       this.propertyForm.controls.endTime.addValidators(Validators.max(this.endTime));
     }
@@ -83,7 +82,7 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
   }
 
   submitForm(): void {
-    if (!this.layer || !this.propertyForm.dirty) return;
+    if (!this.properties || !this.propertyForm.dirty) return;
 
     if (this.propertyForm.invalid) console.log('Invalid Form ');
     else {

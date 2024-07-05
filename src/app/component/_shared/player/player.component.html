@@ -6,11 +6,34 @@
             <ng-content select="[canvas]"></ng-content>
         </div>
 
-        <div class="control level-2" *ngIf="openSecondLayer" cdkDrag>
+        <div class="control level-2" *ngIf="layer2" cdkDrag>
             <div class="control-header" cdkDragHandle>
-                <ng-content select="[controlHeader]"></ng-content>
+                <ng-content select="[controlHeader2]"></ng-content>
             </div>
             <ng-content select="[control2]"></ng-content>
+        </div>
+
+        <div *ngIf="layer3" class="control" cdkDrag
+        [ngClass]="{
+            'level-3': layer2,
+            'level-2': !layer2
+        }">
+            <div class="control-header" cdkDragHandle>
+                <ng-content select="[controlHeader3]"></ng-content>
+            </div>
+            <ng-content select="[control3]"></ng-content>
+        </div>
+
+        <div class="control level-4" class="control" *ngIf="layer4" cdkDrag
+        [ngClass]="{
+            'level-4': layer2 && layer3,
+            'level-3': layer2 || layer3,
+            'level-2': !layer2 && !layer3
+        }">
+            <div class="control-header" cdkDragHandle>
+                <ng-content select="[controlHeader4]"></ng-content>
+            </div>
+            <ng-content select="[control4]"></ng-content>
         </div>
 
         <div class="control">

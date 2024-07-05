@@ -3,6 +3,7 @@ import { ILayer } from "../interfaces/movie-layer";
 import { IMovie, IMovieMemberBook, IMovieTime } from "../interfaces/timeline-movie";
 import { IVersion } from "../interfaces/version";
 import { cloneDeep } from 'lodash';
+import { ILayerProperties } from "../interfaces/movie-properties";
 
 export class Movie implements IMovie {
     memberBook: IMovieMemberBook;
@@ -29,20 +30,20 @@ export class Movie implements IMovie {
 
     private addMemberProjetedOption(time: number, memberId: string, memberOptionId: string, newLayer: ILayer): void {
         let newTime = time + 1;
-        while (newTime <= newLayer.endTime) {
+        while (newTime <= newLayer.properties.endTime) {
             this.addMemberOptionToTime(newTime, memberId, memberOptionId, newLayer, true, time);
             newTime++;
         }
     }
 
     private updateProjectedLayers(time: number, oldLayer: ILayer, newLayer: ILayer): void {
-        const maxTime = Math.max(oldLayer.endTime, newLayer.endTime);
+        const maxTime = Math.max(oldLayer.properties.endTime, newLayer.properties.endTime);
         const updatedNewLayer = cloneDeep(newLayer);
         updatedNewLayer.isProjected = true;
         let newTime = time + 1;
         while (newTime <= maxTime) {
-            const oldInRange = oldLayer.endTime >= newTime;
-            const newInRange = updatedNewLayer.endTime >= newTime;
+            const oldInRange = oldLayer.properties.endTime >= newTime;
+            const newInRange = updatedNewLayer.properties.endTime >= newTime;
             const existProjectedLayerInTimeline = !!this.timeline[newTime]?.layers?.some(l => l.layerId === updatedNewLayer.layerId);
 
 
@@ -64,7 +65,7 @@ export class Movie implements IMovie {
 
     private deleteProjectedLayer(time: number, deletedLayer: ILayer): void {
         let newTime = time + 1;
-        while (newTime <= deletedLayer.endTime) {
+        while (newTime <= deletedLayer.properties.endTime) {
             this.removeLayer(newTime, deletedLayer.layerId);
             newTime++;
         }
@@ -74,7 +75,7 @@ export class Movie implements IMovie {
     public addMemberOptionToTime(time: number, memberId: string, memberOptionId: string, newLayer: ILayer, isProjected: boolean = false, projectedTime = 0): void {
         this.checkAndCreateTimeline(time);
 
-        newLayer.stackPosition = this.timeline[time].layers.length + 1;
+        newLayer.properties.stackPosition = this.timeline[time].layers.length + 1;
         if (!isProjected) this.timeline[time].layers.push(newLayer);
         else {
             const newLayerCopy = cloneDeep(newLayer);
@@ -108,9 +109,26 @@ export class Movie implements IMovie {
 
         // update stack positions of layers above deleted layer
         timeLine.layers.forEach(layer => {
-            if (layer.stackPosition > deletedLayer[0].stackPosition)
-                layer.stackPosition -= 1;
+            if (layer.properties.stackPosition > deletedLayer[0].properties.stackPosition)
+                layer.properties.stackPosition -= 1;
         });
+    }
+
+    public updateProperties(time: number, layerId: string, newProperties: ILayerProperties): void {
+        const timeLine = this.timeline[time];
+        if (!timeLine) {
+            console.log('No Timeline found to update');
+            return;
+        }
+
+        const layerIndex = timeLine.layers.findIndex(l => l.layerId === layerId);
+        if (layerIndex < 0) {
+            console.log('No Layer found to update');
+            return;
+        }
+
+        timeLine.layers[layerIndex].properties = Object.assign({}, timeLine.layers[layerIndex].properties, newProperties);
+        this.updateLayer(time, timeLine.layers[layerIndex]);
     }
 
     public updateLayer(time: number, newLayer: ILayer, holdStackPositionUpdate: boolean = false): void {
@@ -127,14 +145,14 @@ export class Movie implements IMovie {
             return;
         }
 
-        const prevStackPosition = timeLine.layers[layerIndex].stackPosition;
+        const prevStackPosition = timeLine.layers[layerIndex].properties.stackPosition;
         if (!newLayer.isProjected) this.updateProjectedLayers(time, timeLine.layers[layerIndex], newLayer);
         timeLine.layers[layerIndex] = Object.assign(
             {},
             timeLine.layers[layerIndex],
             newLayer,
             {
-                stackPosition: holdStackPositionUpdate ? prevStackPosition : newLayer.stackPosition
+                stackPosition: holdStackPositionUpdate ? prevStackPosition : newLayer.properties.stackPosition
             })
     }
 
@@ -148,7 +166,7 @@ export class Movie implements IMovie {
 
         moveItemInArray(timeLine.layers, previousIndex, newIndex);
         timeLine.layers.forEach((l, i) => {
-            l.stackPosition = i + 1;
+            l.properties.stackPosition = i + 1;
         });
     }
 

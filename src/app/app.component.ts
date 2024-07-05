@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MemberService } from './services/member.service';
 import { MovieService } from './services/movie.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { ILayer } from './interfaces/movie-layer';
 import { TimelineService } from './services/timeline.service';
 import { Member } from './models/members';
 import { IMemberOption } from './interfaces/member';
-import { cloneDeep } from 'lodash';
+import { ILayerProperties } from './interfaces/movie-properties';
+import { ILayer } from './interfaces/movie-layer';
 
 @Component({
   selector: 'app-root',
@@ -36,15 +36,15 @@ export class AppComponent implements OnInit {
 
   handleTabChange(event: MatTabChangeEvent) {
     this.selectedIndex = event.index
-    this.movieService.resetSelectedLayer();
-    this.memberService.resetSelectedRecord();
+    // this.movieService.resetSelectedLayer();
+    // this.memberService.resetSelectedRecord();
   }
 
-  saveLayer(updatedLayer: ILayer): void {
-    this.movieService.updateLayer(this.timelineService.currentTime.value, updatedLayer);
+  saveLayer(layer: ILayer, newProperties: ILayerProperties): void {
+    this.movieService.updateProperties(this.timelineService.currentTime.value, layer.layerId, newProperties);
   }
 
-  addOptionToMovieTimeLine(member: Member, option: IMemberOption) {
+  addOptionToMovieTimeLine(member: Member, option: IMemberOption): void {
     this.movieService.addMemberOptionToTime(this.timelineService.currentTime.value, member.memberId, option.optionId);
   }
 }
