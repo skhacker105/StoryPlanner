@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MemberService } from './services/member.service';
 import { MovieService } from './services/movie.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -7,6 +7,7 @@ import { Member } from './models/members';
 import { IMemberOption } from './interfaces/member';
 import { ILayerProperties } from './interfaces/movie-properties';
 import { ILayer } from './interfaces/movie-layer';
+import { ILayerAnimation } from './interfaces/movie-animations';
 
 @Component({
   selector: 'app-root',
@@ -40,8 +41,12 @@ export class AppComponent implements OnInit {
     // this.memberService.resetSelectedRecord();
   }
 
-  saveLayer(layer: ILayer, newProperties: ILayerProperties): void {
+  saveProperty(layer: ILayer, newProperties: ILayerProperties): void {
     this.movieService.updateProperties(this.timelineService.currentTime.value, layer.layerId, newProperties);
+  }
+
+  saveAnimation(layer: ILayer, newAnimation: ILayerAnimation): void {
+    this.movieService.updateAnimation(this.timelineService.currentTime.value, layer.layerId, newAnimation)
   }
 
   addOptionToMovieTimeLine(member: Member, option: IMemberOption): void {

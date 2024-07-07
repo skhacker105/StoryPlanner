@@ -4,6 +4,7 @@ import { IMovie, IMovieMemberBook, IMovieTime } from "../interfaces/timeline-mov
 import { IVersion } from "../interfaces/version";
 import { cloneDeep } from 'lodash';
 import { ILayerProperties } from "../interfaces/movie-properties";
+import { ILayerAnimation } from "../interfaces/movie-animations";
 
 export class Movie implements IMovie {
     memberBook: IMovieMemberBook;
@@ -129,6 +130,22 @@ export class Movie implements IMovie {
 
         timeLine.layers[layerIndex].properties = Object.assign({}, timeLine.layers[layerIndex].properties, newProperties);
         this.updateLayer(time, timeLine.layers[layerIndex]);
+    }
+
+    public updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation): void {
+        const timeLine = this.timeline[time];
+        if (!timeLine) {
+            console.log('No Timeline found to update');
+            return;
+        }
+
+        const layerIndex = timeLine.layers.findIndex(l => l.layerId === layerId);
+        if (layerIndex < 0) {
+            console.log('No Layer found to update');
+            return;
+        }
+
+        timeLine.layers[layerIndex].animation = cloneDeep(newAnimation);
     }
 
     public updateLayer(time: number, newLayer: ILayer, holdStackPositionUpdate: boolean = false): void {

@@ -1,0 +1,21 @@
+@if (differences) {
+    <div class="diff-container">
+        @for (diff of differences.differences; track diff) {
+
+            <div class="diff-list" *ngIf="diff">
+
+                <div class="key">
+                    {{ diff.key }}
+                </div>
+
+                <div class="frm-value">
+                    {{ diff.oldValue }}
+                </div>
+
+                <div class="to-value">
+                    {{ diff.newValue }}
+                </div>
+            </div>
+        }
+    </div>
+}

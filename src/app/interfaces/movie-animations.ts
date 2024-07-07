@@ -4,7 +4,7 @@ import { ILayerProperties } from "./movie-properties";
 export interface ILayerAnimation {
     duration: number;
     delay: number;
-    iterationCount?: number;
+    iterationCount: number;
     direction: CssDirection;
     timingFunction: CssTimingFunction;
     fillMode: CssFillMode;
@@ -13,5 +13,5 @@ export interface ILayerAnimation {
 
 export interface IAnimationFrame {
     toLayer?: ILayerProperties,
-    percentFrame?: { [percent: string]: ILayerProperties }
+    percentFrame?: { [percent: number]: ILayerProperties }
 }

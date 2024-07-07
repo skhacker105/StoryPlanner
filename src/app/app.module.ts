@@ -40,6 +40,7 @@ import { LayerStyleStringPipe } from './pipes/layer-style-string.pipe';
 import { StylesComponent } from './component/layer-control/layer-properties/styles/styles.component';
 import { AnimationsComponent } from './component/layer-control/layer-properties/animations/animations.component';
 import { FormFieldComponent } from './component/_shared/form-field/form-field.component';
+import { JSONDiffComponent } from './component/_shared/jsondiff/jsondiff.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { FormFieldComponent } from './component/_shared/form-field/form-field.co
     LayerStyleStringPipe,
     StylesComponent,
     AnimationsComponent,
-    FormFieldComponent
+    FormFieldComponent,
+    JSONDiffComponent
   ],
   imports: [
     BrowserModule,

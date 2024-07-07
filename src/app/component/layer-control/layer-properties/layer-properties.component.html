@@ -4,11 +4,11 @@
     <mat-tab label="Styles">
         <app-styles
             [time]="time"
+            [endTime]="endTime"
             [properties]="layer.properties"
             [isProjected]="layer.isProjected"
-            [endTime]="endTime"
             (onCancel)="onCancel.emit()"
-            (onSave)="handleOnSave($event)">
+            (onSave)="handleOnStyleSave($event)">
         </app-styles>
     </mat-tab>
 
@@ -17,7 +17,11 @@
         <app-animations
         [time]="time"
         [endTime]="endTime"
-        (onCancel)="onCancel.emit()">
+        [existingProperties]="layer.properties"
+        [animation]="layer.animation"
+        [isProjected]="layer.isProjected"
+        (onCancel)="onCancel.emit()"
+        (onSave)="handleOnAnimationSave($event)">
     </app-animations>
     </mat-tab>
 </mat-tab-group>

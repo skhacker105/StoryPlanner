@@ -4,6 +4,7 @@ import { ILayer } from '../../../interfaces/movie-layer';
 import { Member } from '../../../models/members';
 import { IMemberOption } from '../../../interfaces/member';
 import { ILayerProperties } from '../../../interfaces/movie-properties';
+import { ILayerAnimation } from '../../../interfaces/movie-animations';
 
 @Component({
   selector: 'app-layer-properties',
@@ -18,7 +19,8 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   @Input() layerMember?: Member;
   @Input() layerOption?: IMemberOption;
   @Output() onCancel = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<ILayerProperties>();
+  @Output() onStyleSave = new EventEmitter<ILayerProperties>();
+  @Output() onAnimationSave = new EventEmitter<ILayerAnimation>();
   
   constructor() {
     super();
@@ -31,7 +33,11 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
     this.onDestroy();
   }
 
-  handleOnSave(updatedProperties: ILayerProperties): void {
-    this.onSave.emit(updatedProperties);
+  handleOnStyleSave(updatedProperties: ILayerProperties): void {
+    this.onStyleSave.emit(updatedProperties);
+  }
+
+  handleOnAnimationSave(updatedAnimation: ILayerAnimation): void {
+    this.onAnimationSave.emit(updatedAnimation);
   }
 }

@@ -1,5 +1,6 @@
-<div class="confirmation-container">
-    <app-popup-header [title]="data && data.title ? data.title : 'Confirm Delete'" (onCloseTrigger)="dialogRef.close(false)">
+<div class="confirmation-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+    <app-popup-header [title]="data && data.title ? data.title : 'Confirm Delete'"
+    (onCloseTrigger)="dialogRef.close(false)">
     </app-popup-header>
 
     <div class="confirm-message">

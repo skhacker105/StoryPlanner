@@ -1,7 +1,8 @@
 
 <app-player
   [layer2]="memberService.selectedMember ? true : false"
-  [layer3]="movieService.selectedLayer ? true : false">
+  [layer3]="movieService.selectedLayer ? true : false"
+  [layer4]="false">
 
   <app-time-line timeLine>
   </app-time-line>
@@ -47,6 +48,7 @@
   </ng-container>
 
 
+  <!-- Selected Member Options -->
   <app-popup-header controlHeader2 *ngIf="memberService.selectedMember"
   [title]="memberService.selectedMember.name" (onCloseTrigger)="memberService.resetSelectedRecord()">
   </app-popup-header>
@@ -57,6 +59,7 @@
       }
   </div>
 
+  <!-- Selected Layer Property -->
   <app-popup-header controlHeader3 *ngIf="movieService.selectedLayer"
   [title]="'Layer ' + movieService.selectedLayer.properties.stackPosition" (onCloseTrigger)="movieService.resetSelectedLayer()">
   </app-popup-header>
@@ -68,8 +71,18 @@
       [layerMember]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].member" 
       [layerOption]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].options[movieService.selectedLayer.memberOptionId]"
       (onCancel)="movieService.resetSelectedLayer()"
-      (onSave)="saveLayer(movieService.selectedLayer, $event)">
+      (onStyleSave)="saveProperty(movieService.selectedLayer, $event)"
+      (onAnimationSave)="saveAnimation(movieService.selectedLayer, $event)">
       </app-layer-properties>
   </div>
+
+  <!-- Selected Animation Frame Styles -->
+  <app-popup-header controlHeader4 *ngIf="true"
+  title="Animation Frame Style" (onCloseTrigger)="movieService.resetSelectedLayer()">
+  </app-popup-header>
+  <div class="list-container" control4>
+    hello
+  </div>
+
 </app-player>
 <!-- <router-outlet /> -->

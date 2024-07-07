@@ -36,6 +36,10 @@
                 .property-item-full {
                     width: calc(100% - 20px);
                 }
+    
+                .property-item-100 {
+                    width: 100%;
+                }
 
                 .property-mini-half {
                     width: 50px;
@@ -67,5 +71,56 @@
         .action {
             text-align: end;
         }
+    }
+}
+
+.frame-row-container {
+    width: 100%;
+    display: flex;
+    font-size: $form-control-label;
+    border-bottom: solid 1px $primary-border-color;
+
+    &.disabled {
+        background-color: #dbdbdb;
+        color: gray;
+    }
+
+    .frame-row-name {
+        flex: 1 auto;
+        margin: auto;
+        padding-left: 10px;
+        white-space: nowrap;
+    }
+
+    .frame-row-percent {
+        flex: 1 auto;
+        margin: auto;
+        padding-left: 10px;
+    }
+}
+
+::ng-deep .frame-style-dialog {
+    z-index: 2000000 !important;
+    height: calc(100% - $timeline-height) !important;
+    margin-right: auto;
+}
+
+::ng-deep .delete-dialog {
+    z-index: 3000000 !important;
+}
+
+.frame-style-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .frame-style-title {
+        padding:  0px !important;
+        height: 64px;
+    }
+
+    .frame-style-fields {
+        flex: 1 auto;
+        overflow: auto;
     }
 }

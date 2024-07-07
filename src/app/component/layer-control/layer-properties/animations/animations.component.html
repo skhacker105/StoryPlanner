@@ -7,15 +7,20 @@
             <!-- Auto Save, Include Animation -->
             <div class="property-box">
 
+                <!-- Include Animation -->
                 <app-form-field label="Include Animation" class="property-box-half">
                     <ng-container formFieldControl>
-                        <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control" [(ngModel)]="includeAnimation" (change)="handleIncludeAnimation()">
+                        <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control"
+                        [disabled]="isProjected"
+                        [(ngModel)]="includeAnimation" (change)="handleIncludeAnimation()">
                     </ng-container>
                 </app-form-field>
 
+                <!-- Auto Save -->
                 <app-form-field label="Auto Save" class="property-box-half">
                     <ng-container formFieldControl>
-                        <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control" [(ngModel)]="autoSave"
+                        <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control"
+                        [(ngModel)]="autoSave"
                         [disabled]="animationForm.disabled">
                     </ng-container>
                 </app-form-field>
@@ -104,22 +109,82 @@
             </div>
             <div class="property-box">
 
-                <app-form-field label="From-To animation" class="property-box-half">
+                <app-form-field label="From-To" class="property-box-half">
                     <ng-container formFieldControl>
-                        <input [ngModelOptions]="{standalone: true}" type="radio" value="fromTo"
-                        [disabled]="animationForm.disabled"
+                        <input [ngModelOptions]="{standalone: true}" type="radio" [value]="animationFrameTypes.fromTo"
+                        [disabled]="animationForm.disabled" (click)="handleFrameTypeChange()"
                         name="animationFrameType" [(ngModel)]="animationFrameType">
                     </ng-container>
                 </app-form-field>
 
                 <app-form-field label="By Percent" class="property-box-half">
                     <ng-container formFieldControl>
-                        <input [ngModelOptions]="{standalone: true}" type="radio" value="percent"
-                        [disabled]="animationForm.disabled"
+                        <input [ngModelOptions]="{standalone: true}" type="radio" [value]="animationFrameTypes.percent"
+                        [disabled]="animationForm.disabled" (click)="handleFrameTypeChange()"
                         name="animationFrameType" [(ngModel)]="animationFrameType">
                     </ng-container>
                 </app-form-field>
 
+            </div>
+
+            <!-- Frame List -->
+            <div class="property-item-100">
+
+                <!-- From To -->
+                <ng-container *ngIf="animationFrameType === animationFrameTypes.fromTo">
+
+                    <!-- From disabled row -->
+                    <ng-container [ngTemplateOutlet]="frameRow" [ngTemplateOutletContext]="{
+                        title: 'From Default Styles',
+                        disabled: true,
+                    }">
+                    </ng-container>
+
+                    <!-- To editable row -->
+                    <ng-container [ngTemplateOutlet]="frameRow" [ngTemplateOutletContext]="{
+                        title: 'To',
+                        data: frameControl.value?.toLayer,
+                        animationFrameType: animationFrameTypes.fromTo,
+
+                        add: frameControl.value?.toLayer ? false : true,
+                        edit: frameControl.value?.toLayer ? true : false,
+                        delete: frameControl.value?.toLayer ? true : false,
+
+                        diff: animationFrameDiff.toLayerDiff
+                    }">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Frame Percent wise -->
+                <ng-container *ngIf="animationFrameType === animationFrameTypes.percent">
+
+                    <!-- Add New Record row -->
+                    <ng-container [ngTemplateOutlet]="frameRow" [ngTemplateOutletContext]="{
+                        add: true,
+                        percent: true,
+                        animationFrameType: animationFrameTypes.percent
+                    }">
+                    </ng-container>
+
+                    <!-- All key frames and percent -->
+                    <!-- {{ frameControlValues.percentFrame | objectKeys | json }} -->
+                    @if (frameControlValues && frameControlValues.percentFrame) {
+                        @for (percent of frameControlPercentList; track percent;) {
+                            <ng-container [ngTemplateOutlet]="frameRow" [ngTemplateOutletContext]="{
+                                title: percent + ' %',
+                                percentageValue: percent,
+                                data: frameControlValues.percentFrame[+percent],
+                                animationFrameType: animationFrameTypes.percent,
+        
+                                edit: frameControlValues.percentFrame[+percent] ? true : false,
+                                delete: frameControlValues.percentFrame[+percent] ? true : false,
+
+                                diff: animationFrameDiff.percentFrameDiff?.[+percent]
+                            }">
+                            </ng-container>
+                        }
+                    }
+                </ng-container>
             </div>
 
         </div>
@@ -136,5 +201,83 @@
             </button>
         </div>
 
+        
     </form>
 </div>
+
+<ng-template #frameRow
+    let-title="title"
+    let-animationFrameType="animationFrameType"
+    let-disabled="disabled"
+    let-data="data"
+    let-add="add"
+    let-edit="edit"
+    let-delete="delete"
+    let-percent="percent"
+    let-percentageValue="percentageValue"
+    let-diff="diff">
+    <div class="frame-row-container" [ngClass]="{
+        'disabled': disabled
+    }">
+
+        <!-- Title -->
+        <div class="frame-row-name" *ngIf="title">
+            {{ title }}
+        </div>
+
+        <!-- Value Diff -->
+        <div class="frame-row-name" *ngIf="diff">
+            <app-jsondiff [differences]="diff"></app-jsondiff>
+        </div>
+
+        <!-- Percent -->
+        <div class="frame-row-percent" *ngIf="percent">
+            <input type="number" [formControl]="percentage">
+        </div>
+
+        <!-- percent -->
+        <button mat-icon-button *ngIf="percent">
+            <mat-icon>percent</mat-icon>
+        </button>
+
+        <!-- Disabled -->
+        <button mat-icon-button *ngIf="disabled && !add && !edit && !delete" [disabled]="true" type="button">
+            <mat-icon>adjust</mat-icon>
+        </button>
+
+        <!-- Add -->
+        <button mat-icon-button *ngIf="add" type="button"
+        [disabled]="percent && percentage.invalid"
+        (click)="handleFrameStyleAdd(animationFrameType)">
+            <mat-icon>add</mat-icon>
+        </button>
+
+        <!-- Edit -->
+        <button mat-icon-button *ngIf="edit && data" type="button" (click)="handleFrameStyleEdit(animationFrameType, data, percentageValue)">
+            <mat-icon>edit</mat-icon>
+        </button>
+
+        <!-- Delete -->
+        <button mat-icon-button *ngIf="delete" type="button" (click)="handleOnDeleteProperty(animationFrameType, percentageValue)">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #frameStyleRef let-data>
+    <div class="frame-style-container">
+        <div cdkDrag cdkDragRootElement=".cdk-overlay-pane" class="frame-style-title" >
+            <app-popup-header [title]="data.title" (onCloseTrigger)="closeStyleDialog()">
+            </app-popup-header>
+        </div>
+        <app-styles
+            class="frame-style-fields"
+            [time]="time"
+            [endTime]="endTime"
+            [properties]="data.animationFrameStyle"
+            (onCancel)="closeStyleDialog()"
+            (onSave)="handleAnimationFramePropertySave($event, data.animationFrameType, data.percent)">
+        </app-styles>
+    </div>
+
+</ng-template>

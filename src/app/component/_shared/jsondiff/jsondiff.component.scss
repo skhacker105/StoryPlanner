@@ -1,0 +1,46 @@
+@import '../../../styles/style-constants.scss';
+
+.diff-container {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: $form-control-header;
+    line-height: 10px;
+
+    .diff-list {
+        margin: 1px;
+        // max-width: 50px;
+        white-space: nowrap;
+        display: flex;
+        border: solid 1px #b9b707;
+
+        .key {
+            width: fit-content;
+            // max-width: 50px;
+            background-color: white;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            padding: 2px;
+        }
+
+        .frm-value {
+            width: fit-content;
+            max-width: 30px;
+            padding: 2px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            color: red;
+            border-right: solid 1px #a0a0a0;
+            border-left: solid 1px #a0a0a0;
+        }
+
+        .to-value {
+            width: fit-content;
+            max-width: 30px;
+            padding-right: 5px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            padding: 2px;
+            color: green;
+        }
+}
+}

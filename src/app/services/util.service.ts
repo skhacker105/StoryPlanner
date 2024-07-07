@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IJSONDiff, IKeyDifference } from '../interfaces/json-diff';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,23 @@ export class UtilService {
     } catch (ex) {
       return undefined;
     }
+  }
+
+  compareJSON(obj1: any, obj2: any): IJSONDiff {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    const allKeys = new Set([...keys1, ...keys2]);
+
+    const differences: IKeyDifference[] = [];
+
+    for (const key of allKeys) {
+      if (obj1[key] !== obj2[key] && key != 'stackPosition') {
+        differences.push({ key, oldValue: obj1[key], newValue: obj2[key] });
+      }
+    }
+
+    const differencesInString = '{ ' + differences.map(d =>  `${d.key}: ${d.newValue} `) + ' }';
+
+    return { keys: Array.from(allKeys), differences, differencesInString };
   }
 }
