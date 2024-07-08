@@ -53,7 +53,7 @@
                             <ng-container formFieldControl>
                                 <select formControlName="direction">
                                     @for(cssDirection of CssDirections; track cssDirection;) {
-                                        <option>
+                                        <option [value]="cssDirection">
                                             {{ cssDirection }}
                                         </option>
                                     }
@@ -72,7 +72,7 @@
                             <ng-container formFieldControl>
                                 <select formControlName="fillMode">
                                     @for(cssFillMode of CssFillModes; track cssFillMode;) {
-                                        <option>
+                                        <option [value]="cssFillMode">
                                             {{ cssFillMode }}
                                         </option>
                                     }
@@ -90,7 +90,7 @@
                             <ng-container formFieldControl>
                                 <select formControlName="timingFunction">
                                     @for(cssTimingFunction of CssTimingFunctions; track cssTimingFunction;) {
-                                        <option>
+                                        <option [value]="cssTimingFunction">
                                             {{ cssTimingFunction }}
                                         </option>
                                     }

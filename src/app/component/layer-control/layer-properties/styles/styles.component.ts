@@ -18,6 +18,7 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
   @Output() onSave = new EventEmitter<ILayerProperties>();
 
   autoSave = true;
+  degreeValidatorPattern = /\-?\d*\.?\d{1,2}/;
 
   propertyForm = new FormGroup({
 
@@ -36,9 +37,9 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
     relativeTop: new FormControl<number>(0, [Validators.pattern(/^\d+$/)]),
 
     // Rotate
-    rotateX: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
-    rotateY: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
-    rotateZ: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
+    rotateX: new FormControl<number>(0, [Validators.required, Validators.min(-360), Validators.max(360), Validators.pattern(this.degreeValidatorPattern)]),
+    rotateY: new FormControl<number>(0, [Validators.required, Validators.min(-360), Validators.max(360), Validators.pattern(this.degreeValidatorPattern)]),
+    rotateZ: new FormControl<number>(0, [Validators.required, Validators.min(-360), Validators.max(360), Validators.pattern(this.degreeValidatorPattern)]),
 
     // Translate
     translateX: new FormControl<number>(0, [Validators.required, Validators.pattern(/^\d+$/)]),
@@ -50,8 +51,8 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
     scaleY: new FormControl<number>(0, [Validators.required, Validators.pattern(/^\d+$/)]),
 
     // Skew
-    skewX: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
-    skewY: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(360), Validators.pattern(/^\d+$/)]),
+    skewX: new FormControl<number>(0, [Validators.required, Validators.min(-360), Validators.max(360), Validators.pattern(this.degreeValidatorPattern)]),
+    skewY: new FormControl<number>(0, [Validators.required, Validators.min(-360), Validators.max(360), Validators.pattern(this.degreeValidatorPattern)]),
 
   });
 
