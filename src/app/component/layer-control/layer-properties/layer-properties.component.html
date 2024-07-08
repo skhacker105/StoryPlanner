@@ -21,7 +21,8 @@
         [animation]="layer.animation"
         [isProjected]="layer.isProjected"
         (onCancel)="onCancel.emit()"
-        (onSave)="handleOnAnimationSave($event)">
+        (onSave)="handleOnAnimationSave($event)"
+        (onRemoveAnimation)="handleOnAnimationSave(undefined)">
     </app-animations>
     </mat-tab>
 </mat-tab-group>

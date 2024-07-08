@@ -132,7 +132,7 @@ export class Movie implements IMovie {
         this.updateLayer(time, timeLine.layers[layerIndex]);
     }
 
-    public updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation): void {
+    public updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation | undefined): void {
         const timeLine = this.timeline[time];
         if (!timeLine) {
             console.log('No Timeline found to update');

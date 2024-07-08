@@ -2,7 +2,7 @@
     @for (layer of paintedLayers; track layer;) {
         <img 
             [src]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId].image"
-            [style]="(layer | layerStyleString)"
+            [style]="(layer | layerStyleString) + (layer | layerAnimationString)"
         >
     }
 </div>

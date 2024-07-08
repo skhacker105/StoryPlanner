@@ -161,7 +161,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.movieUpdated.next(this.movie);
   }
 
-  public updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation): void {
+  public updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation | undefined): void {
     if (!this.movie) return;
 
     this.movie.updateAnimation(time, layerId, newAnimation);

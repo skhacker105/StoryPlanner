@@ -20,7 +20,7 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   @Input() layerOption?: IMemberOption;
   @Output() onCancel = new EventEmitter<void>();
   @Output() onStyleSave = new EventEmitter<ILayerProperties>();
-  @Output() onAnimationSave = new EventEmitter<ILayerAnimation>();
+  @Output() onAnimationSave = new EventEmitter<ILayerAnimation | undefined>();
   
   constructor() {
     super();
@@ -37,7 +37,7 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
     this.onStyleSave.emit(updatedProperties);
   }
 
-  handleOnAnimationSave(updatedAnimation: ILayerAnimation): void {
+  handleOnAnimationSave(updatedAnimation: ILayerAnimation | undefined): void {
     this.onAnimationSave.emit(updatedAnimation);
   }
 }

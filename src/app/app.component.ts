@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
     this.movieService.updateProperties(this.timelineService.currentTime.value, layer.layerId, newProperties);
   }
 
-  saveAnimation(layer: ILayer, newAnimation: ILayerAnimation): void {
+  saveAnimation(layer: ILayer, newAnimation: ILayerAnimation | undefined): void {
     this.movieService.updateAnimation(this.timelineService.currentTime.value, layer.layerId, newAnimation)
   }
 

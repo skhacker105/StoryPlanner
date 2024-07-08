@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { IPlaySpeed } from '../interfaces/play-speed';
 
 @Injectable({
@@ -23,6 +23,7 @@ export class TimelineService {
   ];
   selectedSpeed: IPlaySpeed = this.speedRange[3];
   playing = false;
+  playingStateChange = new Subject<boolean>();
 
   private maxPlayTime = -1;
 
@@ -70,6 +71,7 @@ export class TimelineService {
 
   play(): void {
     this.playing = true;
+    this.playingStateChange.next(true);
     this.runWhilePlaying();
   }
 
@@ -89,6 +91,7 @@ export class TimelineService {
 
   pause(): void {
     this.playing = false;
+    this.playingStateChange.next(false);
     this.resetMaxPlayTime();
   }
 

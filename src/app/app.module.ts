@@ -41,6 +41,7 @@ import { StylesComponent } from './component/layer-control/layer-properties/styl
 import { AnimationsComponent } from './component/layer-control/layer-properties/animations/animations.component';
 import { FormFieldComponent } from './component/_shared/form-field/form-field.component';
 import { JSONDiffComponent } from './component/_shared/jsondiff/jsondiff.component';
+import { LayerAnimationStringPipe } from './pipes/layer-animation-string.pipe';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { JSONDiffComponent } from './component/_shared/jsondiff/jsondiff.compone
     StylesComponent,
     AnimationsComponent,
     FormFieldComponent,
-    JSONDiffComponent
+    JSONDiffComponent,
+    LayerAnimationStringPipe
   ],
   imports: [
     BrowserModule,
