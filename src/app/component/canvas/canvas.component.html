@@ -1,8 +1,11 @@
-<div class="canvas-container">
+<div class="canvas-container" id="canvas-container">
     @for (layer of paintedLayers; track layer;) {
         <img 
             [src]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId].image"
             [style]="(layer | layerStyleString) + (layer | layerAnimationString)"
         >
     }
+
+    <div class="canvas-video" id="canvas-video" *ngIf="demoVideo.length > 0">
+    </div>
 </div>

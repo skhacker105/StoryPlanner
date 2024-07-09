@@ -35,15 +35,19 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
     this.onDestroy();
   }
 
-  changeCurrentTime(time: number) {
+  changeCurrentTime(time: number): void {
     this.timelineService.setNewTime(time);
   }
 
-  changePlaybackSpeed(speedChange: MatButtonToggleChange) {
+  changePlaybackSpeed(speedChange: MatButtonToggleChange): void {
     this.timelineService.setPlaybackSpeed(speedChange.value);
   }
 
-  playPause() {
+  playPause(): void {
     this.timelineService.playing ? this.timelineService.pause() : this.timelineService.play()
+  }
+
+  toggleRecording(): void {
+    !this.timelineService.recording.value ? this.timelineService.startRecording() : this.timelineService.stopRecording();
   }
 }

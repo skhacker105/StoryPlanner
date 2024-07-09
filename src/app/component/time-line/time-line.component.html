@@ -23,26 +23,30 @@
 
         <div class="status-blocks">
 
-            <!-- Current Time -->
-            <div class="stat-block">
-                <div class="label">Time</div>
-                <div class="value"><pre class="time-display">{{ timelineService.currentTime.value | spacePadded:4 }}</pre></div>
-            </div>
-
             <!-- Reset -->
-            <div class="stat-block">
+            <div class="stat-block no-padding">
                 <button mat-icon-button (click)="timelineService.timeToZero()">
                     <mat-icon>restart_alts</mat-icon>
                 </button>
             </div>
 
-
             <!-- Play / Pause -->
-            <div class="stat-block">
-                <button mat-icon-button color="primary" (click)="playPause()">
+            <div class="stat-block no-padding">
+                <button mat-icon-button color="primary" (click)="playPause()" class="play-pause-icon">
                     <mat-icon>
                         {{
                             timelineService.playing ? 'pause_circle' : 'not_started'
+                        }}
+                    </mat-icon>
+                </button>
+            </div>
+
+            <!-- Recording -->
+            <div class="stat-block no-padding">
+                <button mat-icon-button color="primary" (click)="toggleRecording()" class="play-pause-icon">
+                    <mat-icon>
+                        {{
+                            timelineService.recording.value ? 'radio_button_checked' : 'radio_button_unchecked'
                         }}
                     </mat-icon>
                 </button>
@@ -66,6 +70,12 @@
                         </mat-button-toggle>
                     }
                 </mat-button-toggle-group>
+            </div>
+
+            <!-- Current Time -->
+            <div class="stat-block">
+                <div class="label">Time</div>
+                <div class="value"><pre class="time-display">{{ timelineService.currentTime.value | spacePadded:4 }}</pre></div>
             </div>
 
         </div>

@@ -49,6 +49,20 @@
                 padding-right: 10px;
                 font-size: $time-line-font-size;
 
+                &.no-padding {
+                    padding: 0px;
+
+                    button {
+                        padding: 0px;
+    
+                        .mat-icon {
+                            font-size: 48px;
+                            width: 48px;
+                            height: 48px;
+                        }
+                    }
+                }
+
                 .label {
                     font-size: $time-line-font-size;
                     font-weight: bold;
