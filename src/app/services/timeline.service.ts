@@ -24,12 +24,17 @@ export class TimelineService {
   selectedSpeed: IPlaySpeed = this.speedRange[3];
 
   playing = false;
+  framesPerUnitTime = 3;
   recording = new BehaviorSubject<boolean>(false);
   playingStateChange = new Subject<boolean>();
 
   private maxPlayTime = -1;
 
   constructor() { }
+
+  get frameSpeed() {
+    return this.standardSpeed * this.selectedSpeed.multiple;
+  }
 
   setNewTime(time: number): void {
     this.currentTime.next(time);
@@ -84,10 +89,10 @@ export class TimelineService {
       if (this.hasNextTime()) {
         setTimeout(() => {
           this.runWhilePlaying();
-        }, this.standardSpeed * this.selectedSpeed.multiple);
+        }, this.frameSpeed);
       } else {
         this.pause();
-        if (this.recording.value) this.stopRecording();
+        // if (this.recording.value) this.stopRecording();
       }
     }
   }
@@ -103,13 +108,14 @@ export class TimelineService {
   }
 
   startRecording() {
+    this.timeToEnd();
     this.timeToZero();
     this.recording.next(true);
-    this.play();
+    // this.play();
   }
 
   stopRecording() {
     this.recording.next(false);
-    if (this.playing) this.pause()
+    // if (this.playing) this.pause()
   }
 }

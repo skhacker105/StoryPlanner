@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { cloneDeep, extend } from 'lodash';
 import { ComponentBase } from '../../base/component-base';
 import { TimelineService } from '../../services/timeline.service';
-import { take, takeUntil } from 'rxjs';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
 import { MovieService } from '../../services/movie.service';
 import { ILayer } from '../../interfaces/movie-layer';
 import { MemberService } from '../../services/member.service';
@@ -40,8 +40,18 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
       .subscribe({
         next: currentTime => {
           const goingBack = this.currentTime > currentTime;
-          this.updatePrintedLayer(this.movieService.movie?.timeline[currentTime]?.layers ? this.movieService.movie.timeline[currentTime].layers : [], goingBack);
-          this.currentTime = currentTime
+          let layers = this.movieService.movie?.timeline[currentTime]?.layers
+            ? this.movieService.movie.timeline[currentTime].layers
+            : [];
+
+          let continueToCollect = false;
+          if (this.timelineService.recording.value) {
+            continueToCollect = true;
+            layers = this.updateAnimationDurationForRecording(layers);
+          }
+
+          this.updatePrintedLayer(layers, goingBack, continueToCollect);
+          this.currentTime = currentTime;
         }
       });
     this.movieService.movieUpdated
@@ -74,12 +84,28 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     this.timelineService.recording
       .pipe(takeUntil(this.isComponentActive))
       .subscribe({
-        next: recording => recording ? this.startrecording() : this.stopRecording()
+        next: recording => {
+          if (recording) {
+            const updatedLayers = this.updateAnimationDurationForRecording(this.paintedLayers);
+            this.updatePrintedLayer(updatedLayers, false, false);
+            this.startrecording();
+          } else {
+            this.stopRecording();
+          }
+        }
       });
   }
 
   ngOnDestroy(): void {
     this.onDestroy();
+  }
+
+  updateAnimationDurationForRecording(layers: ILayer[]): ILayer[] {
+    if (!this.timelineService.recording.value) return layers;
+
+    const newLayers = cloneDeep(layers);
+    newLayers.forEach(l => l.animation ? l.animation.duration = l.animation.duration * 10 : null)
+    return newLayers;
   }
 
   convertLayersById(layers: ILayer[]): ILayersById {
@@ -89,7 +115,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     }, {} as ILayersById);
   }
 
-  updatePrintedLayer(sourceLayers: ILayer[], goingBack: boolean = false): void {
+  updatePrintedLayer(sourceLayers: ILayer[], goingBack: boolean = false, continueToCollect: boolean = false): void {
     if (goingBack) {
       this.paintedLayers = cloneDeep(sourceLayers);
       return;
@@ -114,36 +140,69 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     const styleEl = this.renderer.createElement('style');
     styleEl.appendChild(this.renderer.createText(animationStr));
     this.renderer.appendChild(document.head, styleEl);
+
+
     this.paintedLayers = [...layersToUpdate, ...layersToAdd];
-  }
-
-  getCurrentFrame(): Promise<HTMLCanvasElement | null> | undefined {
-    const divElement = document.getElementById('canvas-container'); // Replace with your div's ID
-    if (!divElement) return;
-
-    return new Promise((resolve, reject) => {
-      html2canvas(divElement)
-        .then(canvas => resolve(canvas))
-        .catch(err => reject(err));
-    });
+    if (continueToCollect) this.collectTillRecording();
   }
 
   startrecording(): void {
     this.recordedFrames = [];
+    this.timelineService.setMaxPlayTime(this.movieService.maxPlayTime);
+    // this.paintedLayers = [...this.paintedLayers];
     this.collectTillRecording();
   }
 
   collectTillRecording(): void {
-    setTimeout(() => {
-      this.getCurrentFrame()?.then(frame => {
-        if (frame) this.recordedFrames.push(frame);
-        if (this.timelineService.recording.value) this.collectTillRecording();
+    const framesPerUnitTime$ = this.getFramesPerUnitTime(this.timelineService.framesPerUnitTime);
+    framesPerUnitTime$
+      .pipe(take(1))
+      .subscribe({
+        next: recordedFrames => {
+          this.recordedFrames = [...this.recordedFrames, ...recordedFrames];
+          if (this.timelineService.hasNextTime() && this.timelineService.recording.value) {
+            this.timelineService.increaseTime();
+          } else this.timelineService.stopRecording();
+        }
       });
-    }, 1);
+  }
+
+  getFramesPerUnitTime(frameCount: number): Subject<HTMLCanvasElement[]> {
+    const recordedFrames: HTMLCanvasElement[] = [];
+    const recordedFrames$ = new Subject<HTMLCanvasElement[]>();
+    const collectAll = () => {
+      this.getCurrentFrame()
+        ?.pipe(take(1))
+        ?.subscribe({
+          next: frame => {
+            frame ? recordedFrames.push(frame) : null;
+            if (recordedFrames.length < frameCount && this.timelineService.recording.value) {
+              setTimeout(() => {
+                collectAll();
+              }, (this.timelineService.standardSpeed * 10) / frameCount);
+            } else {
+              recordedFrames$.next(recordedFrames);
+            }
+          }
+        })
+    }
+
+    collectAll();
+    return recordedFrames$;
+  }
+
+  getCurrentFrame(): Observable<HTMLCanvasElement | null> | undefined {
+    const divElement = document.getElementById('canvas-container'); // Replace with your div's ID
+    if (!divElement) return;
+
+    return new Observable(observer => {
+      html2canvas(divElement)
+        .then(canvas => observer.next(canvas))
+        .catch(err => observer.error(err));
+    });
   }
 
   stopRecording(): void {
-    console.log('this.recordedFrames = ', this.recordedFrames)
     if (this.recordedFrames.length > 0) {
       this.saveCanvasAsVideo(this.recordedFrames)
     }
@@ -151,7 +210,6 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
 
   saveCanvasAsVideo(canvases: HTMLCanvasElement[]) {
     this.demoVideo = canvases.map(c => c.toDataURL("image/png"))
-    console.log('this.demoVideo = ', this.demoVideo)
     // this.fileService.convertImageURLsToVideo(this.demoVideo);
 
     // this.fileService.generateVideo1(canvases);
@@ -160,7 +218,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
       Promise.all(promises).then(arrBlob => {
         const arrNonUllBlobs: Blob[] = [];
         arrBlob.map(b => b ? arrNonUllBlobs.push(b) : false);
-        this.fileService.generateVideo1(arrNonUllBlobs)
+        this.fileService.generateVideo(arrNonUllBlobs, (this.timelineService.standardSpeed / this.timelineService.framesPerUnitTime))
       });
     }
   }

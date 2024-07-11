@@ -1,6 +1,6 @@
 <div class="canvas-container" id="canvas-container">
     @for (layer of paintedLayers; track layer;) {
-        <img 
+        <img
             [src]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId].image"
             [style]="(layer | layerStyleString) + (layer | layerAnimationString)"
         >
