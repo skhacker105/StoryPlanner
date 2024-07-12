@@ -8,6 +8,8 @@ import { ILayer } from '../../interfaces/movie-layer';
 import { MemberService } from '../../services/member.service';
 import { StyleService } from '../../services/style.service';
 import { RecordingService } from '../../services/recording.service';
+import { FileService } from '../../services/file.service';
+import { Video } from '../../models/video';
 
 interface ILayersById { [key: string]: ILayer }
 
@@ -28,7 +30,8 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     private memberService: MemberService,
     private styleService: StyleService,
     private renderer: Renderer2,
-    public recordingService: RecordingService) {
+    public recordingService: RecordingService,
+    public fileService: FileService) {
     super();
   }
 
@@ -69,11 +72,11 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
         next: playing => this.paintedLayers = playing ? cloneDeep(this.paintedLayers) : this.paintedLayers
       });
 
-    // this.timelineService.recording
-    //   .pipe(takeUntil(this.isComponentActive))
-    //   .subscribe({
-    //     next: recording => recording ? this.startrecording() : this.stopRecording()
-    //   });
+    this.fileService.newVideo
+    .pipe(takeUntil(this.isComponentActive))
+    .subscribe({
+      next: video => this.showMovie(video)
+    });
   }
 
   ngOnDestroy(): void {
@@ -113,5 +116,18 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     styleEl.appendChild(this.renderer.createText(animationStr));
     this.renderer.appendChild(document.head, styleEl);
     this.paintedLayers = [...layersToUpdate, ...layersToAdd];
+  }
+
+  showMovie(video: Video) {
+    this.movieService.selectVideo(video.id);
+    const videoUrl = URL.createObjectURL(video.blob);
+
+    // Display video in video element
+    const videoElement = document.createElement('video');
+    videoElement.src = videoUrl;
+    videoElement.style.width = '100%'
+    videoElement.controls = true;
+    document.getElementById('canvas-video')?.appendChild(videoElement);
+    videoElement.play();
   }
 }

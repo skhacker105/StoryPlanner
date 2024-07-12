@@ -42,6 +42,9 @@ import { AnimationsComponent } from './component/layer-control/layer-properties/
 import { FormFieldComponent } from './component/_shared/form-field/form-field.component';
 import { JSONDiffComponent } from './component/_shared/jsondiff/jsondiff.component';
 import { LayerAnimationStringPipe } from './pipes/layer-animation-string.pipe';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AllMoviesComponent } from './component/all-movies/all-movies.component';
+import { VideoDisplayComponent } from './component/all-movies/video-display/video-display.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +72,9 @@ import { LayerAnimationStringPipe } from './pipes/layer-animation-string.pipe';
     AnimationsComponent,
     FormFieldComponent,
     JSONDiffComponent,
-    LayerAnimationStringPipe
+    LayerAnimationStringPipe,
+    AllMoviesComponent,
+    VideoDisplayComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +94,8 @@ import { LayerAnimationStringPipe } from './pipes/layer-animation-string.pipe';
     MatTooltipModule,
     MatButtonToggleModule,
     MatCheckboxModule,
-    MatSliderModule
+    MatSliderModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     provideAnimationsAsync()

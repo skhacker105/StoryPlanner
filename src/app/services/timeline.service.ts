@@ -25,7 +25,6 @@ export class TimelineService {
 
   playing = false;
   framesPerUnitTime = 4;
-  // recording = new BehaviorSubject<boolean>(false);
   playingStateChange = new Subject<boolean>();
 
   private maxPlayTime = -1;
@@ -96,7 +95,6 @@ export class TimelineService {
         }, this.frameSpeed);
       } else {
         this.pause();
-        // if (this.recording.value) this.stopRecording();
       }
     }
   }
@@ -110,16 +108,4 @@ export class TimelineService {
   setPlaybackSpeed(speed: IPlaySpeed) {
     this.selectedSpeed = speed;
   }
-
-  // startRecording() {
-  //   this.timeToEnd();
-  //   this.recording.next(true);
-  //   this.timeToZero();
-  //   this.play();
-  // }
-
-  // stopRecording() {
-  //   this.recording.next(false);
-  //   if (this.playing) this.pause()
-  // }
 }

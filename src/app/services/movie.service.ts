@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { UtilService } from './util.service';
 import { MemberService } from './member.service';
 import { IMovie } from '../interfaces/timeline-movie';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { IMemberStorage } from '../interfaces/member-storage';
 import { Movie } from '../models/movie';
 import { ILayer } from '../interfaces/movie-layer';
@@ -13,6 +13,8 @@ import { IMemberOption } from '../interfaces/member';
 import { createLayerWithDefaultProperties } from '../models/layer';
 import { ILayerProperties } from '../interfaces/movie-properties';
 import { ILayerAnimation } from '../interfaces/movie-animations';
+import { Video } from '../models/video';
+import { FileService } from './file.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +27,13 @@ export class MovieService extends ServiceBase implements OnDestroy {
   movieUpdated = new Subject<IMovie>();
   dictionaryMemberBook: IMemberBookDictionary = {};
 
+  allVideos: Video[] = [];
+  selectedVideoId = new BehaviorSubject<string | undefined>(undefined);
+
   public selectedLayer?: ILayer;
   public selectedLayerTime?: number;
 
-  constructor(private utilService: UtilService, private memberService: MemberService) {
+  constructor(private utilService: UtilService, private memberService: MemberService, private fileServie: FileService) {
     super();
 
     this.movieUpdated
@@ -55,6 +60,12 @@ export class MovieService extends ServiceBase implements OnDestroy {
           }
         }
       });
+
+    this.fileServie.newVideo
+    .pipe(takeUntil(this.isServiceActive))
+    .subscribe({
+      next: newVideo => this.addNewVideo(newVideo)
+    })
   }
 
   get versionNoString(): string {
@@ -194,5 +205,17 @@ export class MovieService extends ServiceBase implements OnDestroy {
     setTimeout(() => {
       this.selectedLayer = layer;
     }, 1);
+  }
+
+  addNewVideo(video: Video): void {
+    this.allVideos.push(video);
+  }
+
+  selectVideo(videoId: string): void {
+    this.selectedVideoId.next(videoId);
+  }
+
+  resetSelectedVideo(): void {
+    this.selectedVideoId.next(undefined);
   }
 }

@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { TimelineService } from '../../services/timeline.service';
 import { ComponentBase } from '../../base/component-base';
 import { takeUntil } from 'rxjs';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { RecordingService } from '../../services/recording.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-time-line',
@@ -14,22 +15,25 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
 
   arrTime: number[] = [];
   minimumNumDisplayLength = 10;
+  dialogRef?: MatDialogRef<any>
+  @ViewChild('settings') settings!: TemplateRef<any>;
 
   constructor(
     public timelineService: TimelineService,
-    public recordingService: RecordingService
+    public recordingService: RecordingService,
+    private dialog: MatDialog
   ) {
     super();
   }
 
   ngOnInit(): void {
     this.timelineService.endTime
-    .pipe(takeUntil(this.isComponentActive))
-    .subscribe({
-      next: time => {
-        this.arrTime = (new Array(time + 1)).fill(0).map((x,i) => i);
-      }
-    });
+      .pipe(takeUntil(this.isComponentActive))
+      .subscribe({
+        next: time => {
+          this.arrTime = (new Array(time + 1)).fill(0).map((x, i) => i);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -50,5 +54,9 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
 
   toggleRecording(): void {
     !this.recordingService.recording.value ? this.recordingService.startRecording() : this.recordingService.stopRecording();
+  }
+
+  handleSettingClick(): void {
+    this.dialogRef = this.dialog.open(this.settings);
   }
 }

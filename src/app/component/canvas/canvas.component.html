@@ -1,4 +1,14 @@
 <div class="canvas-container" id="canvas-container">
+
+    <div class="progress-spinner-container" *ngIf="fileService.fileProcessing">
+        <mat-progress-spinner
+            color="accent"
+            class="progress-spinner"
+            [mode]="fileService.renderingFrame ? 'determinate' : 'indeterminate'"
+            [value]="fileService.progressPercent">
+        </mat-progress-spinner>
+    </div>
+
     @for (layer of paintedLayers; track layer;) {
         <img
             [src]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId].image"

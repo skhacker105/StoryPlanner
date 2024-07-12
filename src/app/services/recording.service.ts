@@ -5,6 +5,7 @@ import { MovieService } from './movie.service';
 import { ServiceBase } from '../base/service-base';
 import html2canvas from 'html2canvas';
 import { FileService } from './file.service';
+import computedStyleToInlineStyle from 'computed-style-to-inline-style';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,13 @@ export class RecordingService extends ServiceBase {
     super();
   }
 
+  toggleRecording(): void {
+    if (this.recording.value) this.stopRecording();
+    else this.startRecording();
+  }
+
   startRecording(): void {
+    if (this.timelineService.playing) this.timelineService.pause();
     this.timelineService.timeToEnd();
     this.recording.next(true);
     this.timelineService.timeToZero();
@@ -34,7 +41,10 @@ export class RecordingService extends ServiceBase {
 
   runWhileRecording(frameCanvas: HTMLCanvasElement[]): void {
     if (!this.recording.value) {
+      if (frameCanvas.length > 0)
+        this.recordedFrames = this.recordedFrames.concat(frameCanvas);
       this.stopRecording();
+      this.saveCanvasAsVideo();
       return;
     }
 
@@ -43,17 +53,21 @@ export class RecordingService extends ServiceBase {
       this.captureFrame(frameCanvas);
 
     } else { // store all collected frames and increase time
+      this.recordedFrames = this.recordedFrames.concat(frameCanvas);
+
       if (this.timelineService.hasNextTime()) {
 
-        this.recordedFrames = this.recordedFrames.concat(frameCanvas);
         this.timelineService.increaseTime();
         this.runWhileRecording([]);
-      } else this.stopRecording();
+      } else {
+        this.stopRecording();
+        this.saveCanvasAsVideo();
+      }
     }
   }
 
   captureFrame(frameCanvas: HTMLCanvasElement[]): void {
-    const divElement = document.getElementById(this.canvasContainerId); // Replace with your div's ID
+    const divElement = document.getElementById(this.canvasContainerId);
     if (!divElement) {
       this.stopRecording();
       return;
@@ -61,46 +75,41 @@ export class RecordingService extends ServiceBase {
     this.animationPausedForCapture.next(true);
 
     setTimeout(() => {
-      html2canvas(divElement)
-          .then(canvas => {
-            frameCanvas.push(canvas);
-  
-            this.animationPausedForCapture.next(false);
-            setTimeout(() => {
-              this.runWhileRecording(frameCanvas);
-  
-            }, this.timelineService.frameSpeedByPerUnitTime);
-  
-          })
-          .catch(err => {
-            console.log('err = ', err)
-            this.stopRecording();
-          });
-    }, 1000);
+      html2canvas(divElement, {
+        onclone: doc => {
+          const newDivElement = document.getElementById(this.canvasContainerId);
+          if (newDivElement)
+            computedStyleToInlineStyle(newDivElement, { recursive: true })
+        }
+      })
+        .then(canvas => {
+          frameCanvas.push(canvas);
+
+          this.animationPausedForCapture.next(false);
+          setTimeout(() => {
+            this.runWhileRecording(frameCanvas);
+
+          }, this.timelineService.frameSpeedByPerUnitTime);
+
+        })
+        .catch(err => {
+          console.log('err = ', err)
+          this.stopRecording();
+        });
+    }, 100);
   }
 
   stopRecording(): void {
+    if (!this.recording.value) return;
+
     this.recording.next(false);
     this.timelineService.resetMaxPlayTime();
-    this.saveCanvasAsVideo();
   }
 
-  saveCanvasAsVideo() {
+  saveCanvasAsVideo(): void {
     if (!this.recordedFrames || this.recordedFrames.length === 0) return;
 
-    const promises = this.recordedFrames.map(c => new Promise<Blob | null>(resolve => c.toBlob(blob => resolve(blob))));
-    if (promises && promises.length > 0) {
-
-      Promise.all(promises).then(arrBlob => {
-        const arrNonUllBlobs: Blob[] = [];
-
-        arrBlob.map(b => b ? arrNonUllBlobs.push(b) : false);
-        this.fileService.generateVideo(
-          arrNonUllBlobs,
-          (this.timelineService.frameSpeedByPerUnitTime)
-        );
-
-      });
-    }
+    const videoLength = this.recordedFrames.length / this.timelineService.framesPerUnitTime;
+    this.fileService.saveFramesAsVideo(this.recordedFrames, this.timelineService.frameSpeedByPerUnitTime, videoLength)
   }
 }
