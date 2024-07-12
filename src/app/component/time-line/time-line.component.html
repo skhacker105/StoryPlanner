@@ -46,7 +46,7 @@
                 <button mat-icon-button color="primary" (click)="toggleRecording()" class="play-pause-icon">
                     <mat-icon>
                         {{
-                            timelineService.recording.value ? 'radio_button_checked' : 'radio_button_unchecked'
+                            recordingService.recording.value ? 'radio_button_checked' : 'radio_button_unchecked'
                         }}
                     </mat-icon>
                 </button>

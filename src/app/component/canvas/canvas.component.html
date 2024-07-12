@@ -3,9 +3,12 @@
         <img
             [src]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId].image"
             [style]="(layer | layerStyleString) + (layer | layerAnimationString)"
+            [ngClass]="{
+                'animation-paused': recordingService.animationPausedForCapture.value
+            }"
         >
     }
 
-    <div class="canvas-video" id="canvas-video" *ngIf="demoVideo.length > 0">
+    <div class="canvas-video" id="canvas-video" *ngIf="true">
     </div>
 </div>

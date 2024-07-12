@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TimelineService } from '../../services/timeline.service';
 import { ComponentBase } from '../../base/component-base';
 import { takeUntil } from 'rxjs';
-import { IPlaySpeed } from '../../interfaces/play-speed';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { RecordingService } from '../../services/recording.service';
 
 @Component({
   selector: 'app-time-line',
@@ -16,7 +16,8 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
   minimumNumDisplayLength = 10;
 
   constructor(
-    public timelineService: TimelineService
+    public timelineService: TimelineService,
+    public recordingService: RecordingService
   ) {
     super();
   }
@@ -48,6 +49,6 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
   }
 
   toggleRecording(): void {
-    !this.timelineService.recording.value ? this.timelineService.startRecording() : this.timelineService.stopRecording();
+    !this.recordingService.recording.value ? this.recordingService.startRecording() : this.recordingService.stopRecording();
   }
 }
