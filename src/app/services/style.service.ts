@@ -85,12 +85,11 @@ export class StyleService {
 
     let animationString = '';
     animationString += this.getAnimationBasicPropertiesString(layer, layer.animation);
-    console.log('animationString = ', animationString)
     return animationString ? `animation: ${animationString};` : '';
   }
 
   keyFrameName(layer: ILayer): string {
-    return layer.layerId;
+    return 'MA_' + layer.layerId;
   }
 
   getAnimationBasicPropertiesString(layer: ILayer, animation: ILayerAnimation): string {

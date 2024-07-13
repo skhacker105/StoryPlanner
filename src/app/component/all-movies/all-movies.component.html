@@ -18,7 +18,7 @@
         
         @for (video of movieService.allVideos; track video;) {
             <app-video-display [video]="video" [isSelected]="video.id === movieService.selectedVideoId.value"
-            (onClick)="handleVideoClick(video)" (onDelete)="handleDeleteVideo(video)">
+            (onClick)="handleVideoClick(video)" (onDelete)="handleDeleteVideo(video)" (onDownloadVideo)="downloadVideo(video)">
             </app-video-display>
         }
     </div>

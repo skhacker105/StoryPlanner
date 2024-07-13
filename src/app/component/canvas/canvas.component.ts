@@ -140,7 +140,6 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     // videoElement.play();
   }
 
-
   resetSelectedVideo() {
     this.videoURLToPlay = undefined;
     this.movieService.resetSelectedVideo();

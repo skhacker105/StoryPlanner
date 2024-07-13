@@ -76,11 +76,11 @@ export class RecordingService extends ServiceBase {
 
     setTimeout(() => {
       html2canvas(divElement, {
-        onclone: doc => {
-          const newDivElement = document.getElementById(this.canvasContainerId);
-          if (newDivElement)
-            computedStyleToInlineStyle(newDivElement, { recursive: true })
-        }
+        // onclone: doc => {
+        //   const newDivElement = document.getElementById(this.canvasContainerId);
+        //   if (newDivElement)
+        //     computedStyleToInlineStyle(newDivElement, { recursive: true })
+        // }
       })
         .then(canvas => {
           frameCanvas.push(canvas);

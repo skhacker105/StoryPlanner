@@ -11,6 +11,7 @@ export class VideoDisplayComponent {
   @Input() isSelected = false;
   @Output() onDelete = new EventEmitter<Video>();
   @Output() onClick = new EventEmitter<Video>();
+  @Output() onDownloadVideo = new EventEmitter<Video>();
 
   handleDeleteClick(member: Video, e: any): void {
     e.stopPropagation();
@@ -21,9 +22,6 @@ export class VideoDisplayComponent {
     e.stopPropagation();
     if (!this.video) return;
 
-    let link = document.createElement("a");
-    link.download = "image.mp4";
-    link.href = URL.createObjectURL(this.video.blob);
-    link.click();
+    this.onDownloadVideo.emit(this.video);
   }
 }
