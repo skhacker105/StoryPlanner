@@ -21,12 +21,14 @@ export class LayerDisplayComponent extends ComponentBase implements OnInit, OnDe
   @Output() onGoToProjectionStart = new EventEmitter<ILayer>();
 
   hasNoMatch = false;
+  isBroken = false;
 
   constructor() {
     super();
   }
 
   ngOnInit(): void {
+    this.isBroken = !this.layerMember || !this.layerOption;
   }
 
   ngOnDestroy(): void {

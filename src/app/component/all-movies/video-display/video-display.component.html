@@ -1,4 +1,4 @@
-<div class="video-display-container" *ngIf="video" matRipple (click)="onCLick.emit()"
+<div class="video-display-container" *ngIf="video" matRipple (click)="onClick.emit()"
     [ngClass]="{
         'selected': isSelected
     }">
@@ -16,6 +16,11 @@
         <div class="video-length">
             {{ video.videoLength }} s
         </div>
+        <button mat-icon-button (click)="downloadVideo($event)">
+            <mat-icon>
+                download
+            </mat-icon>
+        </button>
         <button mat-icon-button (click)="handleDeleteClick(video, $event)">
             <mat-icon>
                 delete

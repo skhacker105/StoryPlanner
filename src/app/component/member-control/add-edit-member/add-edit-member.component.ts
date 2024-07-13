@@ -18,14 +18,14 @@ export class AddEditMemberComponent implements OnInit {
   readonly dialog = inject(MatDialog);
 
   memberForm = new FormGroup({
-    memberId: new FormControl<string>(''),
+    id: new FormControl<string>(''),
     name: new FormControl<string>('', { validators: Validators.required }),
     image: new FormControl<ImageControl>('', { validators: Validators.required }),
     options: new FormArray([] as any[])
   });
 
   get popupTitle(): string {
-    return this.data?.memberId ? 'Edit Member Layer' : 'Add Member as Layer';
+    return this.data?.id ? 'Edit Member Layer' : 'Add Member as Layer';
   }
 
   get memberNameCtrl(): FormControl<string | null> {

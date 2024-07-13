@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { UtilService } from './util.service';
 import { MemberService } from './member.service';
 import { IMovie } from '../interfaces/timeline-movie';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
 import { IMemberStorage } from '../interfaces/member-storage';
 import { Movie } from '../models/movie';
 import { ILayer } from '../interfaces/movie-layer';
@@ -15,6 +15,8 @@ import { ILayerProperties } from '../interfaces/movie-properties';
 import { ILayerAnimation } from '../interfaces/movie-animations';
 import { Video } from '../models/video';
 import { FileService } from './file.service';
+import { IndexedDBManager } from '../storage/indexedDB.manager';
+import { Tables } from '../constants/constant';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +28,12 @@ export class MovieService extends ServiceBase implements OnDestroy {
   movie?: Movie;
   movieUpdated = new Subject<IMovie>();
   dictionaryMemberBook: IMemberBookDictionary = {};
+  movieStorageManager = new IndexedDBManager<IMovie>(Tables.MovieStorage, 'id');
 
   allVideos: Video[] = [];
+  playVideo = new BehaviorSubject<Video | undefined>(undefined);
   selectedVideoId = new BehaviorSubject<string | undefined>(undefined);
+  videoStorageManager = new IndexedDBManager<Video>(Tables.VideoListStorage, 'id');
 
   public selectedLayer?: ILayer;
   public selectedLayerTime?: number;
@@ -39,33 +44,27 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.movieUpdated
       .pipe(takeUntil(this.isServiceActive))
       .subscribe({
-        next: movie => this.saveMovieToLocalStorage(movie)
+        next: movie => this.saveMovieToStorage(movie)
       });
 
     this.memberService.members
       .pipe(takeUntil(this.isServiceActive))
       .subscribe({
-        next: members => this.dictionaryMemberBook = this.getMemberOptionDictionary(members)
-      });
-
-    this.memberService.memberStorageUpdated
-      .pipe(takeUntil(this.isServiceActive))
-      .subscribe({
-        next: memberStorage => {
-          if (!this.movie) this.loadMovieFromLocalStorage(memberStorage);
-          else {
-            if (memberStorage.name !== this.movie.memberBook.name) this.movie.memberBook.name = memberStorage.name;
-            if (memberStorage.version !== this.movie.memberBook.version) this.movie.memberBook.version = memberStorage.version;
-            this.movieUpdated.next(this.movie);
-          }
+        next: members => {
+          if (members.length === 0) return;
+          this.dictionaryMemberBook = this.getMemberOptionDictionary(members);
+          if (!this.movie) this.loadMovieFromStorage();
         }
       });
 
     this.fileServie.newVideo
-    .pipe(takeUntil(this.isServiceActive))
-    .subscribe({
-      next: newVideo => this.addNewVideo(newVideo)
-    })
+      .pipe(takeUntil(this.isServiceActive))
+      .subscribe({
+        next: newVideo => this.addNewVideo(newVideo)
+      })
+
+
+    this.loadVideosFromStorage();
   }
 
   get versionNoString(): string {
@@ -94,10 +93,10 @@ export class MovieService extends ServiceBase implements OnDestroy {
   }
 
   getMemberOptionDictionary(members: Member[]): IMemberBookDictionary {
-    return members.reduce(
+    const dict = members.reduce(
       (objMember: IMemberBookDictionary, member: Member) => {
 
-        if (!objMember[member.memberId]) objMember[member.memberId] = { member, options: {} }
+        if (!objMember[member.id]) objMember[member.id] = { member, options: {} }
 
         member.options.reduce(
           (objOption: IMemberOptionDictionary, option: IMemberOption) => {
@@ -105,17 +104,19 @@ export class MovieService extends ServiceBase implements OnDestroy {
             if (!objOption[option.optionId]) objOption[option.optionId] = option;
             return objOption;
           },
-          objMember[member.memberId].options)
+          objMember[member.id].options)
         return objMember;
       },
       {} as IMemberBookDictionary)
+    return dict;
   }
 
-  createDefaultMovie(memberBook: IMemberStorage): void {
+  createDefaultMovie(): void {
     this.movie = new Movie({
+      id: this.utilService.generateNewId(),
       memberBook: {
-        name: memberBook.name,
-        version: memberBook.version
+        name: '',
+        version: ''
       },
       movieName: 'MyMovie',
       timeline: {},
@@ -126,35 +127,48 @@ export class MovieService extends ServiceBase implements OnDestroy {
       }
     } as IMovie);
     this.movieUpdated.next(this.movie);
+    this.movieStorageManager.add(this.movie);
   }
 
-  loadMovieFromLocalStorage(memberBook: IMemberStorage): void {
-    const savedMovie = localStorage.getItem(this.movieLocalStorageKey);
-    if (!savedMovie) this.createDefaultMovie(memberBook);
-    else {
-      const storedMovie: IMovie = JSON.parse(savedMovie);
-
-      if (storedMovie.memberBook.name !== memberBook.name || storedMovie.memberBook.version !== memberBook.version) {
-        console.log('Locally saved movie do not matches with your locally saved Book')
-      } else {
-        this.movie = new Movie(storedMovie);
-        this.movieUpdated.next(this.movie);
-      }
-    }
+  loadVideosFromStorage() {
+    this.videoStorageManager.getAll()
+      .pipe(takeUntil(this.isServiceActive))
+      .subscribe({
+        next: videos => this.allVideos = videos
+      });
   }
 
-  saveMovieToLocalStorage(movie: IMovie): void {
-    localStorage.setItem(this.movieLocalStorageKey, JSON.stringify(movie));
+  loadMovieFromStorage(): void {
+    this.movieStorageManager.getAll()
+      .pipe(take(1))
+      .subscribe({
+        next: savedMovies => {
+          if (savedMovies.length === 0) this.createDefaultMovie();
+          else {
+            const storedMovie = savedMovies[0];
+            // if (storedMovie.memberBook.name !== memberBook.name || storedMovie.memberBook.version !== memberBook.version) {
+            //   console.log('Locally saved movie do not matches with your locally saved Book')
+            // } else {
+            this.movie = new Movie(storedMovie);
+            this.movieUpdated.next(this.movie);
+            // }
+          }
+        }
+      });
   }
 
-  addMemberOptionToTime(time: number, memberId: string, memberOptionId: string): void {
+  saveMovieToStorage(movie: IMovie): void {
+    this.movieStorageManager.update(movie);
+  }
+
+  addMemberOptionToTime(time: number, id: string, memberOptionId: string): void {
     if (!this.movie) {
       console.log('No movie to add layer');
       return;
     }
 
-    const newLayer: ILayer = createLayerWithDefaultProperties(this.utilService.generateNewId(), time, memberId, memberOptionId);
-    this.movie.addMemberOptionToTime(time, memberId, memberOptionId, newLayer);
+    const newLayer: ILayer = createLayerWithDefaultProperties(this.utilService.generateNewId(), time, id, memberOptionId);
+    this.movie.addMemberOptionToTime(time, id, memberOptionId, newLayer);
     this.movieUpdated.next(this.movie);
   }
 
@@ -209,6 +223,12 @@ export class MovieService extends ServiceBase implements OnDestroy {
 
   addNewVideo(video: Video): void {
     this.allVideos.push(video);
+    this.videoStorageManager.add(video);
+  }
+
+  deleteVideo(videoId: string) {
+    this.videoStorageManager.delete(videoId);
+    this.loadVideosFromStorage();
   }
 
   selectVideo(videoId: string): void {

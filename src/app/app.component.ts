@@ -64,6 +64,6 @@ export class AppComponent extends ComponentBase implements OnInit, OnDestroy {
   }
 
   addOptionToMovieTimeLine(member: Member, option: IMemberOption): void {
-    this.movieService.addMemberOptionToTime(this.timelineService.currentTime.value, member.memberId, option.optionId);
+    this.movieService.addMemberOptionToTime(this.timelineService.currentTime.value, member.id, option.optionId);
   }
 }

@@ -11,7 +11,7 @@
 
     @for (layer of paintedLayers; track layer;) {
         <img
-            [src]="movieService.dictionaryMemberBook[layer.memberId].options[layer.memberOptionId].image"
+            [src]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.image"
             [style]="(layer | layerStyleString) + (layer | layerAnimationString)"
             [ngClass]="{
                 'animation-paused': recordingService.animationPausedForCapture.value
@@ -19,6 +19,10 @@
         >
     }
 
-    <div class="canvas-video" id="canvas-video" *ngIf="true">
+    <div class="canvas-video" id="canvas-video" *ngIf="videoURLToPlay">
+        <button type="button" mat-icon-button class="close-video" (click)="resetSelectedVideo()">
+            <mat-icon>close</mat-icon>
+        </button>
+        <video [src]="videoURLToPlay" controls></video>
     </div>
 </div>

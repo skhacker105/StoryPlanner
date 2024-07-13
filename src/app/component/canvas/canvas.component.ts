@@ -21,6 +21,7 @@ interface ILayersById { [key: string]: ILayer }
 export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy {
 
   currentTime = 0;
+  videoURLToPlay: string | undefined;
   paintedLayers: ILayer[] = [];
   recordedFrames: HTMLCanvasElement[] = [];
 
@@ -77,6 +78,14 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     .subscribe({
       next: video => this.showMovie(video)
     });
+
+    this.movieService.playVideo
+    .pipe(takeUntil(this.isComponentActive))
+    .subscribe({
+      next: video => {
+        video ? this.showMovie(video) : this.resetSelectedVideo();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -120,14 +129,20 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
 
   showMovie(video: Video) {
     this.movieService.selectVideo(video.id);
-    const videoUrl = URL.createObjectURL(video.blob);
-
+    this.videoURLToPlay = URL.createObjectURL(video.blob);
+    
     // Display video in video element
-    const videoElement = document.createElement('video');
-    videoElement.src = videoUrl;
-    videoElement.style.width = '100%'
-    videoElement.controls = true;
-    document.getElementById('canvas-video')?.appendChild(videoElement);
-    videoElement.play();
+    // const videoElement = document.createElement('video');
+    // videoElement.src = videoUrl;
+    // videoElement.style.width = '100%'
+    // videoElement.controls = true;
+    // document.getElementById('canvas-video')?.appendChild(videoElement);
+    // videoElement.play();
+  }
+
+
+  resetSelectedVideo() {
+    this.videoURLToPlay = undefined;
+    this.movieService.resetSelectedVideo();
   }
 }

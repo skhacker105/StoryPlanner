@@ -28,7 +28,7 @@ export class MemberControlComponent extends ComponentBase implements OnDestroy {
   }
 
   compareSelectedMembers(member: IMember): boolean {
-    return member.memberId === this.memberService.selectedMember?.['memberId'];
+    return member.id === this.memberService.selectedMember?.['id'];
   }
 
   loadAddMemberPopup(): void {
@@ -80,8 +80,8 @@ export class MemberControlComponent extends ComponentBase implements OnDestroy {
   }
 
   handleDeleteMember(member: Member): void {
-    this.memberService.removeMember(member.memberId);
-    if (this.memberService.selectedMember?.memberId === member.memberId) this.memberService.selectedMember = undefined;
+    this.memberService.removeMember(member.id);
+    if (this.memberService.selectedMember?.id === member.id) this.memberService.selectedMember = undefined;
   }
 
   handleMemberClick(member: Member): void {

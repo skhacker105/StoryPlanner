@@ -2,10 +2,12 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Member } from '../models/members';
 import { IMember, IMemberOption } from '../interfaces/member';
 import { UtilService } from './util.service';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
 import { IVersion } from '../interfaces/version';
 import { IMemberStorage } from '../interfaces/member-storage';
 import { ServiceBase } from '../base/service-base';
+import { IndexedDBManager } from '../storage/indexedDB.manager';
+import { Tables } from '../constants/constant';
 
 @Injectable({
   providedIn: 'root'
@@ -22,21 +24,22 @@ export class MemberService extends ServiceBase implements OnDestroy {
   members = new BehaviorSubject<Member[]>([]);
 
   public selectedMember?: Member;
-  memberStorageUpdated = new Subject<IMemberStorage>();
+  memberBookDetail = new Subject<IMemberStorage>();
+  memberStorageManager = new IndexedDBManager<IMember>(Tables.MemberStorage, 'id');
 
   constructor(private utilService: UtilService) {
     super();
-    this.memberStorageUpdated
-    .pipe(takeUntil(this.isServiceActive))
-    .subscribe({
-      next: memberStorage => this.saveMembersToLocalStorage(memberStorage)
-    });
-    this.loadSavedMembersFromLocalStorage();
+    this.memberBookDetail
+      .pipe(takeUntil(this.isServiceActive))
+      .subscribe({
+        next: memberStorage => this.saveMembersToLocalStorage(memberStorage)
+      });
     this.members
-    .pipe(takeUntil(this.isServiceActive))
-    .subscribe({
-      next: members => this.fireMemberStorageUpdate()
-    });
+      .pipe(takeUntil(this.isServiceActive))
+      .subscribe({
+        next: members => this.fireMemberStorageUpdate()
+      });
+    this.loadSavedMembersFromStorage();
   }
 
   get versionNoString(): string {
@@ -55,25 +58,40 @@ export class MemberService extends ServiceBase implements OnDestroy {
     this.onDestroy();
   }
 
-  loadSavedMembersFromLocalStorage(): void {
+  loadSavedMembersFromStorage(): void {
+
     const savedMemberBook = localStorage.getItem(this.membersLocalStorageKey);
     if (savedMemberBook) {
       const storedMemberBook: IMemberStorage = JSON.parse(savedMemberBook);
       this.versionNoString = storedMemberBook.version;
       this.memberBookName = storedMemberBook.name;
-      const members = storedMemberBook.members.map(m => new Member(m));
-      this.members.next(members);
+      
+      // const members = storedMemberBook.members.map((m: IMember) => new Member({
+      //   id: m.id ? m.id : this.utilService.generateNewId(),
+      //   image: m.image,
+      //   name: m.name,
+      //   options: m.options
+      // }));
+      // console.log('members = ', members)
+      // members.map((m: any) => this.memberStorageManager.add(m))
     }
+
+    this.memberStorageManager.getAll()
+      .pipe(take(1))
+      .subscribe({
+        next: members => {
+          this.members.next(members.map(m => new Member(m)));
+        }
+      })
   }
 
   saveMembersToLocalStorage(members: IMemberStorage): void {
     localStorage.setItem(this.membersLocalStorageKey, JSON.stringify(members));
-  }  
+  }
 
   fireMemberStorageUpdate(): void {
     setTimeout(() => {
-      this.memberStorageUpdated.next({
-        members: this.members.value,
+      this.memberBookDetail.next({
         name: this.memberBookName,
         version: this.versionNoString
       });
@@ -91,22 +109,24 @@ export class MemberService extends ServiceBase implements OnDestroy {
   }
 
   addNewMember(member: IMember): void {
-    member.memberId = this.utilService.generateNewId();
+    member.id = this.utilService.generateNewId();
     if (member.options.length > 0) member.options = this.generateOptionIds(member.options);
 
     const members = this.members.value;
     members.push(new Member(member));
+    this.memberStorageManager.add(member)
     this.members.next(members);
   }
 
-  removeMember(memberId: string): void {
-    const filteredMembers = this.members.value.filter(member => member.memberId !== memberId);
+  removeMember(id: string): void {
+    const filteredMembers = this.members.value.filter(member => member.id !== id);
     this.members.next(filteredMembers);
+    this.memberStorageManager.delete(id);
   }
 
   updateMember(memberData: IMember): void {
     const members = this.members.value;
-    let member = members.find(member => member.memberId === memberData.memberId);
+    let member = members.find(member => member.id === memberData.id);
     if (!member) {
       console.log('No member found to update for ', memberData);
       return;
@@ -115,6 +135,7 @@ export class MemberService extends ServiceBase implements OnDestroy {
     if (memberData.options.length > 0) memberData.options = this.generateOptionIds(memberData.options);
     member.updateDetails(memberData);
     this.members.next(members);
+    this.memberStorageManager.update(memberData);
   }
 
   generateOptionIds(options: IMemberOption[]): IMemberOption[] {
@@ -124,47 +145,50 @@ export class MemberService extends ServiceBase implements OnDestroy {
     });
   }
 
-  addMemberOption(memberId: string, option: IMemberOption): void {
+  addMemberOption(id: string, option: IMemberOption): void {
     const members = this.members.value;
-    const member = members.find(member => member.memberId === memberId);
+    const member = members.find(member => member.id === id);
     if (!member) {
-      console.log('No member found to add option for ', memberId);
+      console.log('No member found to add option for ', id);
       return;
     }
 
     member.addOption(option);
     this.members.next(members);
+    this.memberStorageManager.update(member);
   }
 
-  updateMemberOption(memberId: string, option: IMemberOption): void {
+  updateMemberOption(id: string, option: IMemberOption): void {
     const members = this.members.value;
-    const member = members.find(member => member.memberId === memberId);
+    const member = members.find(member => member.id === id);
     if (!member) {
-      console.log('No member found to update option for ', memberId);
+      console.log('No member found to update option for ', id);
       return;
     }
 
     member.updateOption(option);
     this.members.next(members);
+    this.memberStorageManager.update(member);
   }
 
-  removeMemberOption(memberId: string, optionId: string): void {
+  removeMemberOption(id: string, optionId: string): void {
     const members = this.members.value;
-    const member = members.find(member => member.memberId === memberId);
+    const member = members.find(member => member.id === id);
     if (!member) {
-      console.log('No member found to update option for ', memberId);
+      console.log('No member found to update option for ', id);
       return;
     }
 
     member.removeOption(optionId);
     this.members.next(members);
+    this.memberStorageManager.update(member);
   }
 
   resetSelectedRecord(): void {
-      this.selectedMember = undefined;
+    this.selectedMember = undefined;
   }
 
   selectRecord(record: Member): void {
-      this.selectedMember = record;
+    this.selectedMember = record;
   }
 }

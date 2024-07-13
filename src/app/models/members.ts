@@ -2,13 +2,13 @@ import { IMember, IMemberOption } from "../interfaces/member";
 
 export class Member implements IMember {
 
-    memberId: string;
+    id: string;
     name: string;
     image: any;
     options: IMemberOption[];
 
     constructor(member: IMember) {
-        this.memberId = member.memberId;
+        this.id = member.id;
         this.image = member.image;
         this.name = member.name;
         this.options = member.options;
@@ -41,7 +41,7 @@ export class Member implements IMember {
 
     getJSON() {
         return {
-            memberId: this.memberId,
+            id: this.id,
             name: this.name,
             image: this.image,
             options: this.options

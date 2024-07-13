@@ -17,7 +17,8 @@
         <div class="place-holder-layer" *cdkDragPlaceholder></div>
         
         @for (video of movieService.allVideos; track video;) {
-            <app-video-display [video]="video" [isSelected]="video.id === movieService.selectedVideoId.value">
+            <app-video-display [video]="video" [isSelected]="video.id === movieService.selectedVideoId.value"
+            (onClick)="handleVideoClick(video)" (onDelete)="handleDeleteVideo(video)">
             </app-video-display>
         }
     </div>

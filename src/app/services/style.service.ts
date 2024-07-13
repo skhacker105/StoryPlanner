@@ -85,6 +85,7 @@ export class StyleService {
 
     let animationString = '';
     animationString += this.getAnimationBasicPropertiesString(layer, layer.animation);
+    console.log('animationString = ', animationString)
     return animationString ? `animation: ${animationString};` : '';
   }
 

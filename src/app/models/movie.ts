@@ -7,12 +7,14 @@ import { ILayerProperties } from "../interfaces/movie-properties";
 import { ILayerAnimation } from "../interfaces/movie-animations";
 
 export class Movie implements IMovie {
+    id: string;
     memberBook: IMovieMemberBook;
     movieName: string;
     version: IVersion;
     timeline: { [key: number]: IMovieTime; };
 
     constructor(movie: IMovie) {
+        this.id = movie.id;
         this.movieName = movie.movieName;
         this.version = movie.version;
         this.timeline = movie.timeline;

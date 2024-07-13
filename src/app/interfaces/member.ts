@@ -1,5 +1,5 @@
 export interface IMember {
-    memberId: string;
+    id: string;
     name: string;
     image: any;
     options: IMemberOption[];

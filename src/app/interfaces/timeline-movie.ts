@@ -3,6 +3,7 @@ import { ILayer } from "./movie-layer";
 import { IVersion } from "./version";
 
 export interface IMovie {
+    id: string;
     memberBook: IMovieMemberBook;
     movieName: string;
     version: IVersion;

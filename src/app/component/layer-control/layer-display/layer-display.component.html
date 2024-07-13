@@ -1,12 +1,20 @@
-<div class="layer-display-container" *ngIf="!hasNoMatch && layer && layerMember && layerOption" matRipple (click)="onCLick.emit()"
+<div class="layer-display-container" *ngIf="!hasNoMatch && layer" matRipple (click)="onCLick.emit()"
     [ngClass]="{
         'selected': isSelected,
-        'isProjected': layer.isProjected
+        'isProjected': layer.isProjected || isBroken
     }">
     <div class="image-display">
-        <app-image-icon [image]="layerOption.image"></app-image-icon>
+        @if (!isBroken) {
+            <app-image-icon [image]="layerOption?.image"></app-image-icon>
+        } @else {
+            <mat-icon color="warn">error</mat-icon>
+        }
     </div>
-    <div class="layer-option-name"> {{ layerMember.name }} - {{ layerOption.name }}</div>
+    @if (!isBroken) {
+        <div class="layer-option-name"> {{ layerMember?.name }} - {{ layerOption?.name }}</div>
+    } @else{
+        <div class="layer-option-name">Broken Link</div>
+    }
     <div class="action">
         <button mat-icon-button *ngIf="layer.isProjected"
         matTooltip="{{ 'Got to time ' + layer.projectionStartTime + ' to view start of projection' }}"
@@ -15,7 +23,7 @@
                 link
             </mat-icon>
         </button>
-        <button mat-icon-button (click)="handleDeleteClick(layer, $event)">
+        <button mat-icon-button (click)="handleDeleteClick(layer, $event)" [color]="!isBroken ? '' : 'warn'">
             <mat-icon>
                 delete
             </mat-icon>
