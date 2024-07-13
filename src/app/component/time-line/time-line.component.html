@@ -44,7 +44,7 @@
             
             <!-- Play / Pause -->
             <div class="stat-block no-padding">
-                <button mat-icon-button color="primary" (click)="playPause()" class="play-pause-icon">
+                <button mat-icon-button [color]="timelineService.playing ? 'warn' : 'primary'" (click)="playPause()" class="play-pause-icon">
                     <mat-icon>
                         {{ timelineService.playing ? 'pause_circle' : 'not_started' }}
                     </mat-icon>
@@ -53,7 +53,7 @@
             
             <!-- Recording -->
             <div class="stat-block no-padding">
-                <button mat-icon-button color="primary" (click)="toggleRecording()" class="play-pause-icon">
+                <button mat-icon-button [color]="recordingService.recording.value ? 'warn' : 'primary'" (click)="toggleRecording()" class="play-pause-icon">
                     <mat-icon>
                         {{ recordingService.recording.value ? 'stop_circle' : 'radio_button_checked' }}
                     </mat-icon>
