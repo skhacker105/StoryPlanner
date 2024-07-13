@@ -30,15 +30,10 @@ export class MovieService extends ServiceBase implements OnDestroy {
   dictionaryMemberBook: IMemberBookDictionary = {};
   movieStorageManager = new IndexedDBManager<IMovie>(Tables.MovieStorage, 'id');
 
-  allVideos: Video[] = [];
-  playVideo = new BehaviorSubject<Video | undefined>(undefined);
-  selectedVideoId = new BehaviorSubject<string | undefined>(undefined);
-  videoStorageManager = new IndexedDBManager<Video>(Tables.VideoListStorage, 'id');
-
   public selectedLayer?: ILayer;
   public selectedLayerTime?: number;
 
-  constructor(private utilService: UtilService, private memberService: MemberService, private fileServie: FileService) {
+  constructor(private utilService: UtilService, private memberService: MemberService) {
     super();
 
     this.movieUpdated
@@ -56,15 +51,6 @@ export class MovieService extends ServiceBase implements OnDestroy {
           if (!this.movie) this.loadMovieFromStorage();
         }
       });
-
-    this.fileServie.newVideo
-      .pipe(takeUntil(this.isServiceActive))
-      .subscribe({
-        next: newVideo => this.addNewVideo(newVideo)
-      })
-
-
-    this.loadVideosFromStorage();
   }
 
   get versionNoString(): string {
@@ -128,14 +114,6 @@ export class MovieService extends ServiceBase implements OnDestroy {
     } as IMovie);
     this.movieUpdated.next(this.movie);
     this.movieStorageManager.add(this.movie);
-  }
-
-  loadVideosFromStorage() {
-    this.videoStorageManager.getAll()
-      .pipe(takeUntil(this.isServiceActive))
-      .subscribe({
-        next: videos => this.allVideos = videos
-      });
   }
 
   loadMovieFromStorage(): void {
@@ -219,23 +197,5 @@ export class MovieService extends ServiceBase implements OnDestroy {
     setTimeout(() => {
       this.selectedLayer = layer;
     }, 1);
-  }
-
-  addNewVideo(video: Video): void {
-    this.allVideos.push(video);
-    this.videoStorageManager.add(video);
-  }
-
-  deleteVideo(videoId: string) {
-    this.videoStorageManager.delete(videoId);
-    this.loadVideosFromStorage();
-  }
-
-  selectVideo(videoId: string): void {
-    this.selectedVideoId.next(videoId);
-  }
-
-  resetSelectedVideo(): void {
-    this.selectedVideoId.next(undefined);
   }
 }

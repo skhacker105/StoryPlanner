@@ -71,6 +71,14 @@ export class TimelineService {
     return this.currentTime.value < (this.maxPlayTime !== -1 ? this.maxPlayTime : this.endTime.value);
   }
 
+  getMaxPlayTime(): number {
+    return this.maxPlayTime;
+  }
+
+  hasMaxPlayTime(): boolean {
+    return this.maxPlayTime === -1
+  }
+
   setMaxPlayTime(maxTime: number): void {
     this.maxPlayTime = maxTime;
   }

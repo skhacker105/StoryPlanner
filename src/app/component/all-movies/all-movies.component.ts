@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../_shared/confirmation-dialog/confirmation-dialog.component';
 import { take } from 'rxjs';
 import moment from 'moment';
+import { RecordingService } from '../../services/recording.service';
 
 @Component({
   selector: 'app-all-movies',
@@ -13,10 +14,13 @@ import moment from 'moment';
 })
 export class AllMoviesComponent {
 
-  constructor(public movieService: MovieService, private dialog: MatDialog) {}
+  constructor(public movieService: MovieService, private dialog: MatDialog, public recordingService: RecordingService) {}
 
   handleVideoClick(video: Video): void {
-    this.movieService.playVideo.next(video);
+    if (this.recordingService.playVideo.value?.id === video.id)
+      this.recordingService.resetSelectedVideo();
+    else
+      this.recordingService.selectVideo(video);
   }
 
   handleDeleteVideo(video: Video): void {
@@ -24,7 +28,7 @@ export class AllMoviesComponent {
     ref.afterClosed()
     .pipe(take(1))
     .subscribe({
-      next: result => result ? this.movieService.deleteVideo(video.id) : null
+      next: result => result ? this.recordingService.deleteVideo(video.id) : null
     });
   }
 

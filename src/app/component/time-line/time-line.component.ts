@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { TimelineService } from '../../services/timeline.service';
 import { ComponentBase } from '../../base/component-base';
 import { takeUntil } from 'rxjs';
@@ -15,13 +15,15 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
 
   arrTime: number[] = [];
   minimumNumDisplayLength = 10;
-  dialogRef?: MatDialogRef<any>
+  dialogRef?: MatDialogRef<any>;
   @ViewChild('settings') settings!: TemplateRef<any>;
 
   constructor(
     public timelineService: TimelineService,
     public recordingService: RecordingService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private renderer: Renderer2,
+    private el: ElementRef
   ) {
     super();
   }
@@ -34,6 +36,12 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
           this.arrTime = (new Array(time + 1)).fill(0).map((x, i) => i);
         }
       });
+
+    this.recordingService.unitTimeRecordingPercent
+      .pipe(takeUntil(this.isComponentActive))
+      .subscribe({
+        next: percent => this.updateUnitTimeFramePercentStyle(percent)
+    });
   }
 
   ngOnDestroy(): void {
@@ -58,5 +66,11 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
 
   handleSettingClick(): void {
     this.dialogRef = this.dialog.open(this.settings);
+  }
+
+  updateUnitTimeFramePercentStyle(percent: number): void {
+
+    const time = this.el.nativeElement.querySelector('#time-display');
+    this.renderer.setStyle(time, 'background', `linear-gradient(to right, #dffba5 ${percent}%, white 1%)`);
   }
 }

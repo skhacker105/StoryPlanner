@@ -10,6 +10,8 @@ import { ILayer } from './interfaces/movie-layer';
 import { ILayerAnimation } from './interfaces/movie-animations';
 import { takeUntil } from 'rxjs';
 import { ComponentBase } from './base/component-base';
+import { RecordingService } from './services/recording.service';
+import { FileService } from './services/file.service';
 
 @Component({
   selector: 'app-root',
@@ -20,15 +22,20 @@ export class AppComponent extends ComponentBase implements OnInit, OnDestroy {
   title = 'StoryPlanner';
   selectedIndex = 0;
 
-  constructor(public memberService: MemberService, public movieService: MovieService, public timelineService: TimelineService) {
+  constructor(
+    public memberService: MemberService,
+    public movieService: MovieService,
+    public timelineService: TimelineService,
+    private recordingService: RecordingService,
+    private fileService: FileService) {
     super();
   }
 
   ngOnInit(): void {
-    this.movieService.selectedVideoId
+    this.fileService.newVideo
     .pipe(takeUntil(this.isComponentActive))
     .subscribe({
-      next: selectedVideoId => selectedVideoId ? this.selectedIndex = 2 : null
+      next: video => video ? this.selectedIndex = 2 : null
     });
 
     setTimeout(() => {

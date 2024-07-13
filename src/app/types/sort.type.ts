@@ -1,1 +1,1 @@
-export type SortType = 'byName' | 'byTime';
+export type SortType = 'byName' | 'byTime' | 'createdOn';

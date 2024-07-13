@@ -27,7 +27,10 @@
             <div class="stat-block">
                 <app-form-field label="Time">
                     <ng-container formFieldControl>
-                        <input type="number" disabled [ngModel]="timelineService.currentTime.value" class="time-display">
+                            <input type="number" disabled
+                            [ngModel]="timelineService.currentTime.value"
+                            class="time-display"
+                            id="time-display">
                     </ng-container>
                 </app-form-field>
             </div>
@@ -43,9 +46,7 @@
             <div class="stat-block no-padding">
                 <button mat-icon-button color="primary" (click)="playPause()" class="play-pause-icon">
                     <mat-icon>
-                        {{
-                        timelineService.playing ? 'pause_circle' : 'not_started'
-                        }}
+                        {{ timelineService.playing ? 'pause_circle' : 'not_started' }}
                     </mat-icon>
                 </button>
             </div>
@@ -54,9 +55,7 @@
             <div class="stat-block no-padding">
                 <button mat-icon-button color="primary" (click)="toggleRecording()" class="play-pause-icon">
                     <mat-icon>
-                        {{
-                        recordingService.recording.value ? 'radio_button_checked' : 'radio_button_unchecked'
-                        }}
+                        {{ recordingService.recording.value ? 'stop_circle' : 'radio_button_checked' }}
                     </mat-icon>
                 </button>
             </div>

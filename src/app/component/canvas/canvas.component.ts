@@ -73,13 +73,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
         next: playing => this.paintedLayers = playing ? cloneDeep(this.paintedLayers) : this.paintedLayers
       });
 
-    this.fileService.newVideo
-    .pipe(takeUntil(this.isComponentActive))
-    .subscribe({
-      next: video => this.showMovie(video)
-    });
-
-    this.movieService.playVideo
+    this.recordingService.playVideo
     .pipe(takeUntil(this.isComponentActive))
     .subscribe({
       next: video => {
@@ -128,20 +122,15 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
   }
 
   showMovie(video: Video) {
-    this.movieService.selectVideo(video.id);
+    // this.recordingService.selectVideo(video);
     this.videoURLToPlay = URL.createObjectURL(video.blob);
-    
-    // Display video in video element
-    // const videoElement = document.createElement('video');
-    // videoElement.src = videoUrl;
-    // videoElement.style.width = '100%'
-    // videoElement.controls = true;
-    // document.getElementById('canvas-video')?.appendChild(videoElement);
-    // videoElement.play();
+  }
+
+  hideMovie() {
+    this.recordingService.resetSelectedVideo();
   }
 
   resetSelectedVideo() {
     this.videoURLToPlay = undefined;
-    this.movieService.resetSelectedVideo();
   }
 }

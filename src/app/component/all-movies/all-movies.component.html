@@ -16,8 +16,8 @@
 
         <div class="place-holder-layer" *cdkDragPlaceholder></div>
         
-        @for (video of movieService.allVideos; track video;) {
-            <app-video-display [video]="video" [isSelected]="video.id === movieService.selectedVideoId.value"
+        @for (video of recordingService.allVideos | sort:'createdOn'; track video;) {
+            <app-video-display [video]="video" [isSelected]="video.id === recordingService.playVideo?.value?.id"
             (onClick)="handleVideoClick(video)" (onDelete)="handleDeleteVideo(video)" (onDownloadVideo)="downloadVideo(video)">
             </app-video-display>
         }

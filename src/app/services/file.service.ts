@@ -16,6 +16,7 @@ export class FileService {
   constructor(private util: UtilService) { }
 
   saveFramesAsVideo(recordedFrames: HTMLCanvasElement[], frameDelay: number, videoLength: number): void {
+    console.log('Frames save started')
     const promises = recordedFrames.map(c => new Promise<Blob | null>(resolve => c.toBlob(blob => resolve(blob))));
     if (promises && promises.length > 0) {
 
@@ -45,6 +46,7 @@ export class FileService {
       const { mediaRecorder, stopRecording } = this.createMediaRecorder(canvas, chunks, videoLength);
 
       // Draw each image on the canvas and record
+    console.log('Image rendering started')
       let i = 0;
       for (const imageBlob of images) {
         await this.drawBlobImage(imageBlob, ctx, canvas.width, canvas.height);
@@ -62,6 +64,7 @@ export class FileService {
         this.progressPercent = (i * percent);
       }
       this.renderingFrame = false;
+      console.log('Image rendering ended')
 
       // Stop recording after a short delay (adjust as needed)
       setTimeout(
@@ -104,6 +107,7 @@ export class FileService {
     mediaRecorder.ondataavailable = (event) => this.handleMediaRecorderData(event, chunks);
     mediaRecorder.onstop = () => this.handleMediaRecorderStop(chunks, videoLength);
     const stopRecording = () => {
+      console.log('Starting to stop recording')
       if (mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
       }
@@ -123,12 +127,14 @@ export class FileService {
   }
 
   private handleMediaRecorderData(event: BlobEvent, chunks: Blob[]): void {
+    console.log('Data available')
     if (event.data.size > 0) {
       chunks.push(event.data);
     }
   }
 
   private handleMediaRecorderStop(chunks: Blob[], videoLength: number) {
+    console.log('Recording stopped')
     // Combine all recorded chunks into a single Blob
     const videoBlob = new Blob(chunks, { type: 'video/webm' });
     this.newVideo.next(new Video({

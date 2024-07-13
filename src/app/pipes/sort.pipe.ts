@@ -12,7 +12,7 @@ export class SortPipe implements PipeTransform {
 
   compareValues(a: any, b: any, sortBy: SortType): number {
     let diff = 0;
-    switch(sortBy) {
+    switch (sortBy) {
 
       case 'byName':
         diff = a['name'].localeCompare(b['name']);
@@ -20,6 +20,10 @@ export class SortPipe implements PipeTransform {
 
       case 'byTime':
         diff = b['name'].localeCompare(a['name']);
+        break;
+
+      case 'createdOn':
+        diff = (b['createdOn'] as Date).getTime() - (a['createdOn'] as Date).getTime()
         break;
     }
     return diff;

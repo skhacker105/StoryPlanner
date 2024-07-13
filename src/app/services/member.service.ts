@@ -65,15 +65,6 @@ export class MemberService extends ServiceBase implements OnDestroy {
       const storedMemberBook: IMemberStorage = JSON.parse(savedMemberBook);
       this.versionNoString = storedMemberBook.version;
       this.memberBookName = storedMemberBook.name;
-      
-      // const members = storedMemberBook.members.map((m: IMember) => new Member({
-      //   id: m.id ? m.id : this.utilService.generateNewId(),
-      //   image: m.image,
-      //   name: m.name,
-      //   options: m.options
-      // }));
-      // console.log('members = ', members)
-      // members.map((m: any) => this.memberStorageManager.add(m))
     }
 
     this.memberStorageManager.getAll()

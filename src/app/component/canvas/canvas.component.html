@@ -20,7 +20,7 @@
     }
 
     <div class="canvas-video" id="canvas-video" *ngIf="videoURLToPlay">
-        <button type="button" mat-icon-button class="close-video" (click)="resetSelectedVideo()">
+        <button type="button" mat-icon-button class="close-video" (click)="hideMovie()">
             <mat-icon>close</mat-icon>
         </button>
         <video [src]="videoURLToPlay" controls></video>
