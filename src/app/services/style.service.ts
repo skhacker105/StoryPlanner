@@ -113,6 +113,7 @@ export class StyleService {
     if (animation.frame) {
 
       if (animation.frame.toLayer) {
+        animation.frame.toLayer.stackPosition = layer.properties.stackPosition
         str += ' from {' + this.getPropertiesString(layer.properties) + '} \
         to {' + this.getPropertiesString(animation.frame.toLayer) + '} ';
 

@@ -28,7 +28,7 @@
                 <app-form-field label="Time">
                     <ng-container formFieldControl>
                             <input type="number" disabled
-                            [ngModel]="timelineService.currentTime.value"
+                            [ngModel]="timelineService.currentTime.value + 1"
                             class="time-display"
                             id="time-display">
                     </ng-container>

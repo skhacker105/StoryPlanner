@@ -136,29 +136,24 @@ export class RecordingService extends ServiceBase {
   }
 
   async captureFrame(frameCanvas: HTMLCanvasElement[]) {
-    const divElement = document.getElementById(this.canvasContainerId);
+    const canvasContainerId = this.canvasContainerId
+    const divElement = document.getElementById(canvasContainerId);
     if (!divElement) {
       this.stopRecording();
       return;
     }
     this.animationPausedForCapture.next(true);
+    divElement.getBoundingClientRect();
 
     return await new Promise<HTMLCanvasElement[]>((resolve, reject) => {
       setTimeout(() => {
-        html2canvas(divElement, {
-          // onclone: doc => {
-          //   const newDivElement = document.getElementById(this.canvasContainerId);
-          //   if (newDivElement)
-          //     computedStyleToInlineStyle(newDivElement, { recursive: true })
-          // }
-        })
+        html2canvas(divElement)
           .then(canvas => {
             frameCanvas.push(canvas);
             resolve(frameCanvas);
-
           })
           .catch(err => reject(err));
-      }, 100);
+      }, 50);
     });
   }
 

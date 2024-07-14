@@ -108,11 +108,10 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     const layersToUpdate = this.paintedLayers.filter(l =>
       objSource[l.layerId] && objSource[l.layerId].isProjected
         ? true : false
-    );
-    const layersToDelete = this.paintedLayers.filter(l =>
-      !objSource[l.layerId] || !objSource[l.layerId].isProjected
-        ? true : false
-    );
+    ).map(l => {
+      l.properties.stackPosition = objSource[l.layerId].properties.stackPosition;
+      return l;
+    });
 
     const animationStr = layersToAdd.reduce((str: string, l) => str + this.styleService.getAnimationFrameString(l), '')
     const styleEl = this.renderer.createElement('style');
