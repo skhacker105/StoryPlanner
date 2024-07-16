@@ -63,7 +63,7 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
   ngOnInit(): void {
     if (this.properties) {
       this.propertyForm.patchValue(this.properties);
-      if (this.isProjected) this.propertyForm.disable();
+      if (this.isProjected) this.disableNonProjectedPropertyControls();
       this.propertyForm.controls.endTime.addValidators(Validators.min(this.time));
       this.propertyForm.controls.endTime.addValidators(Validators.max(this.endTime));
     }
@@ -73,6 +73,13 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
       .subscribe({
         next: val => this.autoSave ? this.submitForm() : null
       })
+  }
+
+  disableNonProjectedPropertyControls(): void {
+    const projectedControls = ['isInView'];
+    Object.keys(this.propertyForm.controls).forEach(control => {
+      if (!projectedControls.includes(control)) this.propertyForm.get(control)?.disable();
+    });
   }
 
   ngOnDestroy(): void {

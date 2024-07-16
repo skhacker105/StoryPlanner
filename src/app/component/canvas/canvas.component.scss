@@ -20,6 +20,10 @@
         }
     }
 
+    .image-hidden {
+        opacity: 0 !important;
+    }
+
     .canvas-video {
         position: absolute;
         left: 0;

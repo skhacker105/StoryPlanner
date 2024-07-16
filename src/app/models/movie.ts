@@ -150,7 +150,7 @@ export class Movie implements IMovie {
         timeLine.layers[layerIndex].animation = cloneDeep(newAnimation);
     }
 
-    public updateLayer(time: number, newLayer: ILayer, holdStackPositionUpdate: boolean = false): void {
+    public updateLayer(time: number, newLayer: ILayer, holdProjectionUpdate: boolean = false): void {
 
         const timeLine = this.timeline[time];
         if (!timeLine) {
@@ -165,13 +165,15 @@ export class Movie implements IMovie {
         }
 
         const prevStackPosition = timeLine.layers[layerIndex].properties.stackPosition;
+        const prevIsInView = timeLine.layers[layerIndex].properties.isInView;
         if (!newLayer.isProjected) this.updateProjectedLayers(time, timeLine.layers[layerIndex], newLayer);
         timeLine.layers[layerIndex] = Object.assign(
             {},
             timeLine.layers[layerIndex],
             newLayer,
             {
-                stackPosition: holdStackPositionUpdate ? prevStackPosition : newLayer.properties.stackPosition
+                stackPosition: holdProjectionUpdate ? prevStackPosition : newLayer.properties.stackPosition,
+                isInView: holdProjectionUpdate ? prevIsInView : newLayer.properties.isInView
             })
     }
 

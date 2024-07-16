@@ -101,6 +101,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     const objSource = this.convertLayersById(sourceLayers);
     const objPaintedLayers = this.convertLayersById(this.paintedLayers);
 
+    // Add source layer which is not painted before or is not a projected source layer
     const layersToAdd = sourceLayers.filter(sl =>
       !sl.isProjected || !objPaintedLayers[sl.layerId]
         ? true : false
@@ -110,6 +111,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
         ? true : false
     ).map(l => {
       l.properties.stackPosition = objSource[l.layerId].properties.stackPosition;
+      l.properties.isInView = objSource[l.layerId].properties.isInView;
       return l;
     });
 

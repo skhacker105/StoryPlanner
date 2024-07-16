@@ -14,7 +14,8 @@
             [src]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.image"
             [style]="(layer | layerStyleString) + (layer | layerAnimationString)"
             [ngClass]="{
-                'animation-paused': recordingService.animationPausedForCapture.value
+                'animation-paused': recordingService.animationPausedForCapture.value,
+                'image-hidden': !layer.properties.isInView
             }"
         >
     }
