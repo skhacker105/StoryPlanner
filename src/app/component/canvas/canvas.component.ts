@@ -111,7 +111,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
         ? true : false
     ).map(l => {
       l.properties.stackPosition = objSource[l.layerId].properties.stackPosition;
-      l.properties.isInView = objSource[l.layerId].properties.isInView;
+      // l.properties.isInView = objSource[l.layerId].properties.isInView;
       return l;
     });
 

@@ -112,7 +112,7 @@ export class Movie implements IMovie {
 
     public removeLayer(time: number, layerId: string): void {
         const { timeLine, layerIndex } = this.getTimelineLayerRef(time, layerId);
-        if (!layerIndex || !timeLine) return;
+        if (layerIndex === undefined || layerIndex === null || !timeLine) return;
 
         // delete layer
         const deletedLayer = timeLine.layers.splice(layerIndex, 1);
@@ -127,7 +127,7 @@ export class Movie implements IMovie {
 
     public updateProperties(time: number, layerId: string, newProperties: ILayerProperties): void {
         const { timeLine, layerIndex } = this.getTimelineLayerRef(time, layerId);
-        if (!layerIndex || !timeLine) return;
+        if (layerIndex === undefined || layerIndex === null || !timeLine) return;
 
         const updatedProperties = Object.assign({}, timeLine.layers[layerIndex].properties, newProperties);
         const newLayer = { ...timeLine.layers[layerIndex], properties: updatedProperties };
@@ -137,24 +137,24 @@ export class Movie implements IMovie {
 
     public updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation | undefined): void {
         const { timeLine, layerIndex } = this.getTimelineLayerRef(time, layerId);
-        if (!layerIndex || !timeLine) return;
+        if (layerIndex === undefined || layerIndex === null || !timeLine) return;
 
         timeLine.layers[layerIndex].animation = cloneDeep(newAnimation);
     }
 
     public updateLayer(time: number, newLayer: ILayer, holdProjectionUpdate: boolean = false): void {
         const { timeLine, layerIndex } = this.getTimelineLayerRef(time, newLayer.layerId);
-        if (!layerIndex || !timeLine) return;
+        if (layerIndex === undefined || layerIndex === null || !timeLine) return;
 
         const prevStackPosition = timeLine.layers[layerIndex].properties.stackPosition;
-        const prevIsInView = timeLine.layers[layerIndex].properties.isInView;
+        // const prevIsInView = timeLine.layers[layerIndex].properties.isInView;
         timeLine.layers[layerIndex] = Object.assign(
             {},
             timeLine.layers[layerIndex],
             newLayer,
             {
                 stackPosition: holdProjectionUpdate ? prevStackPosition : newLayer.properties.stackPosition,
-                isInView: holdProjectionUpdate ? prevIsInView : newLayer.properties.isInView
+                // isInView: holdProjectionUpdate ? prevIsInView : newLayer.properties.isInView
             })
     }
 

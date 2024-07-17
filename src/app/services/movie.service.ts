@@ -51,6 +51,18 @@ export class MovieService extends ServiceBase implements OnDestroy {
           if (!this.movie) this.loadMovieFromStorage();
         }
       });
+      // setTimeout(() => {
+      //   console.log('this.movie = ',this.movie)
+      //   if (!this.movie) return;
+  
+      //   Object.keys(this.movie.timeline).forEach(t => {
+      //     if (!this.movie) return;
+      //     this.movie.timeline[+t].layers = this.movie.timeline[+t].layers.filter(l => !l.isProjected);
+      //     if (this.movie.timeline[+t].layers.length === 0) delete this.movie.timeline[+t]
+      //   });
+      //   console.log('this.movie = ',this.movie)
+      //   this.movieStorageManager.update(this.movie);
+      // }, 1000);
   }
 
   get versionNoString(): string {
