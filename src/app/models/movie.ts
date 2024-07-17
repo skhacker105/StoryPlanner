@@ -49,19 +49,18 @@ export class Movie implements IMovie {
             const newInRange = updatedNewLayer.properties.endTime >= newTime;
             const existProjectedLayerInTimeline = !!this.timeline[newTime]?.layers?.some(l => l.layerId === updatedNewLayer.layerId);
 
+            // if layer do not exists in newTime and is in new range then add it
+            if (!existProjectedLayerInTimeline && newInRange)
+                this.addMemberOptionToTime(newTime, updatedNewLayer.memberId, updatedNewLayer.memberOptionId, updatedNewLayer, true, time);
 
-            if (existProjectedLayerInTimeline && oldInRange && newInRange) {
-                // update old from new
+            // if layer is present in newTime and both old and new end times are in range then update
+            else if (existProjectedLayerInTimeline && oldInRange && newInRange)
                 this.updateLayer(newTime, updatedNewLayer, true);
 
-            } else if (existProjectedLayerInTimeline && oldInRange && !newInRange) {
-                // delete projected data
-                this.removeLayer(newTime, updatedNewLayer.layerId)
+            // if layer is present in newTime and not present in range of endTime of newLayer then delete
+            else if (existProjectedLayerInTimeline && !newInRange)
+                this.removeLayer(newTime, updatedNewLayer.layerId);
 
-            } else if (!existProjectedLayerInTimeline || (!oldInRange && newInRange)) {
-                // add new projected data
-                this.addMemberOptionToTime(newTime, updatedNewLayer.memberId, updatedNewLayer.memberOptionId, updatedNewLayer, true, time);
-            }
             newTime++;
         }
     }
@@ -74,8 +73,27 @@ export class Movie implements IMovie {
         }
     }
 
+    private getTimelineLayerRef(time: number, layerId: string | undefined = undefined): { timeLine: IMovieTime | undefined, layerIndex: number | undefined } {
+        const timeLine = this.timeline[time];
+        if (!timeLine) {
+            console.log('No Timeline found to update');
+            return { timeLine: undefined, layerIndex: undefined };
+        }
+
+        if (!layerId) {
+            return { timeLine, layerIndex: undefined };
+        }
+
+        const layerIndex = timeLine.layers.findIndex(l => l.layerId === layerId);
+        if (layerIndex < 0) {
+            console.log('No Layer found to update');
+            return { timeLine: undefined, layerIndex: undefined };
+        }
+        return { timeLine, layerIndex }
+    }
+
     // PUBLIC Members
-    public addMemberOptionToTime(time: number, memberId: string, memberOptionId: string, newLayer: ILayer, isProjected: boolean = false, projectedTime = 0): void {
+    public addMemberOptionToTime(time: number, memberId: string, memberOptionId: string, newLayer: ILayer, isProjected: boolean = false, projectionStartTime = 0): void {
         this.checkAndCreateTimeline(time);
 
         newLayer.properties.stackPosition = this.timeline[time].layers.length + 1;
@@ -83,7 +101,7 @@ export class Movie implements IMovie {
         else {
             const newLayerCopy = cloneDeep(newLayer);
             newLayerCopy.isProjected = true;
-            newLayerCopy.projectionStartTime = projectedTime;
+            newLayerCopy.projectionStartTime = projectionStartTime;
             this.timeline[time].layers.push(newLayerCopy);
         }
 
@@ -93,18 +111,8 @@ export class Movie implements IMovie {
     }
 
     public removeLayer(time: number, layerId: string): void {
-
-        const timeLine = this.timeline[time];
-        if (!timeLine) {
-            console.log('No Timeline found to update');
-            return;
-        }
-
-        const layerIndex = timeLine.layers.findIndex(l => l.layerId === layerId);
-        if (layerIndex < 0) {
-            console.log('No Layer found to update');
-            return;
-        }
+        const { timeLine, layerIndex } = this.getTimelineLayerRef(time, layerId);
+        if (!layerIndex || !timeLine) return;
 
         // delete layer
         const deletedLayer = timeLine.layers.splice(layerIndex, 1);
@@ -118,55 +126,28 @@ export class Movie implements IMovie {
     }
 
     public updateProperties(time: number, layerId: string, newProperties: ILayerProperties): void {
-        const timeLine = this.timeline[time];
-        if (!timeLine) {
-            console.log('No Timeline found to update');
-            return;
-        }
+        const { timeLine, layerIndex } = this.getTimelineLayerRef(time, layerId);
+        if (!layerIndex || !timeLine) return;
 
-        const layerIndex = timeLine.layers.findIndex(l => l.layerId === layerId);
-        if (layerIndex < 0) {
-            console.log('No Layer found to update');
-            return;
-        }
-
-        timeLine.layers[layerIndex].properties = Object.assign({}, timeLine.layers[layerIndex].properties, newProperties);
-        this.updateLayer(time, timeLine.layers[layerIndex]);
+        const updatedProperties = Object.assign({}, timeLine.layers[layerIndex].properties, newProperties);
+        const newLayer = { ...timeLine.layers[layerIndex], properties: updatedProperties };
+        if (!newLayer.isProjected) this.updateProjectedLayers(time, timeLine.layers[layerIndex], newLayer);
+        timeLine.layers[layerIndex] = newLayer;
     }
 
     public updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation | undefined): void {
-        const timeLine = this.timeline[time];
-        if (!timeLine) {
-            console.log('No Timeline found to update');
-            return;
-        }
-
-        const layerIndex = timeLine.layers.findIndex(l => l.layerId === layerId);
-        if (layerIndex < 0) {
-            console.log('No Layer found to update');
-            return;
-        }
+        const { timeLine, layerIndex } = this.getTimelineLayerRef(time, layerId);
+        if (!layerIndex || !timeLine) return;
 
         timeLine.layers[layerIndex].animation = cloneDeep(newAnimation);
     }
 
     public updateLayer(time: number, newLayer: ILayer, holdProjectionUpdate: boolean = false): void {
-
-        const timeLine = this.timeline[time];
-        if (!timeLine) {
-            console.log('No Timeline found to update');
-            return;
-        }
-
-        const layerIndex = timeLine.layers.findIndex(l => l.layerId === newLayer.layerId);
-        if (layerIndex < 0) {
-            console.log('No Layer found to update');
-            return;
-        }
+        const { timeLine, layerIndex } = this.getTimelineLayerRef(time, newLayer.layerId);
+        if (!layerIndex || !timeLine) return;
 
         const prevStackPosition = timeLine.layers[layerIndex].properties.stackPosition;
         const prevIsInView = timeLine.layers[layerIndex].properties.isInView;
-        if (!newLayer.isProjected) this.updateProjectedLayers(time, timeLine.layers[layerIndex], newLayer);
         timeLine.layers[layerIndex] = Object.assign(
             {},
             timeLine.layers[layerIndex],
@@ -178,12 +159,8 @@ export class Movie implements IMovie {
     }
 
     public moveLayers(time: number, previousIndex: number, newIndex: number) {
-
-        const timeLine = this.timeline[time];
-        if (!timeLine) {
-            console.log('No Timeline found to update');
-            return;
-        }
+        const { timeLine } = this.getTimelineLayerRef(time);
+        if (!timeLine) return;
 
         moveItemInArray(timeLine.layers, previousIndex, newIndex);
         timeLine.layers.forEach((l, i) => {
