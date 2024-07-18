@@ -13,8 +13,13 @@
             flex-direction: column;
             height: calc(100% - 56px);
 
-            .name-field {
+            .member-details {
+                display: flex;
                 width: 100%;
+
+                .name-field {
+                    flex: 1 auto;
+                }
             }
 
             .options {

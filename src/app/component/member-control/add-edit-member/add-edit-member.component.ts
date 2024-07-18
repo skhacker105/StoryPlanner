@@ -49,6 +49,8 @@ export class AddEditMemberComponent implements OnInit {
           this.optionsFormArray.push(form);
         });
       }
+     } else {
+      this.addNewOption();
      }
   }
 

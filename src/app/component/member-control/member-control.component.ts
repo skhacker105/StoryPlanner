@@ -33,7 +33,7 @@ export class MemberControlComponent extends ComponentBase implements OnDestroy {
 
   loadAddMemberPopup(): void {
     const ref = this.dialog.open(AddEditMemberComponent, {
-      width: '90%',
+      width: '478px',
       height: '90%'
     });
 
@@ -52,7 +52,7 @@ export class MemberControlComponent extends ComponentBase implements OnDestroy {
 
   loadEditMemberPopup(member: IMember): void {
     const ref = this.dialog.open(AddEditMemberComponent, {
-      width: '90%',
+      width: '478px',
       height: '90%',
       data: member
     });

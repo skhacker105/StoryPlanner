@@ -7,18 +7,22 @@
 
         <div class="member-form">
 
-            <mat-form-field class="name-field">
-                <mat-label>Member Name</mat-label>
-                <input matInput type="text" formControlName="name">
-                @if (memberNameCtrl.value) {
-                <button matSuffix mat-icon-button aria-label="Clear" (click)="memberNameCtrl.setValue('')">
-                    <mat-icon>close</mat-icon>
-                </button>
-                }
-            </mat-form-field>
+            <!-- Member Details -->
+            <div class="member-details">
+                <mat-form-field class="name-field">
+                    <mat-label>Member Name</mat-label>
+                    <input matInput type="text" formControlName="name">
+                    @if (memberNameCtrl.value) {
+                    <button matSuffix mat-icon-button aria-label="Clear" (click)="memberNameCtrl.setValue('')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    }
+                </mat-form-field>
 
-            <app-picture-upload [pictureFormControl]="imageCtrl"></app-picture-upload>
+                <app-picture-upload [pictureFormControl]="imageCtrl"></app-picture-upload>
+            </div>
 
+            <!-- Options for Layers -->
             <div class="options" formArrayName="options">
                 <fieldset>
                     <legend align="right">
@@ -31,22 +35,26 @@
                     </legend>
                     @for (optionControl of optionsFormArray.controls; track optionControl; let idx = $index) {
                         <fieldset [formGroupName]="idx" class="option">
-                            <legend>{{ optionControl.value.name ? optionControl.value.name : ('Option ' + (idx + 1)) }}</legend>
-                            <legend align="right">
+                            <!-- <legend>{{ optionControl.value.name ? optionControl.value.name : ('Option ' + (idx + 1)) }}</legend> -->
+                            <!-- <legend align="right">
                                 <button mat-icon-button type="button" (click)="optionControl.value.optionId ? handleRemoveOptionClick(idx) : removeOption(idx)">
                                     <mat-icon>delete</mat-icon>
                                 </button>
-                            </legend>
+                            </legend> -->
 
                             <div class="option-form">
 
-                                <mat-form-field class="name-field">
+                                <mat-form-field class="name-field spacer">
                                     <mat-label>Option Name</mat-label>
                                     <input matInput type="text" formControlName="name">
                                 </mat-form-field>
 
                                 
                                 <app-picture-upload [pictureFormControl]="getImageControl(idx)"></app-picture-upload>
+
+                                <button mat-icon-button type="button" (click)="optionControl.value.optionId ? handleRemoveOptionClick(idx) : removeOption(idx)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
 
                             </div>
                         </fieldset>

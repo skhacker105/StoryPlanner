@@ -1,16 +1,14 @@
 <div class="image-upload-container" *ngIf="pictureFormControl">
-    <mat-form-field class="image-upload-field">
-        <mat-label>Image</mat-label>
-        <input matInput type="text" [value]="pictureFormControl.value" placeholder="Select Image">
-        <input id="fileInput" type="file" [formControl]="pictureControl" (change)="handlePictureUpload($event)">
-        @if (pictureControl.value) {
-        <button matSuffix mat-icon-button aria-label="Clear" (click)="resetPictureControl()">
-            <mat-icon>close</mat-icon>
-        </button>
-        }
-    </mat-form-field>
 
-    <div class="image-display" *ngIf="pictureFormControl.value">
-        <app-image-icon [image]="pictureFormControl.value"></app-image-icon>
-    </div>
+    <input #fileInput id="fileInput" type="file" [formControl]="pictureControl" (change)="handlePictureUpload($event)" style="display: none">
+
+    @if (pictureFormControl.value) {
+        <div class="image-display" *ngIf="pictureFormControl.value" (click)="fileInput.click()">
+            <app-image-icon [image]="pictureFormControl.value"></app-image-icon>
+        </div>
+    } @else {
+        <button mat-icon-button type="button" class="image-display" (click)="fileInput.click()">
+            <mat-icon>add_a_photo</mat-icon>
+        </button>
+    }
 </div>
