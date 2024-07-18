@@ -33,8 +33,8 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
     relativeHeight: new FormControl<number>(10, [Validators.min(0), Validators.pattern(/^\d+$/)]),
 
     // Position
-    relativeLeft: new FormControl<number>(0, [Validators.pattern(/^\d+$/)]),
-    relativeTop: new FormControl<number>(0, [Validators.pattern(/^\d+$/)]),
+    relativeLeft: new FormControl<number>(0, [Validators.pattern(/^-?\d*\.?\d+$/)]),
+    relativeTop: new FormControl<number>(0, [Validators.pattern(/^-?\d*\.?\d+$/)]),
 
     // Rotate
     rotateX: new FormControl<number>(0, [Validators.required, Validators.min(-360), Validators.max(360), Validators.pattern(this.degreeValidatorPattern)]),

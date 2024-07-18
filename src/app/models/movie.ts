@@ -148,14 +148,8 @@ export class Movie implements IMovie {
 
         const prevStackPosition = timeLine.layers[layerIndex].properties.stackPosition;
         // const prevIsInView = timeLine.layers[layerIndex].properties.isInView;
-        timeLine.layers[layerIndex] = Object.assign(
-            {},
-            timeLine.layers[layerIndex],
-            newLayer,
-            {
-                stackPosition: holdProjectionUpdate ? prevStackPosition : newLayer.properties.stackPosition,
-                // isInView: holdProjectionUpdate ? prevIsInView : newLayer.properties.isInView
-            })
+        timeLine.layers[layerIndex] = { ...timeLine.layers[layerIndex], ...newLayer };
+        timeLine.layers[layerIndex].properties.stackPosition = holdProjectionUpdate ? prevStackPosition : newLayer.properties.stackPosition;
     }
 
     public moveLayers(time: number, previousIndex: number, newIndex: number) {
