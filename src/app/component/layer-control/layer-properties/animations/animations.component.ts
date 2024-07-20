@@ -4,7 +4,7 @@ import { debounceTime, take, takeUntil } from 'rxjs';
 import { ComponentBase } from '../../../../base/component-base';
 import { IAnimationFrame, ILayerAnimation } from '../../../../interfaces/movie-animations';
 import { CssDirection, CssDirections, CssFillMode, CssFillModes, CssTimingFunction, CssTimingFunctions } from '../../../../types/movie-animation';
-import { getDefaultProperties } from '../../../../models/layer';
+import { GetDefaultProperties } from '../../../../models/layer';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ILayerProperties } from '../../../../interfaces/movie-properties';
 import { ConfirmationDialogComponent } from '../../../_shared/confirmation-dialog/confirmation-dialog.component';
@@ -138,6 +138,7 @@ export class AnimationsComponent extends ComponentBase implements OnInit, OnDest
       this.animationForm.enable();
     } else {
       this.animationForm.disable();
+      this.animationForm.reset();
       this.onRemoveAnimation.emit()
     }
   }
@@ -175,7 +176,7 @@ export class AnimationsComponent extends ComponentBase implements OnInit, OnDest
       this.handleFrameStyleEdit(animationFrameType, existingProperty, percentage);
       return;
     }
-    const animationFrameStyle = this.existingProperties ? this.existingProperties : getDefaultProperties(this.time)
+    const animationFrameStyle = this.existingProperties ? this.existingProperties : GetDefaultProperties(this.time)
     const title = animationFrameType === this.animationFrameTypes.fromTo
       ? 'To styles'
       : `Style at ${this.percentage.value}`;

@@ -21,7 +21,7 @@ export class RecordingService extends ServiceBase {
   // selectedVideoId = new BehaviorSubject<string | undefined>(undefined);
   videoStorageManager = new IndexedDBManager<Video>(Tables.VideoListStorage, 'id');
 
-  animationPausedForCapture = new BehaviorSubject<boolean>(false);
+  animationPausedForCapture = new BehaviorSubject<boolean>(true);
   recording = new BehaviorSubject<boolean>(false);
   recordedFrames: HTMLCanvasElement[] = [];
   unitTimeRecordingPercent = new BehaviorSubject<number>(0);
@@ -40,7 +40,10 @@ export class RecordingService extends ServiceBase {
     this.timelineService.playingStateChange
       .pipe(takeUntil(this.isServiceActive))
       .subscribe({
-        next: playing => playing && this.playVideo.value ? this.resetSelectedVideo() : null
+        next: playing => {
+          playing ? this.animationPausedForCapture.next(false) : this.animationPausedForCapture.next(true);
+          playing && this.playVideo.value ? this.resetSelectedVideo() : null;
+        }
       })
   }
 
@@ -87,7 +90,7 @@ export class RecordingService extends ServiceBase {
   }
 
   updateFrameRecordingPercent(collectedFrames: number) {
-    this.unitTimeRecordingPercent.next((collectedFrames / this.timelineService.framesPerUnitTime) * 100);
+    this.unitTimeRecordingPercent.next((collectedFrames / this.timelineService.framesPerUnitTime.value) * 100);
   }
 
   record(): void {
@@ -106,8 +109,9 @@ export class RecordingService extends ServiceBase {
     this.updateFrameRecordingPercent(frameCanvas.length);
 
     // frames pending to capture
-    if (frameCanvas.length < this.timelineService.framesPerUnitTime) {
+    if (frameCanvas.length < this.timelineService.framesPerUnitTime.value) {
 
+      this.animationPausedForCapture.next(true);
       const collectedFrames = await this.captureFrame(frameCanvas);
       this.animationPausedForCapture.next(false);
 
@@ -142,7 +146,6 @@ export class RecordingService extends ServiceBase {
       this.stopRecording();
       return;
     }
-    this.animationPausedForCapture.next(true);
     divElement.getBoundingClientRect();
 
     return await new Promise<HTMLCanvasElement[]>((resolve, reject) => {
@@ -169,7 +172,7 @@ export class RecordingService extends ServiceBase {
     if (!this.recordedFrames || this.recordedFrames.length === 0) return;
 
     console.log('this.recordedFrames = ', this.recordedFrames)
-    const videoLength = this.recordedFrames.length / this.timelineService.framesPerUnitTime;
+    const videoLength = this.recordedFrames.length / this.timelineService.framesPerUnitTime.value;
     this.fileService.saveFramesAsVideo(this.recordedFrames, this.timelineService.frameSpeedByPerUnitTime, videoLength)
   }
 }

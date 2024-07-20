@@ -28,7 +28,7 @@
                 <app-form-field label="Time">
                     <ng-container formFieldControl>
                             <input type="number" disabled
-                            [ngModel]="timelineService.currentTime.value + 1"
+                            [ngModel]="timelineService.currentTime.value"
                             class="time-display"
                             id="time-display">
                     </ng-container>
@@ -83,7 +83,10 @@
             <div class="stat-block">
                 <app-form-field label="Standard Speed">
                     <ng-container formFieldControl>
-                        <input type="number" [(ngModel)]="timelineService.standardSpeed" class="standard-speed-input">
+                        <input type="number"
+                        [ngModel]="timelineService.standardSpeed.value"
+                        (ngModelChange)="timelineService.standardSpeed.next($event)"
+                        class="standard-speed-input">
                     </ng-container>
                 </app-form-field>
             </div>
@@ -92,7 +95,10 @@
             <div class="stat-block">
                 <app-form-field label="Frame / Unit Time">
                     <ng-container formFieldControl>
-                        <input type="number" [(ngModel)]="timelineService.framesPerUnitTime" class="standard-speed-input">
+                        <input type="number"
+                        [ngModel]="timelineService.framesPerUnitTime.value"
+                        (ngModelChange)="timelineService.framesPerUnitTime.next($event)"
+                        class="standard-speed-input">
                     </ng-container>
                 </app-form-field>
             </div>
@@ -109,8 +115,9 @@
                         @for (speed of timelineService.speedRange; track speed) {
                         <mat-button-toggle [value]="speed" class="play-back-speed" (click)="timelineService.setPlaybackSpeed(speed)"
                             [ngClass]="{
-                                'selected-placback-speed': timelineService.selectedSpeed.key === speed.key
-                            }">
+                                'selected-placback-speed': timelineService.selectedSpeed.value.key === speed.key
+                            }"
+                            [attr.someLabel]="timelineService.selectedSpeed.value.key === speed.key">
                             {{ speed.key }}
                         </mat-button-toggle>
                         }

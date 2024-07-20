@@ -74,7 +74,8 @@
       [layerOption]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].options[movieService.selectedLayer.memberOptionId]"
       (onCancel)="movieService.resetSelectedLayer()"
       (onStyleSave)="saveProperty(movieService.selectedLayer, $event)"
-      (onAnimationSave)="saveAnimation(movieService.selectedLayer, $event)">
+      (onAnimationSave)="saveAnimation(movieService.selectedLayer, $event)"
+      (onRepeatSave)="saveRepeat(movieService.selectedLayer, $event)">
       </app-layer-properties>
   </div>
 

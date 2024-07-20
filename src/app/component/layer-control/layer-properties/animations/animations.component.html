@@ -232,13 +232,14 @@
 
         <!-- Percent -->
         <div class="frame-row-percent" *ngIf="percent">
-            <input type="number" [formControl]="percentage">
+            <input type="number" [formControl]="percentage" [disabled]="isProjected">
         </div>
 
         <!-- percent -->
-        <button mat-icon-button *ngIf="percent">
+        <button mat-icon-button *ngIf="percent" [disabled]="isProjected">
             <mat-icon>percent</mat-icon>
         </button>
+        
 
         <!-- Disabled -->
         <button mat-icon-button *ngIf="disabled && !add && !edit && !delete" [disabled]="true" type="button">
@@ -247,7 +248,7 @@
 
         <!-- Add -->
         <button mat-icon-button *ngIf="add" type="button"
-        [disabled]="percent && percentage.invalid"
+        [disabled]="isProjected || (percent && percentage.invalid)"
         (click)="handleFrameStyleAdd(animationFrameType)">
             <mat-icon>add</mat-icon>
         </button>

@@ -2,19 +2,16 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { UtilService } from './util.service';
 import { MemberService } from './member.service';
 import { IMovie } from '../interfaces/timeline-movie';
-import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
-import { IMemberStorage } from '../interfaces/member-storage';
+import { Subject, take, takeUntil } from 'rxjs';
 import { Movie } from '../models/movie';
-import { ILayer } from '../interfaces/movie-layer';
+import { ILayer, ILayerRepeat } from '../interfaces/movie-layer';
 import { ServiceBase } from '../base/service-base';
 import { IMemberBookDictionary, IMemberOptionDictionary } from '../interfaces/member-dictionary';
 import { Member } from '../models/members';
 import { IMemberOption } from '../interfaces/member';
-import { createLayerWithDefaultProperties } from '../models/layer';
+import { CreateLayerWithDefaultProperties } from '../models/layer';
 import { ILayerProperties } from '../interfaces/movie-properties';
 import { ILayerAnimation } from '../interfaces/movie-animations';
-import { Video } from '../models/video';
-import { FileService } from './file.service';
 import { IndexedDBManager } from '../storage/indexedDB.manager';
 import { Tables } from '../constants/constant';
 
@@ -33,7 +30,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
   public selectedLayer?: ILayer;
   public selectedLayerTime?: number;
 
-  constructor(private utilService: UtilService, private memberService: MemberService) {
+  constructor(private utilService: UtilService, public memberService: MemberService) {
     super();
 
     this.movieUpdated
@@ -57,7 +54,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
   
       //   Object.keys(this.movie.timeline).forEach(t => {
       //     if (!this.movie) return;
-      //     this.movie.timeline[+t].layers = this.movie.timeline[+t].layers.filter(l => !l.isProjected);
+      //     this.movie.timeline[+t].layers = this.movie.timeline[+t].layers.filter(l => !l.repeating);
       //     if (this.movie.timeline[+t].layers.length === 0) delete this.movie.timeline[+t]
       //   });
       //   console.log('this.movie = ',this.movie)
@@ -123,7 +120,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
         major: 0,
         minor: 1
       }
-    } as IMovie);
+    } as IMovie, this.utilService);
     this.movieUpdated.next(this.movie);
     this.movieStorageManager.add(this.movie);
   }
@@ -139,7 +136,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
             // if (storedMovie.memberBook.name !== memberBook.name || storedMovie.memberBook.version !== memberBook.version) {
             //   console.log('Locally saved movie do not matches with your locally saved Book')
             // } else {
-            this.movie = new Movie(storedMovie);
+            this.movie = new Movie(storedMovie, this.utilService);
             this.movieUpdated.next(this.movie);
             // }
           }
@@ -157,7 +154,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
       return;
     }
 
-    const newLayer: ILayer = createLayerWithDefaultProperties(this.utilService.generateNewId(), time, id, memberOptionId);
+    const newLayer: ILayer = CreateLayerWithDefaultProperties(this.utilService.generateNewId(), time, id, memberOptionId);
     this.movie.addMemberOptionToTime(time, id, memberOptionId, newLayer);
     this.movieUpdated.next(this.movie);
   }
@@ -169,10 +166,17 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.movieUpdated.next(this.movie);
   }
 
-  public updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation | undefined): void {
+  updateAnimation(time: number, layerId: string, newAnimation: ILayerAnimation | undefined): void {
     if (!this.movie) return;
 
     this.movie.updateAnimation(time, layerId, newAnimation);
+    this.movieUpdated.next(this.movie);
+  }
+
+  updateRepeat(time: number, layerId: string, newRepeating: ILayerRepeat | undefined): void {
+    if (!this.movie) return;
+
+    this.movie.updateRepeat(time, layerId, newRepeating)
     this.movieUpdated.next(this.movie);
   }
 

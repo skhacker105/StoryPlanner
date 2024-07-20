@@ -5,10 +5,22 @@ export interface ILayer {
 
     // :Fields
     layerId: string;
-    isProjected: boolean;
     memberId: string;
     memberOptionId: string;
-    projectionStartTime: number;
+
     properties: ILayerProperties
     animation?: ILayerAnimation;
+    repeating?: ILayerRepeat;
+    
+    // Projection
+    isProjected: boolean;
+    projectionStartTime: number;
+}
+
+
+export interface ILayerRepeat {
+    layerId: string;
+    repeatingStartTime: number;
+    interval: number;
+    count: number;
 }

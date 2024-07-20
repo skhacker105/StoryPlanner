@@ -1,0 +1,64 @@
+<div class="repeat-container">
+
+    <form [formGroup]="repeatForm" (ngSubmit)="submitForm()">
+
+        <div class="fields-container">
+
+            <!-- Auto Save, Include Repeat -->
+            <div class="property-box">
+
+                <!-- Include Repeat -->
+                <app-form-field label="Repeat" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control"
+                        [disabled]="isProjected"
+                        [(ngModel)]="includeRepeat" (change)="handleIncludeRepeat()">
+                    </ng-container>
+                </app-form-field>
+
+                <!-- Auto Save -->
+                <app-form-field label="Auto Save" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control"
+                        [(ngModel)]="autoSave"
+                        [disabled]="repeatForm.disabled">
+                    </ng-container>
+                </app-form-field>
+
+            </div>
+
+            <!-- Form Controls -->
+            <div class="property-box">
+
+                <app-form-field label="Interval" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input type="number" formControlName="interval">
+                    </ng-container>
+                </app-form-field>
+
+                <app-form-field label="Count" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input type="number" formControlName="count">
+                    </ng-container>
+                </app-form-field>
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <div class="action">
+            <button mat-raised-button type="button" (click)="onCancel.emit()">
+                Cancel
+            </button>
+            &nbsp;
+            <button mat-raised-button color="primary" [disabled]="!repeatForm.dirty || !repeatForm.valid">
+                Save
+            </button>
+        </div>
+
+        
+    </form>
+</div>
+

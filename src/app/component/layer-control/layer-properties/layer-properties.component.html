@@ -8,7 +8,7 @@
             [properties]="layer.properties"
             [isProjected]="layer.isProjected"
             (onCancel)="onCancel.emit()"
-            (onSave)="handleOnStyleSave($event)">
+            (onSave)="onStyleSave.emit($event)">
         </app-styles>
     </mat-tab>
 
@@ -21,8 +21,21 @@
         [animation]="layer.animation"
         [isProjected]="layer.isProjected"
         (onCancel)="onCancel.emit()"
-        (onSave)="handleOnAnimationSave($event)"
-        (onRemoveAnimation)="handleOnAnimationSave(undefined)">
+        (onSave)="onAnimationSave.emit($event)"
+        (onRemoveAnimation)="onAnimationSave.emit(undefined)">
     </app-animations>
+    </mat-tab>
+
+    <mat-tab label="Repeat">
+        <app-repeat
+        [time]="time"
+        [layerId]="layer.layerId"
+        [existingProperties]="layer.properties"
+        [repeating]="layer.repeating"
+        [isProjected]="layer.isProjected"
+        (onCancel)="onCancel.emit()"
+        (onSave)="onRepeatSave.emit($event)"
+        (onRemoveRepeating)="onRepeatSave.emit(undefined)">>
+    </app-repeat>
     </mat-tab>
 </mat-tab-group>

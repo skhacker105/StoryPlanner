@@ -45,6 +45,7 @@ import { LayerAnimationStringPipe } from './pipes/layer-animation-string.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AllMoviesComponent } from './component/all-movies/all-movies.component';
 import { VideoDisplayComponent } from './component/all-movies/video-display/video-display.component';
+import { RepeatComponent } from './component/layer-control/layer-properties/repeat/repeat.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { VideoDisplayComponent } from './component/all-movies/video-display/vide
     JSONDiffComponent,
     LayerAnimationStringPipe,
     AllMoviesComponent,
-    VideoDisplayComponent
+    VideoDisplayComponent,
+    RepeatComponent
   ],
   imports: [
     BrowserModule,

@@ -6,7 +6,7 @@ import { TimelineService } from './services/timeline.service';
 import { Member } from './models/members';
 import { IMemberOption } from './interfaces/member';
 import { ILayerProperties } from './interfaces/movie-properties';
-import { ILayer } from './interfaces/movie-layer';
+import { ILayer, ILayerRepeat } from './interfaces/movie-layer';
 import { ILayerAnimation } from './interfaces/movie-animations';
 import { takeUntil } from 'rxjs';
 import { ComponentBase } from './base/component-base';
@@ -72,5 +72,9 @@ export class AppComponent extends ComponentBase implements OnInit, OnDestroy {
 
   addOptionToMovieTimeLine(member: Member, option: IMemberOption): void {
     this.movieService.addMemberOptionToTime(this.timelineService.currentTime.value, member.id, option.optionId);
+  }
+
+  saveRepeat(layer: ILayer, repeating: ILayerRepeat | undefined): void {
+    this.movieService.updateRepeat(this.timelineService.currentTime.value, layer.layerId, repeating)
   }
 }

@@ -1,16 +1,17 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { IPlaySpeed } from '../interfaces/play-speed';
+import { ServiceBase } from '../base/service-base';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TimelineService {
+export class TimelineService extends ServiceBase implements OnDestroy {
 
   currentTime = new BehaviorSubject<number>(0);
   endTime = new BehaviorSubject<number>(600);
 
-  standardSpeed = 1000;
+  standardSpeed = new BehaviorSubject<number>(1000);
   speedRange: IPlaySpeed[] = [
     { key: '0.25', multiple: 1 / 0.25 },
     { key: '0.5', multiple: 1 / 0.5 },
@@ -21,22 +22,58 @@ export class TimelineService {
     { key: '1.75', multiple: 1 / 1.75 },
     { key: '2', multiple: 1 / 2 }
   ];
-  selectedSpeed: IPlaySpeed = this.speedRange[3];
+  selectedSpeed = new BehaviorSubject<IPlaySpeed>(this.speedRange[3]);
 
   playing = false;
-  framesPerUnitTime = 4;
+  framesPerUnitTime = new BehaviorSubject<number>(4);
   playingStateChange = new Subject<boolean>();
+
+  settingStorageKey = 'settingStorage';
 
   private maxPlayTime = -1;
 
-  constructor() { }
+  constructor() {
+    super();
+    this.loadSettingFromStorage();
+    combineLatest([this.currentTime, this.endTime, this.standardSpeed, this.framesPerUnitTime, this.selectedSpeed])
+      .pipe(takeUntil(this.isServiceActive))
+      .subscribe(() => this.saveSettingToStorage());
+  }
 
   get frameSpeed(): number {
-    return this.standardSpeed * this.selectedSpeed.multiple;
+    return this.standardSpeed.value * this.selectedSpeed.value.multiple;
   }
 
   get frameSpeedByPerUnitTime(): number {
-    return this.standardSpeed / this.framesPerUnitTime;
+    return this.standardSpeed.value / this.framesPerUnitTime.value;
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy();
+  }
+
+  loadSettingFromStorage(): void {
+    const settingData = localStorage.getItem(this.settingStorageKey)
+    if (!settingData) return;
+
+    const setting: any = JSON.parse(settingData);
+    this.currentTime.next(setting.currentTime);
+    this.endTime.next(setting.endTime);
+    this.standardSpeed.next(setting.standardSpeed);
+    this.framesPerUnitTime.next(setting.framesPerUnitTime);
+    this.selectedSpeed.next(setting.selectedSpeed);
+
+  }
+
+  saveSettingToStorage(): void {
+    const settingData = {
+      currentTime: this.currentTime.value,
+      endTime: this.endTime.value,
+      standardSpeed: this.standardSpeed.value,
+      framesPerUnitTime: this.framesPerUnitTime.value,
+      selectedSpeed: this.selectedSpeed.value
+    };
+    localStorage.setItem(this.settingStorageKey, JSON.stringify(settingData))
   }
 
   setNewTime(time: number): void {
@@ -114,6 +151,6 @@ export class TimelineService {
   }
 
   setPlaybackSpeed(speed: IPlaySpeed) {
-    this.selectedSpeed = speed;
+    this.selectedSpeed.next(speed);
   }
 }

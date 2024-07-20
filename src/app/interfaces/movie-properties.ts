@@ -50,5 +50,4 @@ export interface IScale {
 export interface ISkew {
     skewX: number;
     skewY: number;
-
 }

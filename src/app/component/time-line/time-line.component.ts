@@ -42,10 +42,22 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
       .subscribe({
         next: percent => this.updateUnitTimeFramePercentStyle(percent)
     });
+
+    this.timelineService.standardSpeed
+    .pipe(takeUntil(this.isComponentActive))
+    .subscribe({
+      next: standardSpeed => this.resetMinimumDisplayLength(standardSpeed)
+    });
   }
 
   ngOnDestroy(): void {
     this.onDestroy();
+  }
+
+  // Sets this number so that timeline shows seconds
+  resetMinimumDisplayLength(standardSpeed: number): void {
+    // for 1000 ms set display length to 10
+    // for 100 ms set display length to 
   }
 
   changeCurrentTime(time: number): void {

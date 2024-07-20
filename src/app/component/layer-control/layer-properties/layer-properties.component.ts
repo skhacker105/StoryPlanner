@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ComponentBase } from '../../../base/component-base';
-import { ILayer } from '../../../interfaces/movie-layer';
+import { ILayer, ILayerRepeat } from '../../../interfaces/movie-layer';
 import { Member } from '../../../models/members';
 import { IMemberOption } from '../../../interfaces/member';
 import { ILayerProperties } from '../../../interfaces/movie-properties';
@@ -21,6 +21,7 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   @Output() onCancel = new EventEmitter<void>();
   @Output() onStyleSave = new EventEmitter<ILayerProperties>();
   @Output() onAnimationSave = new EventEmitter<ILayerAnimation | undefined>();
+  @Output() onRepeatSave = new EventEmitter<ILayerRepeat | undefined>();
   
   constructor() {
     super();
@@ -31,13 +32,5 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   
   ngOnDestroy(): void {
     this.onDestroy();
-  }
-
-  handleOnStyleSave(updatedProperties: ILayerProperties): void {
-    this.onStyleSave.emit(updatedProperties);
-  }
-
-  handleOnAnimationSave(updatedAnimation: ILayerAnimation | undefined): void {
-    this.onAnimationSave.emit(updatedAnimation);
   }
 }

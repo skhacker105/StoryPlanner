@@ -1,7 +1,7 @@
-import { ILayer } from "../interfaces/movie-layer";
+import { ILayer, ILayerRepeat } from "../interfaces/movie-layer";
 import { ILayerProperties } from "../interfaces/movie-properties";
 
-export function createLayerWithDefaultProperties(layerId: string, time: number, memberId: string, memberOptionId: string): ILayer {
+export function CreateLayerWithDefaultProperties(layerId: string, time: number, memberId: string, memberOptionId: string): ILayer {
   return {
     layerId,
     memberId,
@@ -9,15 +9,16 @@ export function createLayerWithDefaultProperties(layerId: string, time: number, 
     isProjected: false,
     projectionStartTime: 0,
     animations: [],
+    repeating: undefined,
 
-    properties: getDefaultProperties(time),
+    properties: GetDefaultProperties(time),
 
     // Animation
     animation: undefined
   } as ILayer
 }
 
-export function getDefaultProperties(time: number): ILayerProperties {
+export function GetDefaultProperties(time: number): ILayerProperties {
   return {
     // Generic
     stackPosition: 0,
@@ -52,4 +53,14 @@ export function getDefaultProperties(time: number): ILayerProperties {
     skewX: 0,
     skewY: 0
   }
+}
+
+export function CreateRepeatedLayer(newLayerId: string, layer: ILayer, newRepeating: ILayerRepeat, time: number): ILayer {
+  const obj = {
+    ...layer,
+    repeating: newRepeating,
+    layerId: newLayerId
+  }
+  obj.properties.endTime = time;
+  return obj;
 }
