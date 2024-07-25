@@ -41,26 +41,26 @@ export class FileService {
     this.renderingFrame = true;
     try {
       const chunks: Blob[] = [];
-      const percent = 100 / images.length;
+      const imagesLength = images.length;
+      const percent = 100 / imagesLength;
       const { canvas, ctx } = await this.createCanvas(images[0]);
       const { mediaRecorder, stopRecording } = this.createMediaRecorder(canvas, chunks, videoLength);
 
       // Draw each image on the canvas and record
-    console.log('Image rendering started')
-      let i = 0;
-      for (const imageBlob of images) {
+      console.log('Image rendering started')
+
+      mediaRecorder.start();
+      for (const [i, imageBlob] of images.entries()) {
+        const tm1 = new Date();
         await this.drawBlobImage(imageBlob, ctx, canvas.width, canvas.height);
+        const tm2 = new Date();
+        const diff = tm2.getTime() - tm1.getTime();
 
         // Delay between all frame images
-        await new Promise(resolve => setTimeout(() => resolve(null), frameDelay));
-
-        // Start recording after the first image is drawn
-        if (mediaRecorder.state === 'inactive') {
-          mediaRecorder.start();
-        }
+        if (i < imagesLength - 1)
+          await new Promise(resolve => setTimeout(() => resolve(null), (frameDelay - diff)));
 
         // Track completePercent
-        i++;
         this.progressPercent = (i * percent);
       }
       this.renderingFrame = false;

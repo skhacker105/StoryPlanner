@@ -13,6 +13,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 })
 export class TimeLineComponent extends ComponentBase implements OnInit, OnDestroy {
 
+  timeMultiplier = 0;
   arrTime: number[] = [];
   minimumNumDisplayLength = 10;
   dialogRef?: MatDialogRef<any>;
@@ -43,21 +44,19 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
         next: percent => this.updateUnitTimeFramePercentStyle(percent)
     });
 
+    this.recordingService.animationPausedForCapture.subscribe({
+      next: res => console.log('animationPausedForCapture = ', res)
+    })
+
     this.timelineService.standardSpeed
     .pipe(takeUntil(this.isComponentActive))
     .subscribe({
-      next: standardSpeed => this.resetMinimumDisplayLength(standardSpeed)
+      next: standardSpeed => this.timeMultiplier = standardSpeed / 1000
     });
   }
 
   ngOnDestroy(): void {
     this.onDestroy();
-  }
-
-  // Sets this number so that timeline shows seconds
-  resetMinimumDisplayLength(standardSpeed: number): void {
-    // for 1000 ms set display length to 10
-    // for 100 ms set display length to 
   }
 
   changeCurrentTime(time: number): void {

@@ -5,7 +5,6 @@ import { MovieService } from './movie.service';
 import { ServiceBase } from '../base/service-base';
 import html2canvas from 'html2canvas';
 import { FileService } from './file.service';
-import computedStyleToInlineStyle from 'computed-style-to-inline-style';
 import { Video } from '../models/video';
 import { IndexedDBManager } from '../storage/indexedDB.manager';
 import { Tables } from '../constants/constant';
@@ -47,7 +46,7 @@ export class RecordingService extends ServiceBase {
       })
   }
 
-  loadVideosFromStorage() {
+  loadVideosFromStorage(): void {
     this.videoStorageManager.getAll()
       .pipe(takeUntil(this.isServiceActive))
       .subscribe({
@@ -111,20 +110,13 @@ export class RecordingService extends ServiceBase {
     // frames pending to capture
     if (frameCanvas.length < this.timelineService.framesPerUnitTime.value) {
 
-      this.animationPausedForCapture.next(true);
       const collectedFrames = await this.captureFrame(frameCanvas);
-      this.animationPausedForCapture.next(false);
-
       if (collectedFrames) {
-        setTimeout(() => {
-          this.runWhileRecording(collectedFrames);
-
-        }, this.timelineService.frameSpeedByPerUnitTime);
+        this.runWhileRecording(collectedFrames);
 
       } else this.stopRecording()
 
     } else { // store all collected frames and increase time
-      console.log('frameCanvas = ', frameCanvas)
       this.recordedFrames = this.recordedFrames.concat(frameCanvas);
 
       if (this.timelineService.hasNextTime()) {
@@ -146,23 +138,49 @@ export class RecordingService extends ServiceBase {
       this.stopRecording();
       return;
     }
-    divElement.getBoundingClientRect();
 
-    return await new Promise<HTMLCanvasElement[]>((resolve, reject) => {
+    const updatedCanvases = await new Promise<HTMLCanvasElement[]>((resolve, reject) => {
       setTimeout(() => {
         html2canvas(divElement)
-          .then(canvas => {
+          .then(async (canvas) => {
             frameCanvas.push(canvas);
+            await this.runOneFrameOfAnimation();
             resolve(frameCanvas);
           })
           .catch(err => reject(err));
-      }, 50);
+      }, 100);
+    });
+    return updatedCanvases;
+  }
+
+  async runOneFrameOfAnimation() {
+
+    await this.loopTimeout(Math.floor(this.timelineService.frameSpeedByPerUnitTime / 10), this.timelineService.frameSpeedByPerUnitTime, new Date())
+  }
+
+  async loopTimeout(duration: number, remainingTime: number, lastDate: Date) {
+    // const dt1 = new Date();
+    this.animationPausedForCapture.next(false);
+    return await new Promise(resolve => {
+      setTimeout(async() => {
+        const dt2 = new Date();
+        const diff = dt2.getTime() - lastDate.getTime();
+
+        const newTimeRemaining = remainingTime - diff;
+        if (newTimeRemaining < 0) {
+          this.animationPausedForCapture.next(true);
+        } else {
+          await this.loopTimeout(duration, newTimeRemaining, dt2);
+        }
+        resolve(null);
+      }, duration);
     });
   }
 
   stopRecording(): void {
     if (!this.recording.value) return;
 
+    // this.animationPausedForCapture.next(true);
     this.recording.next(false);
     this.unitTimeRecordingPercent.next(0);
     this.timelineService.resetMaxPlayTime();
@@ -172,7 +190,8 @@ export class RecordingService extends ServiceBase {
     if (!this.recordedFrames || this.recordedFrames.length === 0) return;
 
     console.log('this.recordedFrames = ', this.recordedFrames)
-    const videoLength = this.recordedFrames.length / this.timelineService.framesPerUnitTime.value;
+    const timeLength = this.recordedFrames.length / this.timelineService.framesPerUnitTime.value;
+    const videoLength = +((this.timelineService.standardSpeed.value / 1000) * timeLength).toFixed(2);
     this.fileService.saveFramesAsVideo(this.recordedFrames, this.timelineService.frameSpeedByPerUnitTime, videoLength)
   }
 }

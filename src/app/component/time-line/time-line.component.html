@@ -8,7 +8,7 @@
                 }" (click)="changeCurrentTime(time)">
                     @if (time === 0 || time % minimumNumDisplayLength === 0) {
                         <span class="time-label">
-                            {{ time }}
+                            {{ (time * timeMultiplier).toFixed(0) }}
                         </span>
                     }
                 </td>
@@ -78,10 +78,12 @@
         <app-popup-header title="Settings" (onCloseTrigger)="dialogRef?.close()">
         </app-popup-header>
     
+        <!-- Standard Speed, Frame Per Unit Time -->
         <div class="flex-display standard-padding">
+
             <!-- Standard Speed -->
             <div class="stat-block">
-                <app-form-field label="Standard Speed">
+                <app-form-field label="Standard Speed (ms)">
                     <ng-container formFieldControl>
                         <input type="number"
                         [ngModel]="timelineService.standardSpeed.value"
@@ -98,6 +100,18 @@
                         <input type="number"
                         [ngModel]="timelineService.framesPerUnitTime.value"
                         (ngModelChange)="timelineService.framesPerUnitTime.next($event)"
+                        class="standard-speed-input">
+                    </ng-container>
+                </app-form-field>
+            </div>
+    
+            <!-- Animation -->
+            <div class="stat-block">
+                <app-form-field label="Frame / Unit Time">
+                    <ng-container formFieldControl>
+                        <input type="checkbox"
+                        [ngModel]="recordingService.animationPausedForCapture.value"
+                        (ngModelChange)="recordingService.animationPausedForCapture.next($event)"
                         class="standard-speed-input">
                     </ng-container>
                 </app-form-field>

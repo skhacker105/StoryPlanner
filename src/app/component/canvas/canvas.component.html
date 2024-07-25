@@ -11,10 +11,10 @@
 
     @for (layer of paintedLayers; track layer;) {
         <img
+            [attr.id]="layer.layerId"
             [src]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.image"
-            [style]="(layer | layerStyleString) + (layer | layerAnimationString)"
+            [style]="(layer | layerStyleString) + (layer | layerAnimationString) + (recordingService.animationPausedForCapture.value | animationPause)"
             [ngClass]="{
-                'animation-paused': recordingService.animationPausedForCapture.value,
                 'image-hidden': !layer.properties.isInView
             }"
         >

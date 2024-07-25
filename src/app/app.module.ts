@@ -46,6 +46,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AllMoviesComponent } from './component/all-movies/all-movies.component';
 import { VideoDisplayComponent } from './component/all-movies/video-display/video-display.component';
 import { RepeatComponent } from './component/layer-control/layer-properties/repeat/repeat.component';
+import { AnimationPausePipe } from './pipes/animation-pause.pipe';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { RepeatComponent } from './component/layer-control/layer-properties/repe
     LayerAnimationStringPipe,
     AllMoviesComponent,
     VideoDisplayComponent,
-    RepeatComponent
+    RepeatComponent,
+    AnimationPausePipe
   ],
   imports: [
     BrowserModule,

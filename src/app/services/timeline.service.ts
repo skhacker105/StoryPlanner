@@ -125,6 +125,8 @@ export class TimelineService extends ServiceBase implements OnDestroy {
   }
 
   play(): void {
+    if (!this.hasNextTime()) this.timeToZero();
+    
     this.playing = true;
     this.playingStateChange.next(true);
     this.runWhilePlaying();
