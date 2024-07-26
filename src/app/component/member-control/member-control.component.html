@@ -14,7 +14,7 @@
     </div>
     <div class="layers">
         <mat-divider></mat-divider>
-        @for (member of memberService.members.value | sort:sortBy; track member) {
+        @for (member of memberService.members.value | sort:'byName'; track member) {
             <app-member-display [member]="member" [isSelected]="compareSelectedMembers(member)"
                 (onCLick)="handleMemberClick(member)"
                 (onEdit)="loadEditMemberPopup($event)" (onDelete)="handleDeleteConfirmationPopup(member)">

@@ -17,10 +17,8 @@ export class RecordingService extends ServiceBase {
 
   allVideos: Video[] = [];
   playVideo = new BehaviorSubject<Video | undefined>(undefined);
-  // selectedVideoId = new BehaviorSubject<string | undefined>(undefined);
   videoStorageManager = new IndexedDBManager<Video>(Tables.VideoListStorage, 'id');
 
-  animationPausedForCapture = new BehaviorSubject<boolean>(true);
   recording = new BehaviorSubject<boolean>(false);
   recordedFrames: HTMLCanvasElement[] = [];
   unitTimeRecordingPercent = new BehaviorSubject<number>(0);
@@ -40,7 +38,6 @@ export class RecordingService extends ServiceBase {
       .pipe(takeUntil(this.isServiceActive))
       .subscribe({
         next: playing => {
-          playing ? this.animationPausedForCapture.next(false) : this.animationPausedForCapture.next(true);
           playing && this.playVideo.value ? this.resetSelectedVideo() : null;
         }
       })
@@ -112,6 +109,7 @@ export class RecordingService extends ServiceBase {
 
       const collectedFrames = await this.captureFrame(frameCanvas);
       if (collectedFrames) {
+        this.timelineService.gotoNextFrame();
         this.runWhileRecording(collectedFrames);
 
       } else this.stopRecording()
@@ -140,41 +138,16 @@ export class RecordingService extends ServiceBase {
     }
 
     const updatedCanvases = await new Promise<HTMLCanvasElement[]>((resolve, reject) => {
-      setTimeout(() => {
-        html2canvas(divElement)
-          .then(async (canvas) => {
-            frameCanvas.push(canvas);
-            await this.runOneFrameOfAnimation();
-            resolve(frameCanvas);
-          })
-          .catch(err => reject(err));
-      }, 100);
+      // setTimeout(() => {
+      html2canvas(divElement)
+        .then(async (canvas) => {
+          frameCanvas.push(canvas);
+          resolve(frameCanvas);
+        })
+        .catch(err => reject(err));
+      // }, 100);
     });
     return updatedCanvases;
-  }
-
-  async runOneFrameOfAnimation() {
-
-    await this.loopTimeout(Math.floor(this.timelineService.frameSpeedByPerUnitTime / 10), this.timelineService.frameSpeedByPerUnitTime, new Date())
-  }
-
-  async loopTimeout(duration: number, remainingTime: number, lastDate: Date) {
-    // const dt1 = new Date();
-    this.animationPausedForCapture.next(false);
-    return await new Promise(resolve => {
-      setTimeout(async() => {
-        const dt2 = new Date();
-        const diff = dt2.getTime() - lastDate.getTime();
-
-        const newTimeRemaining = remainingTime - diff;
-        if (newTimeRemaining < 0) {
-          this.animationPausedForCapture.next(true);
-        } else {
-          await this.loopTimeout(duration, newTimeRemaining, dt2);
-        }
-        resolve(null);
-      }, duration);
-    });
   }
 
   stopRecording(): void {

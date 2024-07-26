@@ -1,1 +1,1 @@
-export type SortType = 'byName' | 'byTime' | 'createdOn';
+export type SortType = 'byName' | 'byTime' | 'createdOn' | 'byLayerStack';

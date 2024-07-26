@@ -8,7 +8,8 @@ import { ServiceBase } from '../base/service-base';
 })
 export class TimelineService extends ServiceBase implements OnDestroy {
 
-  currentTime = new BehaviorSubject<number>(0);
+  currentTime = new BehaviorSubject<number>(0); // in unit time
+  currentFrameCount = new BehaviorSubject<number>(0); // frame count completed
   endTime = new BehaviorSubject<number>(600);
 
   standardSpeed = new BehaviorSubject<number>(1000);
@@ -35,17 +36,18 @@ export class TimelineService extends ServiceBase implements OnDestroy {
   constructor() {
     super();
     this.loadSettingFromStorage();
+    this.currentTime
+      .pipe(takeUntil(this.isServiceActive))
+      .subscribe({
+        next: () => this.currentFrameCount.next(0)
+      });
     combineLatest([this.currentTime, this.endTime, this.standardSpeed, this.framesPerUnitTime, this.selectedSpeed])
       .pipe(takeUntil(this.isServiceActive))
       .subscribe(() => this.saveSettingToStorage());
   }
 
-  get frameSpeed(): number {
-    return this.standardSpeed.value * this.selectedSpeed.value.multiple;
-  }
-
   get frameSpeedByPerUnitTime(): number {
-    return this.standardSpeed.value / this.framesPerUnitTime.value;
+    return (this.standardSpeed.value * this.selectedSpeed.value.multiple) / this.framesPerUnitTime.value;
   }
 
   ngOnDestroy(): void {
@@ -90,6 +92,12 @@ export class TimelineService extends ServiceBase implements OnDestroy {
     }
   }
 
+  gotoNextFrame() {
+    if (this.hasNextFrame()) {
+      this.currentFrameCount.next(this.currentFrameCount.value + 1);
+    }
+  }
+
   decreaseTime(): void {
     if (this.currentTime.value > 0) {
       this.currentTime.next(this.currentTime.value - 1);
@@ -102,6 +110,10 @@ export class TimelineService extends ServiceBase implements OnDestroy {
 
   timeToEnd(): void {
     this.currentTime.next(this.endTime.value);
+  }
+
+  hasNextFrame() {
+    return this.currentFrameCount.value < this.framesPerUnitTime.value - 1
   }
 
   hasNextTime(): boolean {
@@ -126,7 +138,7 @@ export class TimelineService extends ServiceBase implements OnDestroy {
 
   play(): void {
     if (!this.hasNextTime()) this.timeToZero();
-    
+
     this.playing = true;
     this.playingStateChange.next(true);
     this.runWhilePlaying();
@@ -134,14 +146,22 @@ export class TimelineService extends ServiceBase implements OnDestroy {
 
   runWhilePlaying(): void {
     if (this.playing) {
-      if (this.hasNextTime()) {
 
+      if (this.hasNextFrame()) {
         setTimeout(() => {
+          this.gotoNextFrame();
+          this.runWhilePlaying();
+        }, this.frameSpeedByPerUnitTime);
+
+      } else {
+
+        if (this.hasNextTime()) {
           this.increaseTime();
           this.runWhilePlaying();
-        }, this.frameSpeed);
-      } else {
-        this.pause();
+
+        } else {
+          this.pause();
+        }
       }
     }
   }

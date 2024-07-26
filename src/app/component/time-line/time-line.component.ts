@@ -44,10 +44,6 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
         next: percent => this.updateUnitTimeFramePercentStyle(percent)
     });
 
-    this.recordingService.animationPausedForCapture.subscribe({
-      next: res => console.log('animationPausedForCapture = ', res)
-    })
-
     this.timelineService.standardSpeed
     .pipe(takeUntil(this.isComponentActive))
     .subscribe({

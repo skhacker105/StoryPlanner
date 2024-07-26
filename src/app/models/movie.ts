@@ -27,13 +27,15 @@ export class Movie implements IMovie {
     addMemberOptionToTime(time: number, memberId: string, memberOptionId: string, newLayer: ILayer, isProjected: boolean = false, projectionStartTime = 0): void {
         this.checkAndCreateTimeline(time);
 
-        newLayer.properties.stackPosition = this.timeline[time].layers.length + 1;
+        // update existing layers stack position to +1
+        this.timeline[time].layers.forEach(layer => layer.properties.stackPosition = layer.properties.stackPosition + 1);
+        newLayer.properties.stackPosition = 1;
         if (!isProjected) this.timeline[time].layers.push(newLayer);
         else {
             const newLayerCopy = cloneDeep(newLayer);
             newLayerCopy.isProjected = true;
             newLayerCopy.projectionStartTime = projectionStartTime;
-            this.timeline[time].layers.push(newLayerCopy);
+            this.timeline[time].layers.unshift(newLayerCopy);
         }
 
         if (!isProjected) {

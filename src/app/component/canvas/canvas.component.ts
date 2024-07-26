@@ -74,12 +74,18 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
       });
 
     this.recordingService.playVideo
-    .pipe(takeUntil(this.isComponentActive))
-    .subscribe({
-      next: video => {
-        video ? this.showMovie(video) : this.resetSelectedVideo();
-      }
-    });
+      .pipe(takeUntil(this.isComponentActive))
+      .subscribe({
+        next: video => {
+          video ? this.showMovie(video) : this.resetSelectedVideo();
+        }
+      });
+
+    this.timelineService.currentFrameCount
+      .pipe(takeUntil(this.isComponentActive))
+      .subscribe({
+        next: () => this.updatedLayersAnimationState()
+      });
   }
 
   ngOnDestroy(): void {
@@ -102,15 +108,17 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     const objPaintedLayers = this.convertLayersById(this.paintedLayers);
 
     // Add source layer which is not painted before or is not a projected source layer
-    const layersToAdd = sourceLayers.filter(sl =>
+    const layersToAdd = cloneDeep(sourceLayers.filter(sl =>
       !sl.isProjected || !objPaintedLayers[sl.layerId]
         ? true : false
-    );
+    ));
     const layersToUpdate = this.paintedLayers.filter(l =>
       objSource[l.layerId] && objSource[l.layerId].isProjected
         ? true : false
     ).map(l => {
+      l.isProjected = true;
       l.properties.stackPosition = objSource[l.layerId].properties.stackPosition;
+      l.projectionStartTime = objSource[l.layerId].projectionStartTime;
       // l.properties.isInView = objSource[l.layerId].properties.isInView;
       return l;
     });
@@ -120,6 +128,26 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     styleEl.appendChild(this.renderer.createText(animationStr));
     this.renderer.appendChild(document.head, styleEl);
     this.paintedLayers = [...layersToUpdate, ...layersToAdd];
+  }
+
+  updatedLayersAnimationState(): void {
+    setTimeout(() => {
+      const currentTime = this.timelineService.currentTime.value;
+      const currentFrameCount = this.timelineService.currentFrameCount.value;
+      const framesPerUnitTime = this.timelineService.framesPerUnitTime.value;
+      const standardSpeed = this.timelineService.standardSpeed.value;
+
+      this.paintedLayers.forEach(layer => {
+        const ob = document.getElementById(layer.layerId);
+        const layerAnimations = ob?.getAnimations();
+        if (!ob || !layerAnimations || layerAnimations.length === 0 || !layer.animation) return;
+
+        const completedAnimation = ((currentTime - layer.projectionStartTime) * framesPerUnitTime) + currentFrameCount;
+        const completedInMillisecond =  (standardSpeed / framesPerUnitTime) * completedAnimation;
+        const completedInMillisecondForCurrentIteration = completedInMillisecond % (layer.animation.duration * 1000);
+        layerAnimations[0].currentTime = completedInMillisecondForCurrentIteration;
+      });
+    });
   }
 
   showMovie(video: Video) {

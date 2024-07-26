@@ -105,18 +105,6 @@
                 </app-form-field>
             </div>
     
-            <!-- Animation -->
-            <div class="stat-block">
-                <app-form-field label="Frame / Unit Time">
-                    <ng-container formFieldControl>
-                        <input type="checkbox"
-                        [ngModel]="recordingService.animationPausedForCapture.value"
-                        (ngModelChange)="recordingService.animationPausedForCapture.next($event)"
-                        class="standard-speed-input">
-                    </ng-container>
-                </app-form-field>
-            </div>
-    
         </div>
     
         <!-- Playback Speed -->

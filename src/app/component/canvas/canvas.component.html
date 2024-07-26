@@ -9,11 +9,11 @@
         </mat-progress-spinner>
     </div>
 
-    @for (layer of paintedLayers; track layer;) {
+    @for (layer of paintedLayers | sort:'byLayerStack'; track layer;) {
         <img
             [attr.id]="layer.layerId"
             [src]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.image"
-            [style]="(layer | layerStyleString) + (layer | layerAnimationString) + (recordingService.animationPausedForCapture.value | animationPause)"
+            [style]="(layer | layerStyleString) + (layer | layerAnimationString) + 'animation-play-state: paused !important; '"
             [ngClass]="{
                 'image-hidden': !layer.properties.isInView
             }"

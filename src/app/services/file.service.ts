@@ -16,7 +16,7 @@ export class FileService {
   constructor(private util: UtilService) { }
 
   saveFramesAsVideo(recordedFrames: HTMLCanvasElement[], frameDelay: number, videoLength: number): void {
-    console.log('Frames save started')
+    console.log('Frames save started', {frameDelay})
     const promises = recordedFrames.map(c => new Promise<Blob | null>(resolve => c.toBlob(blob => resolve(blob))));
     if (promises && promises.length > 0) {
 
@@ -57,7 +57,7 @@ export class FileService {
         const diff = tm2.getTime() - tm1.getTime();
 
         // Delay between all frame images
-        if (i < imagesLength - 1)
+        if (i < imagesLength - 1 && (frameDelay - diff) > frameDelay)
           await new Promise(resolve => setTimeout(() => resolve(null), (frameDelay - diff)));
 
         // Track completePercent

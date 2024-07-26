@@ -25,6 +25,10 @@ export class SortPipe implements PipeTransform {
       case 'createdOn':
         diff = (b['createdOn'] as Date).getTime() - (a['createdOn'] as Date).getTime()
         break;
+
+      case 'byLayerStack':
+        (b['properties']['stackPosition'] as number) - (a['properties']['stackPosition'] as number)
+        break;
     }
     return diff;
   }
