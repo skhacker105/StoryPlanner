@@ -113,7 +113,7 @@ export class TimelineService extends ServiceBase implements OnDestroy {
   }
 
   hasNextFrame() {
-    return this.currentFrameCount.value < this.framesPerUnitTime.value - 1
+    return this.currentFrameCount.value < this.framesPerUnitTime.value
   }
 
   hasNextTime(): boolean {
