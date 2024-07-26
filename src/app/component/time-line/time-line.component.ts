@@ -5,6 +5,22 @@ import { takeUntil } from 'rxjs';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { RecordingService } from '../../services/recording.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { IPlaySpeed } from '../../interfaces/play-speed';
+
+const settingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const standardSpeed = control.get('standardSpeed')?.value as number;
+  const framesPerUnitTime = control.get('framesPerUnitTime')?.value as number;
+  const selectedSpeed = control.get('selectedSpeed')?.value as IPlaySpeed;
+  if (standardSpeed && framesPerUnitTime && selectedSpeed) {
+    if (((standardSpeed * selectedSpeed.multiple) / framesPerUnitTime) < 50) {
+      return {
+        settingError: true
+      }
+    }
+  }
+  return null;
+}
 
 @Component({
   selector: 'app-time-line',
@@ -19,6 +35,12 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
   dialogRef?: MatDialogRef<any>;
   @ViewChild('settings') settings!: TemplateRef<any>;
 
+  settingForm = new FormGroup({
+    standardSpeed: new FormControl<number>(0, [Validators.required]),
+    framesPerUnitTime: new FormControl<number>(0, [Validators.required]),
+    selectedSpeed: new FormControl<IPlaySpeed | undefined>(undefined, [Validators.required])
+  }, settingValidator);
+
   constructor(
     public timelineService: TimelineService,
     public recordingService: RecordingService,
@@ -27,6 +49,20 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
     private el: ElementRef
   ) {
     super();
+  }
+
+  get selectedSpeedCtrl(): FormControl<IPlaySpeed | null | undefined> {
+    return this.settingForm.controls['selectedSpeed']
+  }
+
+  get calculatedValue(): number {
+    const standardSpeed = this.settingForm.controls['standardSpeed']?.value as number;
+    const framesPerUnitTime = this.settingForm.controls['framesPerUnitTime']?.value as number;
+    const selectedSpeed = this.settingForm.controls['selectedSpeed']?.value as IPlaySpeed;
+    if (standardSpeed && framesPerUnitTime && selectedSpeed) {
+      return Math.floor((standardSpeed * selectedSpeed.multiple) / framesPerUnitTime)
+    }
+    return 0;
   }
 
   ngOnInit(): void {
@@ -42,13 +78,13 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
       .pipe(takeUntil(this.isComponentActive))
       .subscribe({
         next: percent => this.updateUnitTimeFramePercentStyle(percent)
-    });
+      });
 
     this.timelineService.standardSpeed
-    .pipe(takeUntil(this.isComponentActive))
-    .subscribe({
-      next: standardSpeed => this.timeMultiplier = standardSpeed / 1000
-    });
+      .pipe(takeUntil(this.isComponentActive))
+      .subscribe({
+        next: standardSpeed => this.timeMultiplier = standardSpeed / 1000
+      });
   }
 
   ngOnDestroy(): void {
@@ -57,10 +93,6 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
 
   changeCurrentTime(time: number): void {
     this.timelineService.setNewTime(time);
-  }
-
-  changePlaybackSpeed(speedChange: MatButtonToggleChange): void {
-    this.timelineService.setPlaybackSpeed(speedChange.value);
   }
 
   playPause(): void {
@@ -72,7 +104,31 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
   }
 
   handleSettingClick(): void {
+    this.prepareSettingForm();
     this.dialogRef = this.dialog.open(this.settings);
+  }
+
+  prepareSettingForm(): void {
+    this.settingForm.reset()
+    this.settingForm.markAsPristine();
+    this.settingForm.patchValue({
+      standardSpeed: this.timelineService.standardSpeed.value,
+      framesPerUnitTime: this.timelineService.framesPerUnitTime.value,
+      selectedSpeed: this.timelineService.selectedSpeed.value
+    });
+  }
+
+  updateSettings(): void {
+    if (!this.settingForm.dirty) return;
+
+    if (this.settingForm.invalid) console.log('Invalid Form');
+
+    const settingFormValue = this.settingForm.value;
+    if (settingFormValue.standardSpeed) this.timelineService.standardSpeed.next(settingFormValue.standardSpeed);
+    if (settingFormValue.selectedSpeed) this.timelineService.selectedSpeed.next(settingFormValue.selectedSpeed);
+    if (settingFormValue.framesPerUnitTime) this.timelineService.framesPerUnitTime.next(settingFormValue.framesPerUnitTime);
+
+    this.dialogRef?.close()
   }
 
   updateUnitTimeFramePercentStyle(percent: number): void {

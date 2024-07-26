@@ -171,8 +171,4 @@ export class TimelineService extends ServiceBase implements OnDestroy {
     this.playingStateChange.next(false);
     this.resetMaxPlayTime();
   }
-
-  setPlaybackSpeed(speed: IPlaySpeed) {
-    this.selectedSpeed.next(speed);
-  }
 }

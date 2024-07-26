@@ -2,16 +2,16 @@
     <table class="time-line">
         <tr>
             @for (time of arrTime; track time) {
-                <td class="time" [ngClass]="{
+            <td class="time" [ngClass]="{
                     'time-with-label': time === 0 || time % minimumNumDisplayLength === 0,
                     'current-time': timelineService.currentTime.value === time
                 }" (click)="changeCurrentTime(time)">
-                    @if (time === 0 || time % minimumNumDisplayLength === 0) {
-                        <span class="time-label">
-                            {{ (time * timeMultiplier).toFixed(0) }}
-                        </span>
-                    }
-                </td>
+                @if (time === 0 || time % minimumNumDisplayLength === 0) {
+                <span class="time-label">
+                    {{ (time * timeMultiplier).toFixed(0) }}
+                </span>
+                }
+            </td>
             }
         </tr>
         <tr>
@@ -22,44 +22,44 @@
     <div class="time-line-status">
 
         <div class="status-blocks">
-    
+
             <!-- Current Time -->
             <div class="stat-block">
                 <app-form-field label="Time">
                     <ng-container formFieldControl>
-                            <input type="number" disabled
-                            [ngModel]="timelineService.currentTime.value"
-                            class="time-display"
+                        <input type="number" disabled [ngModel]="timelineService.currentTime.value" class="time-display"
                             id="time-display">
                     </ng-container>
                 </app-form-field>
             </div>
-            
+
             <!-- Reset -->
             <div class="stat-block no-padding">
                 <button mat-icon-button (click)="timelineService.timeToZero()">
                     <mat-icon>restart_alts</mat-icon>
                 </button>
             </div>
-            
+
             <!-- Play / Pause -->
             <div class="stat-block no-padding">
-                <button mat-icon-button [color]="timelineService.playing ? 'warn' : 'primary'" (click)="playPause()" class="play-pause-icon">
+                <button mat-icon-button [color]="timelineService.playing ? 'warn' : 'primary'" (click)="playPause()"
+                    class="play-pause-icon">
                     <mat-icon>
                         {{ timelineService.playing ? 'pause_circle' : 'not_started' }}
                     </mat-icon>
                 </button>
             </div>
-            
+
             <!-- Recording -->
             <div class="stat-block no-padding">
-                <button mat-icon-button [color]="recordingService.recording.value ? 'warn' : 'primary'" (click)="toggleRecording()" class="play-pause-icon">
+                <button mat-icon-button [color]="recordingService.recording.value ? 'warn' : 'primary'"
+                    (click)="toggleRecording()" class="play-pause-icon">
                     <mat-icon>
                         {{ recordingService.recording.value ? 'stop_circle' : 'radio_button_checked' }}
                     </mat-icon>
                 </button>
             </div>
-            
+
             <!-- Setting -->
             <div class="stat-block no-padding">
                 <button mat-icon-button color="primary" class="play-pause-icon" (click)="handleSettingClick()">
@@ -74,59 +74,103 @@
 
 <ng-template #settings>
 
-    <div class="cover">
-        <app-popup-header title="Settings" (onCloseTrigger)="dialogRef?.close()">
-        </app-popup-header>
-    
-        <!-- Standard Speed, Frame Per Unit Time -->
-        <div class="flex-display standard-padding">
+    <form [formGroup]="settingForm" (ngSubmit)="updateSettings()">
+        <div class="cover">
+            <app-popup-header title="Settings" (onCloseTrigger)="dialogRef?.close()">
+            </app-popup-header>
 
-            <!-- Standard Speed -->
-            <div class="stat-block">
-                <app-form-field label="Standard Speed (ms)">
+            <!-- Standard Speed, Frame Per Unit Time -->
+            <div class="flex-display standard-padding">
+
+                <!-- Standard Speed -->
+                <div class="stat-block">
+                    <app-form-field label="Standard Speed (ms)">
+                        <ng-container formFieldControl>
+                            <input type="number" formControlName="standardSpeed" class="standard-speed-input">
+                        </ng-container>
+                    </app-form-field>
+                </div>
+
+                <!-- Frame Per Unit Time -->
+                <div class="stat-block">
+                    <app-form-field label="Frame / Unit Time">
+                        <ng-container formFieldControl>
+                            <input type="number" formControlName="framesPerUnitTime" class="standard-speed-input">
+                        </ng-container>
+                    </app-form-field>
+                </div>
+
+            </div>
+
+            <!-- Playback Speed -->
+            <div class="stat-block standard-padding">
+                <app-form-field label="Playback Speed">
                     <ng-container formFieldControl>
-                        <input type="number"
-                        [ngModel]="timelineService.standardSpeed.value"
-                        (ngModelChange)="timelineService.standardSpeed.next($event)"
-                        class="standard-speed-input">
+                        <mat-button-toggle-group [value]="selectedSpeedCtrl.value"
+                            (change)="selectedSpeedCtrl.setValue($event.value)" [hideSingleSelectionIndicator]="true"
+                            class="auto-margin">
+                            @for (speed of timelineService.speedRange; track speed) {
+                                <mat-button-toggle [value]="speed" class="play-back-speed" [ngClass]="{
+                                                'selected-placback-speed': selectedSpeedCtrl.value?.key === speed.key
+                                            }">
+                                    {{ speed.key }}
+                                </mat-button-toggle>
+                            }
+                        </mat-button-toggle-group>
                     </ng-container>
                 </app-form-field>
             </div>
-    
-            <!-- Frame Per Unit Time -->
-            <div class="stat-block">
-                <app-form-field label="Frame / Unit Time">
-                    <ng-container formFieldControl>
-                        <input type="number"
-                        [ngModel]="timelineService.framesPerUnitTime.value"
-                        (ngModelChange)="timelineService.framesPerUnitTime.next($event)"
-                        class="standard-speed-input">
-                    </ng-container>
-                </app-form-field>
+
+            <!-- Frame Speed By Per Unit Time -->
+            <div class="stat-block standard-padding">
+                <div class="calc-block" [ngClass]="{
+                    'error': calculatedValue < 50
+                }">
+
+                    <!-- <div class="block left-brace">
+                    </div> -->
+
+                    <div class="block">
+                        <div class="up">
+                            Standard Speed (ms)
+                        </div>
+                        <div class="down">
+                            Frame / Unit Time
+                        </div>
+                    </div>
+
+                    <div class="block">
+                        *
+                    </div>
+
+                    <div class="block">
+                        Playback Speed
+                    </div>
+
+                    <!-- <div class="block right-brace">
+                    </div> -->
+
+                    <div class="block">
+                        =
+                    </div>
+
+                    <div class="block">
+                        {{ calculatedValue }}
+                    </div>
+                </div>
             </div>
-    
+
+            <!-- Action Buttons -->
+            <div class="flex-display standard-padding">
+                <div class="spacer"></div>
+
+                <button mat-raised-button type="button" (click)="dialogRef?.close()">Cancel</button>
+                &nbsp;&nbsp;
+                <button mat-raised-button type="submit" color="primary" [disabled]="!settingForm.dirty || !settingForm.valid">
+                    Update
+                </button>
+            </div>
         </div>
-    
-        <!-- Playback Speed -->
-        <div class="stat-block standard-padding">
-            <app-form-field label="Playback Speed">
-                <ng-container formFieldControl>
-                    <mat-button-toggle-group [hideSingleSelectionIndicator]="true" [value]="timelineService.selectedSpeed"
-                    class="auto-margin"
-                        (change)="changePlaybackSpeed($event)">
-                        @for (speed of timelineService.speedRange; track speed) {
-                        <mat-button-toggle [value]="speed" class="play-back-speed" (click)="timelineService.setPlaybackSpeed(speed)"
-                            [ngClass]="{
-                                'selected-placback-speed': timelineService.selectedSpeed.value.key === speed.key
-                            }"
-                            [attr.someLabel]="timelineService.selectedSpeed.value.key === speed.key">
-                            {{ speed.key }}
-                        </mat-button-toggle>
-                        }
-                    </mat-button-toggle-group>
-                </ng-container>
-            </app-form-field>
-        </div>
-    </div>
+    </form>
 
 </ng-template>
