@@ -39,12 +39,4 @@ export class LayerDisplayComponent extends ComponentBase implements OnInit, OnDe
     e.stopPropagation();
     this.onDelete.emit(layer);
   }
-
-  handleAnimationClick(e: any): void {
-    e.stopPropagation();
-  }
-
-  handleRepeatClick(e: any): void {
-    e.stopPropagation();
-  }
 }

@@ -32,7 +32,6 @@ export class DescriptionToolTipDirective implements OnInit, OnDestroy {
                                                     originY: 'bottom',
                                                     overlayX: 'center',
                                                     overlayY: 'top',
-                                                    offsetY: 5,
                                                 }]);
 
     this._overlayRef = this._overlay.create({ positionStrategy});

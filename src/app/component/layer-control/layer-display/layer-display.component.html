@@ -21,21 +21,9 @@
         (click)="onGoToProjectionStart.emit()">
             <mat-icon>my_location</mat-icon>
         </button>
-        @if (layer.animation) {
-            <button mat-icon-button (click)="handleAnimationClick($event)" [data]="layer"
-                appDescriptionToolTip [contentTemplate]="animation">
-                <mat-icon>animation</mat-icon>
-            </button>
-        }
-        @if (layer.repeating) {
-            <button mat-icon-button (click)="handleRepeatClick($event)" [data]="layer"
-                appDescriptionToolTip [contentTemplate]="repeating">
-                <mat-icon>repeat</mat-icon>
-            </button>
-        }
-        <button mat-icon-button (click)="handleAnimationClick($event)" [data]="layer"
+        <button mat-icon-button (click)="$event.stopPropagation()" [data]="layer"
             appDescriptionToolTip [contentTemplate]="properties">
-            <mat-icon>summarize</mat-icon>
+            <mat-icon>apps</mat-icon>
         </button>
         <button mat-icon-button (click)="handleDeleteClick(layer, $event)" [color]="!isBroken ? '' : 'warn'">
             <mat-icon>
@@ -49,87 +37,95 @@
 </div>
 
 <ng-template #properties let-data="data">
-    @if (data.isProjected) {
-        <app-form-field label="Projected From">
-            <ng-container formFieldControl>
-                {{ data.projectionStartTime | spacePadded }}
-            </ng-container>
-        </app-form-field>
-    }
-    
-    <app-form-field label="Visible">
-        <ng-container formFieldControl>
-            {{ data.properties.isInView }}
-        </ng-container>
-    </app-form-field>
-    
-    <app-form-field label="Projection End TIme">
-        <ng-container formFieldControl>
-            {{ data.properties.endTime }}
-        </ng-container>
-    </app-form-field>
 
-</ng-template>
+    <div class="property-box">
 
-<ng-template #animation let-data="data">
-    @if (data.animation) {
-        <app-form-field label="Duration">
-            <ng-container formFieldControl>
-                {{ data.animation.duration }}
-            </ng-container>
-        </app-form-field>
-
-        <app-form-field label="Delay">
-            <ng-container formFieldControl>
-                {{ data.animation.delay }}
-            </ng-container>
-        </app-form-field>
-        
-        <app-form-field label="Iteration Count">
-            <ng-container formFieldControl>
-                {{ data.animation.iterationCount }}
-            </ng-container>
-        </app-form-field>
-        
-        <app-form-field label="Direction">
-            <ng-container formFieldControl>
-                {{ data.animation.direction }}
-            </ng-container>
-        </app-form-field>
-        
-        <app-form-field label="Timing Function">
-            <ng-container formFieldControl>
-                {{ data.animation.timingFunction }}
-            </ng-container>
-        </app-form-field>
-        
-        <app-form-field label="Fill Mode">
-            <ng-container formFieldControl>
-                {{ data.animation.fillMode }}
-            </ng-container>
-        </app-form-field>
-    }
-</ng-template>
-
-<ng-template #repeating let-data="data">
-        
-    @if (data.repeating) {
-        <app-form-field label="Start Repeat From">
-            <ng-container formFieldControl>
-                {{ data.repeating.repeatingStartTime }}
-            </ng-container>
-        </app-form-field>
+        <div class="box">
+            <b>Properties</b>
+            @if (data.isProjected) {
+                <app-form-field label="Projected From">
+                    <ng-container formFieldControl>
+                        {{ data.projectionStartTime | spacePadded }}
+                    </ng-container>
+                </app-form-field>
+            }
             
-        <app-form-field label="Interval (s)">
-            <ng-container formFieldControl>
-                {{ data.repeating.interval }}
-            </ng-container>
-        </app-form-field>
+            <app-form-field label="Visible">
+                <ng-container formFieldControl>
+                    {{ data.properties.isInView }}
+                </ng-container>
+            </app-form-field>
             
-        <app-form-field label="Count">
-            <ng-container formFieldControl>
-                {{ data.repeating.count }}
-            </ng-container>
-        </app-form-field>
-    }
+            <app-form-field label="Projection End TIme">
+                <ng-container formFieldControl>
+                    {{ data.properties.endTime }}
+                </ng-container>
+            </app-form-field>
+        </div>
+        
+        @if (data.animation) {
+            <div class="box">
+                <b>Animation</b>
+                <app-form-field label="Duration">
+                    <ng-container formFieldControl>
+                        {{ data.animation.duration }}
+                    </ng-container>
+                </app-form-field>
+        
+                <app-form-field label="Delay">
+                    <ng-container formFieldControl>
+                        {{ data.animation.delay }}
+                    </ng-container>
+                </app-form-field>
+                
+                <app-form-field label="Iteration Count">
+                    <ng-container formFieldControl>
+                        {{ data.animation.iterationCount }}
+                    </ng-container>
+                </app-form-field>
+                
+                <app-form-field label="Direction">
+                    <ng-container formFieldControl>
+                        {{ data.animation.direction }}
+                    </ng-container>
+                </app-form-field>
+                
+                <app-form-field label="Timing Function">
+                    <ng-container formFieldControl>
+                        {{ data.animation.timingFunction }}
+                    </ng-container>
+                </app-form-field>
+                
+                <app-form-field label="Fill Mode">
+                    <ng-container formFieldControl>
+                        {{ data.animation.fillMode }}
+                    </ng-container>
+                </app-form-field>
+            </div>
+        }
+        
+        @if (data.repeating) {
+            <div class="box">
+                <b>Repeat</b>
+                <app-form-field label="Start Repeat From">
+                    <ng-container formFieldControl>
+                        {{ data.repeating.repeatingStartTime }}
+                    </ng-container>
+                </app-form-field>
+                    
+                <app-form-field label="Interval (s)">
+                    <ng-container formFieldControl>
+                        {{ data.repeating.interval }}
+                    </ng-container>
+                </app-form-field>
+                    
+                <app-form-field label="Count">
+                    <ng-container formFieldControl>
+                        {{ data.repeating.count }}
+                    </ng-container>
+                </app-form-field>
+            </div>
+        }
+    </div>
+
 </ng-template>

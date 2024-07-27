@@ -55,3 +55,19 @@
         }
     }
 }
+
+.property-box {
+    display: flex;
+
+    .box {
+        font-size: 10px;
+        display: flex;
+        flex-direction: column;
+        padding: 3px;
+        border-right: solid 1px gray;
+    }
+
+    .box:last-of-type {
+        border-right: none;
+    }
+}
