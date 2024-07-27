@@ -28,7 +28,6 @@ export class TimelineKeyHandlerDirective {
     if (this.timelineService.playing) {
       this.timelineService.pause();
     } else {
-      this.timelineService.setMaxPlayTime(this.movieService.maxPlayTime);
       this.timelineService.play();
     }
   }

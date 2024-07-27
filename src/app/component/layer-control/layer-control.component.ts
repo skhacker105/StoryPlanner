@@ -42,16 +42,8 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
     this.onDestroy();
   }
 
-  compareSelectedLayer(layer: ILayer): boolean {
-    return layer.layerId === this.movieService.selectedLayer?.['layerId'];
-  }
-
   handleLayerClick(layer: ILayer): void {
-    if (!this.compareSelectedLayer(layer)) {
-      this.movieService.selectLayer(this.timelineService.currentTime.value, layer);
-    } else {
-      this.movieService.resetSelectedLayer();
-    }
+    this.movieService.selectLayer(this.timelineService.currentTime.value, layer);
   }
 
   handleDeleteConfirmationPopup(layer: ILayer): void {

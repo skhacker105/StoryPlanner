@@ -32,7 +32,7 @@ export class TimelineService extends ServiceBase implements OnDestroy {
 
   settingStorageKey = 'settingStorage';
 
-  private maxPlayTime = -1;
+  public maxPlayTime = -1;
 
   constructor() {
     super();
@@ -121,20 +121,8 @@ export class TimelineService extends ServiceBase implements OnDestroy {
     return this.currentTime.value < (this.maxPlayTime !== -1 ? this.maxPlayTime : this.endTime.value);
   }
 
-  getMaxPlayTime(): number {
-    return this.maxPlayTime;
-  }
-
-  hasMaxPlayTime(): boolean {
-    return this.maxPlayTime === -1
-  }
-
   setMaxPlayTime(maxTime: number): void {
     this.maxPlayTime = maxTime;
-  }
-
-  resetMaxPlayTime(): void {
-    this.maxPlayTime = -1;
   }
 
   play(): void {
@@ -170,6 +158,5 @@ export class TimelineService extends ServiceBase implements OnDestroy {
   pause(): void {
     this.playing = false;
     this.playingStateChange.next(false);
-    this.resetMaxPlayTime();
   }
 }

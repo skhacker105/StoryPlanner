@@ -1,0 +1,8 @@
+<div>
+    <div class="tooltip-conatiner" *ngIf="contentTemplate">
+      <ng-template [ngTemplateOutlet]="contentTemplate" [ngTemplateOutletContext]="{
+        data: data
+      }">
+      </ng-template>
+    </div>
+  </div>

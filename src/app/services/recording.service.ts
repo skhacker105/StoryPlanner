@@ -90,7 +90,6 @@ export class RecordingService extends ServiceBase {
   }
 
   record(): void {
-    this.timelineService.setMaxPlayTime(this.movieService.maxPlayTime);
     this.runWhileRecording([]);
   }
 
@@ -138,14 +137,12 @@ export class RecordingService extends ServiceBase {
     }
 
     const updatedCanvases = await new Promise<HTMLCanvasElement[]>((resolve, reject) => {
-      // setTimeout(() => {
       html2canvas(divElement)
         .then(async (canvas) => {
           frameCanvas.push(canvas);
           resolve(frameCanvas);
         })
         .catch(err => reject(err));
-      // }, 100);
     });
     return updatedCanvases;
   }
@@ -153,10 +150,8 @@ export class RecordingService extends ServiceBase {
   stopRecording(): void {
     if (!this.recording.value) return;
 
-    // this.animationPausedForCapture.next(true);
     this.recording.next(false);
     this.unitTimeRecordingPercent.next(0);
-    this.timelineService.resetMaxPlayTime();
   }
 
   saveCanvasAsVideo(): void {

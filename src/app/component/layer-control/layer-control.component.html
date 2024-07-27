@@ -12,7 +12,9 @@
         
         <!-- Time -->
         <div class="time">
-            <pre class="time-display">{{ timelineService.currentTime.value | spacePadded:4 }}</pre>
+            <div class="time-display">
+                {{ timelineService.currentTime.value | spacePadded }}
+            </div>
         </div>
     </div>
 
@@ -22,7 +24,7 @@
         <div class="place-holder-layer" *cdkDragPlaceholder></div>
         
         @for (layer of movieService.movie.timeline[currentTime].layers; track layer;) {
-            <app-layer-display cdkDrag [layer]="layer" [isSelected]="compareSelectedLayer(layer)"
+            <app-layer-display cdkDrag [layer]="layer" [isSelected]="movieService.compareSelectedLayer(layer)"
             [layerMember]="movieService.dictionaryMemberBook[layer.memberId]?.member" 
             [layerOption]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]"
             (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)"

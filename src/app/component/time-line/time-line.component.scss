@@ -13,7 +13,7 @@
 
         .time {
             height: 20px;
-            border-right: solid 1px #000000;
+            border-right: solid 1px #808080;
             cursor: pointer;
 
             .time-label {
@@ -24,12 +24,20 @@
 
             &.time-with-label {
                 border-width: 1px;
-                border-color: #ff0526;
+                border-color: #000000;
             }
 
             &.current-time {
-                background-color: red;
+                background-color: red !important;
                 border-color: red;
+            }
+
+            &.max-play-time {
+                background-color: #d7ccff;
+            }
+
+            &.recorded-time {
+                background-color: green;
             }
         }
     }
@@ -54,7 +62,7 @@
 
                     button {
                         padding: 0px;
-    
+
                         .mat-icon {
                             font-size: 48px;
                             width: 48px;
@@ -65,10 +73,6 @@
 
                 .standard-speed-input {
                     width: 70px;
-                }
-
-                .time-display {
-                    width: 50px;
                 }
 
                 .label {
@@ -91,7 +95,7 @@
                     .play-back-speed {
                         font-size: $time-line-font-size;
                         height: 20px;
-    
+
                         ::ng-deep .mat-button-toggle-button {
                             height: 20px;
 
@@ -112,6 +116,10 @@
 
 .calc-block {
     display: flex;
+    border: solid 1px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px;
 
     .block {
         min-width: 50px;
@@ -120,11 +128,32 @@
         align-items: center;
         align-self: center;
 
+        &.double-font {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        &.calc-result {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: green;
+        }
+
+        .fps {
+            font-size: 0.6rem;
+            position: absolute;
+            margin-top: 15px;
+            font-weight: 100;
+            line-height: 30px;
+            color: black;
+        }
+
         .up {
             border-bottom: solid 1px;
         }
 
-        .up, .down {
+        .up,
+        .down {
             flex: 1 auto;
             padding: 10px;
         }
@@ -143,5 +172,13 @@
     &.error {
         color: red;
         border-color: red;
+
+        .calc-result {
+            color: red;
+
+            .fps {
+                color: red;
+            }
+        }
     }
 }

@@ -26,7 +26,7 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
   recordedFrames: HTMLCanvasElement[] = [];
 
   constructor(
-    private timelineService: TimelineService,
+    public timelineService: TimelineService,
     public movieService: MovieService,
     private memberService: MemberService,
     private styleService: StyleService,
@@ -150,16 +150,19 @@ export class CanvasComponent extends ComponentBase implements OnInit, OnDestroy 
     });
   }
 
-  showMovie(video: Video) {
-    // this.recordingService.selectVideo(video);
+  showMovie(video: Video): void {
     this.videoURLToPlay = URL.createObjectURL(video.blob);
   }
 
-  hideMovie() {
+  hideMovie(): void {
     this.recordingService.resetSelectedVideo();
   }
 
-  resetSelectedVideo() {
+  resetSelectedVideo(): void {
     this.videoURLToPlay = undefined;
+  }
+
+  handleLayerClick(layer: ILayer): void {
+    this.movieService.selectLayer(this.timelineService.currentTime.value, layer);
   }
 }

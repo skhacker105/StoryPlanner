@@ -1,17 +1,19 @@
 <div class="time-line-container">
-    <table class="time-line">
+    <table class="time-line" cellspacing="0" cellpadding="0">
         <tr>
             @for (time of arrTime; track time) {
-            <td class="time" [ngClass]="{
-                    'time-with-label': time === 0 || time % minimumNumDisplayLength === 0,
-                    'current-time': timelineService.currentTime.value === time
-                }" (click)="changeCurrentTime(time)">
-                @if (time === 0 || time % minimumNumDisplayLength === 0) {
-                <span class="time-label">
-                    {{ (time * timeMultiplier).toFixed(0) }}
-                </span>
-                }
-            </td>
+                <td class="time" [ngClass]="{
+                        'time-with-label': time === 0 || time % minimumNumDisplayLength === 0,
+                        'current-time': timelineService.currentTime.value === time,
+                        'max-play-time': time <= timelineService.maxPlayTime,
+                        'recorded-time': recordingService.recording.value && time < timelineService.currentTime.value
+                    }" (click)="changeCurrentTime(time)">
+                    @if (time === 0 || time % minimumNumDisplayLength === 0) {
+                        <span class="time-label">
+                            {{ (time * timeMultiplier).toFixed(0) }}
+                        </span>
+                    }
+                </td>
             }
         </tr>
         <tr>
@@ -27,8 +29,11 @@
             <div class="stat-block">
                 <app-form-field label="Time">
                     <ng-container formFieldControl>
-                        <input type="number" disabled [ngModel]="timelineService.currentTime.value" class="time-display"
-                            id="time-display">
+                        <div class="time-display" id="time-display">
+                            {{ timelineService.currentTime.value | spacePadded }}
+                        </div>
+                        <!-- <input type="number" disabled [ngModel]="timelineService.currentTime.value" class="time-display"
+                            id="time-display"> -->
                     </ng-container>
                 </app-form-field>
             </div>
@@ -122,7 +127,7 @@
             </div>
 
             <!-- Frame Speed By Per Unit Time -->
-            <div class="stat-block standard-padding">
+            <div class="stat-block standard-padding ">
                 <div class="calc-block" [ngClass]="{
                     'error': calculatedValue > timelineService.maxFPSAllowed
                 }">
@@ -130,6 +135,7 @@
                     <!-- <div class="block left-brace">
                     </div> -->
 
+                    <!-- Up Down -->
                     <div class="block">
                         <div class="up">
                             Standard Speed (ms)
@@ -139,10 +145,12 @@
                         </div>
                     </div>
 
-                    <div class="block">
+                    <!-- * -->
+                    <div class="block double-font">
                         *
                     </div>
 
+                    <!-- Play back speed -->
                     <div class="block">
                         Playback Speed
                     </div>
@@ -150,12 +158,17 @@
                     <!-- <div class="block right-brace">
                     </div> -->
 
-                    <div class="block">
+                    <!-- = -->
+                    <div class="block double-font">
                         =
                     </div>
 
-                    <div class="block">
+                    <!-- Value -->
+                    <div class="block calc-result">
                         {{ calculatedValue }} FPS
+                        <div class="fps">
+                            ( &lt;= {{ timelineService.maxFPSAllowed }} )
+                        </div>
                     </div>
                 </div>
             </div>

@@ -14,6 +14,7 @@ import { ILayerProperties } from '../interfaces/movie-properties';
 import { ILayerAnimation } from '../interfaces/movie-animations';
 import { IndexedDBManager } from '../storage/indexedDB.manager';
 import { Tables } from '../constants/constant';
+import { TimelineService } from './timeline.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,13 +31,16 @@ export class MovieService extends ServiceBase implements OnDestroy {
   public selectedLayer?: ILayer;
   public selectedLayerTime?: number;
 
-  constructor(private utilService: UtilService, public memberService: MemberService) {
+  constructor(private utilService: UtilService, public memberService: MemberService, private timelineService: TimelineService) {
     super();
 
     this.movieUpdated
       .pipe(takeUntil(this.isServiceActive))
       .subscribe({
-        next: movie => this.saveMovieToStorage(movie)
+        next: movie => {
+          this.saveMovieToStorage(movie);
+          this.timelineService.setMaxPlayTime(this.maxPlayTime);
+        }
       });
 
     this.memberService.members
@@ -48,6 +52,8 @@ export class MovieService extends ServiceBase implements OnDestroy {
           if (!this.movie) this.loadMovieFromStorage();
         }
       });
+
+      // Code to delete layers from Indexed DB
       // setTimeout(() => {
       //   console.log('this.movie = ',this.movie)
       //   if (!this.movie) return;
@@ -194,17 +200,26 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.movieUpdated.next(this.movie);
   }
 
+  compareSelectedLayer(layer: ILayer): boolean {
+    return layer.layerId === this.selectedLayer?.layerId;
+  }
+
   resetSelectedLayer(): void {
     this.selectedLayer = undefined;
     this.selectedLayerTime = undefined;
   }
 
   selectLayer(time: number, layer: ILayer): void {
-    this.resetSelectedLayer();
 
-    this.selectedLayerTime = time;
-    setTimeout(() => {
-      this.selectedLayer = layer;
-    }, 1);
+    if (!this.compareSelectedLayer(layer)) {
+      this.resetSelectedLayer();
+      this.selectedLayerTime = time;
+      setTimeout(() => {
+        this.selectedLayer = layer;
+      }, 1);
+
+    } else {
+      this.resetSelectedLayer();
+    }
   }
 }

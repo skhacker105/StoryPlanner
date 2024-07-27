@@ -23,6 +23,18 @@
                 link
             </mat-icon>
         </button>
+        @if (layer.animation) {
+            <button mat-icon-button (click)="handleAnimationClick($event)" [data]="layer"
+                appDescriptionToolTip [contentTemplate]="animation">
+                <mat-icon>animation</mat-icon>
+            </button>
+        }
+        @if (layer.repeating) {
+            <button mat-icon-button (click)="handleRepeatClick($event)" [data]="layer"
+                appDescriptionToolTip [contentTemplate]="repeating">
+                <mat-icon>repeat</mat-icon>
+            </button>
+        }
         <button mat-icon-button (click)="handleDeleteClick(layer, $event)" [color]="!isBroken ? '' : 'warn'">
             <mat-icon>
                 delete
@@ -33,3 +45,74 @@
 <div class="layer-control-container" *ngIf="hasNoMatch">
     Layer to Book connection is broken.
 </div>
+
+<ng-template #properties let-data="data">
+    {{ data ? 'true' : 'false' }}
+    <div style="display: flex; flex-direction: column">
+        <span>tooltip text</span>
+        <span>tootlip description</span>
+    </div>
+</ng-template>
+
+<ng-template #animation let-data="data">
+    @if (data.animation) {
+        <app-form-field label="Duration">
+            <ng-container formFieldControl>
+                {{ data.animation.duration }}
+            </ng-container>
+        </app-form-field>
+
+        <app-form-field label="Delay">
+            <ng-container formFieldControl>
+                {{ data.animation.delay }}
+            </ng-container>
+        </app-form-field>
+        
+        <app-form-field label="Iteration Count">
+            <ng-container formFieldControl>
+                {{ data.animation.iterationCount }}
+            </ng-container>
+        </app-form-field>
+        
+        <app-form-field label="Direction">
+            <ng-container formFieldControl>
+                {{ data.animation.direction }}
+            </ng-container>
+        </app-form-field>
+        
+        <app-form-field label="Timing Function">
+            <ng-container formFieldControl>
+                {{ data.animation.timingFunction }}
+            </ng-container>
+        </app-form-field>
+        
+        <app-form-field label="Fill Mode">
+            <ng-container formFieldControl>
+                {{ data.animation.fillMode }}
+            </ng-container>
+        </app-form-field>
+    }
+</ng-template>
+
+<ng-template #repeating let-data="data">
+        
+    @if (data.repeating) {
+        <app-form-field label="Start Repeat From">
+            <ng-container formFieldControl>
+                {{ data.repeating.repeatingStartTime }}
+            </ng-container>
+        </app-form-field>
+            
+        <app-form-field label="Interval (s)">
+            <ng-container formFieldControl>
+                {{ data.repeating.interval }}
+            </ng-container>
+        </app-form-field>
+            
+        <app-form-field label="Count">
+            <ng-container formFieldControl>
+                {{ data.repeating.count }}
+            </ng-container>
+        </app-form-field>
+    }
+</ng-template>

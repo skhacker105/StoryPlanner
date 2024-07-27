@@ -11,12 +11,15 @@
 
     @for (layer of paintedLayers | sort:'byLayerStack'; track layer;) {
         <img
+            class="layer"
             [attr.id]="layer.layerId"
             [src]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.image"
             [style]="(layer | layerStyleString) + (layer | layerAnimationString) + 'animation-play-state: paused !important; '"
             [ngClass]="{
-                'image-hidden': !layer.properties.isInView
+                'image-hidden': !layer.properties.isInView,
+                'layer': !timelineService.playing && !recordingService.recording.value
             }"
+            (click)="handleLayerClick(layer)"
         >
     }
 
