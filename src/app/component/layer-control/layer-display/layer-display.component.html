@@ -19,9 +19,7 @@
         <button mat-icon-button *ngIf="layer.isProjected"
         matTooltip="{{ 'Got to time ' + layer.projectionStartTime + ' to view start of projection' }}"
         (click)="onGoToProjectionStart.emit()">
-            <mat-icon>
-                link
-            </mat-icon>
+            <mat-icon>my_location</mat-icon>
         </button>
         @if (layer.animation) {
             <button mat-icon-button (click)="handleAnimationClick($event)" [data]="layer"
@@ -35,6 +33,10 @@
                 <mat-icon>repeat</mat-icon>
             </button>
         }
+        <button mat-icon-button (click)="handleAnimationClick($event)" [data]="layer"
+            appDescriptionToolTip [contentTemplate]="properties">
+            <mat-icon>summarize</mat-icon>
+        </button>
         <button mat-icon-button (click)="handleDeleteClick(layer, $event)" [color]="!isBroken ? '' : 'warn'">
             <mat-icon>
                 delete
@@ -47,11 +49,26 @@
 </div>
 
 <ng-template #properties let-data="data">
-    {{ data ? 'true' : 'false' }}
-    <div style="display: flex; flex-direction: column">
-        <span>tooltip text</span>
-        <span>tootlip description</span>
-    </div>
+    @if (data.isProjected) {
+        <app-form-field label="Projected From">
+            <ng-container formFieldControl>
+                {{ data.projectionStartTime | spacePadded }}
+            </ng-container>
+        </app-form-field>
+    }
+    
+    <app-form-field label="Visible">
+        <ng-container formFieldControl>
+            {{ data.properties.isInView }}
+        </ng-container>
+    </app-form-field>
+    
+    <app-form-field label="Projection End TIme">
+        <ng-container formFieldControl>
+            {{ data.properties.endTime }}
+        </ng-container>
+    </app-form-field>
+
 </ng-template>
 
 <ng-template #animation let-data="data">
