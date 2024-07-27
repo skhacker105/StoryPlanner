@@ -124,7 +124,7 @@
             <!-- Frame Speed By Per Unit Time -->
             <div class="stat-block standard-padding">
                 <div class="calc-block" [ngClass]="{
-                    'error': calculatedValue < 50
+                    'error': calculatedValue > timelineService.maxFPSAllowed
                 }">
 
                     <!-- <div class="block left-brace">

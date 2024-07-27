@@ -26,6 +26,7 @@ export class TimelineService extends ServiceBase implements OnDestroy {
   selectedSpeed = new BehaviorSubject<IPlaySpeed>(this.speedRange[3]);
 
   playing = false;
+  maxFPSAllowed = 20;
   framesPerUnitTime = new BehaviorSubject<number>(4);
   playingStateChange = new Subject<boolean>();
 

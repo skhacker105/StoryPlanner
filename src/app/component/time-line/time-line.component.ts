@@ -60,7 +60,7 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
     const framesPerUnitTime = this.settingForm.controls['framesPerUnitTime']?.value as number;
     const selectedSpeed = this.settingForm.controls['selectedSpeed']?.value as IPlaySpeed;
     if (standardSpeed && framesPerUnitTime && selectedSpeed) {
-      return Math.floor((standardSpeed * selectedSpeed.multiple) / framesPerUnitTime)
+      return +(1000 / ((standardSpeed * selectedSpeed.multiple) / framesPerUnitTime)).toFixed(2)
     }
     return 0;
   }
