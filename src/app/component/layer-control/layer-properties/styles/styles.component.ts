@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, takeUntil } from 'rxjs';
 import { ComponentBase } from '../../../../base/component-base';
 import { ILayerProperties } from '../../../../interfaces/movie-properties';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-styles',
@@ -14,6 +15,7 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
   @Input() endTime: number = 0;
   @Input() properties?: ILayerProperties;
   @Input() isProjected = false;
+  @Input() timeMultiplier = 1;
   @Output() onCancel = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<ILayerProperties>();
 
@@ -26,7 +28,7 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
     isInView: new FormControl<boolean>(true),
     isFullScreen: new FormControl<boolean>(false),
     opacity: new FormControl<number>(1.0, [Validators.required, Validators.min(0), Validators.max(1), Validators.pattern(/^\d*\.?\d*$/)]),
-    endTime: new FormControl<number>(1, [Validators.pattern(/^\d+$/)]),
+    endTime: new FormControl<number>(1, [Validators.pattern(/^-?\d*\.?\d+$/)]),
 
     // Dimension
     relativeWidth: new FormControl<number>(10, [Validators.min(0), Validators.pattern(/^\d+$/)]),
@@ -62,10 +64,12 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
 
   ngOnInit(): void {
     if (this.properties) {
-      this.propertyForm.patchValue(this.properties);
+      const prop = cloneDeep(this.properties);
+      prop.endTime = prop.endTime * this.timeMultiplier;
+      this.propertyForm.patchValue(prop);
       if (this.isProjected) this.disableNonProjectedPropertyControls();
-      this.propertyForm.controls.endTime.addValidators(Validators.min(this.time));
-      this.propertyForm.controls.endTime.addValidators(Validators.max(this.endTime));
+      this.propertyForm.controls.endTime.addValidators(Validators.min(this.time * this.timeMultiplier));
+      this.propertyForm.controls.endTime.addValidators(Validators.max(this.endTime * this.timeMultiplier));
     }
 
     this.propertyForm.valueChanges
@@ -91,7 +95,9 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
 
     if (this.propertyForm.invalid) console.log('Invalid Form ');
     else {
-      this.onSave.emit(this.propertyForm.value as ILayerProperties);
+      const value = this.propertyForm.value;
+      value.endTime = value.endTime ? (value.endTime / this.timeMultiplier) : value.endTime;
+      this.onSave.emit(value as ILayerProperties);
       this.propertyForm.markAsPristine();
     }
   }

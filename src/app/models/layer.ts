@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import { ILayer, ILayerRepeat } from "../interfaces/movie-layer";
 import { ILayerProperties } from "../interfaces/movie-properties";
 
@@ -7,7 +8,7 @@ export function CreateLayerWithDefaultProperties(layerId: string, time: number, 
     memberId,
     memberOptionId,
     isProjected: false,
-    projectionStartTime: 0,
+    projectionStartTime: time,
     animations: [],
     repeating: undefined,
 
@@ -57,7 +58,7 @@ export function GetDefaultProperties(time: number): ILayerProperties {
 
 export function CreateRepeatedLayer(newLayerId: string, layer: ILayer, newRepeating: ILayerRepeat, time: number): ILayer {
   const obj = {
-    ...layer,
+    ...cloneDeep(layer),
     repeating: newRepeating,
     layerId: newLayerId
   }

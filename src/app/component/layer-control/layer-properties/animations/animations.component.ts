@@ -22,6 +22,7 @@ export class AnimationsComponent extends ComponentBase implements OnInit, OnDest
   @Input() endTime: number = 0;
   @Input() existingProperties?: ILayerProperties;
   @Input() animation?: ILayerAnimation;
+  @Input() timeMultiplier = 1;
   @Input() isProjected = false;
   @Output() onRemoveAnimation = new EventEmitter<void>();
   @Output() onCancel = new EventEmitter<void>();

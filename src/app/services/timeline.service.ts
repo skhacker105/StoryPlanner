@@ -10,7 +10,7 @@ export class TimelineService extends ServiceBase implements OnDestroy {
 
   currentTime = new BehaviorSubject<number>(0); // in unit time
   currentFrameCount = new BehaviorSubject<number>(0); // frame count completed
-  endTime = new BehaviorSubject<number>(600);
+  endTime = new BehaviorSubject<number>(1000);
 
   standardSpeed = new BehaviorSubject<number>(1000);
   speedRange: IPlaySpeed[] = [
@@ -49,6 +49,10 @@ export class TimelineService extends ServiceBase implements OnDestroy {
 
   get frameSpeedByPerUnitTime(): number {
     return (this.standardSpeed.value * this.selectedSpeed.value.multiple) / this.framesPerUnitTime.value;
+  }
+
+  get timeMultiplier(): number {
+    return this.standardSpeed.value / 1000;
   }
 
   ngOnDestroy(): void {

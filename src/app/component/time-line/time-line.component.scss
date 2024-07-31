@@ -15,6 +15,44 @@
             height: 20px;
             border-right: solid 1px #808080;
             cursor: pointer;
+            position: relative;
+            min-width: 3.5px;
+
+            .selected-layer-container {
+                position: absolute;
+                z-index: 100000;
+                left: -1px;
+
+                &.projected-container {
+                    border-left: solid 1px #00000036;
+                }
+
+                &.projection-start-container {
+                    border-left: solid 1px #000000;
+                }
+
+                .selected-layer {
+                    width: 20px;
+                    height: 20px;
+                    background-color: transparent;
+                    border: solid;
+                    right: 0;
+                    border-width: 1px !important;
+                    border-color: #000000;
+                    border-radius: 50%;
+                    margin-top: 30px;
+    
+                    &.projected {
+                        border-color: #494949;
+                        border: dotted;
+                        opacity: 0.1;
+                    }
+    
+                    &.projection-start {
+                        border-width: 3px !important;
+                    }
+                }
+            }
 
             .time-label {
                 position: absolute;

@@ -69,6 +69,7 @@
       <app-layer-properties
       [time]="movieService.selectedLayerTime || movieService.selectedLayerTime === 0 ? movieService.selectedLayerTime : timelineService.endTime.value"
       [endTime]="timelineService.endTime.value"
+      [timeMultiplier]="timelineService.timeMultiplier"
       [layer]="movieService.selectedLayer"
       [layerMember]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].member" 
       [layerOption]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].options[movieService.selectedLayer.memberOptionId]"

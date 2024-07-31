@@ -16,6 +16,7 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   @Input() time: number = 0;
   @Input() endTime: number = 0;
   @Input() layer?: ILayer;
+  @Input() timeMultiplier = 1;
   @Input() layerMember?: Member;
   @Input() layerOption?: IMemberOption;
   @Output() onCancel = new EventEmitter<void>();

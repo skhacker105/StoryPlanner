@@ -19,3 +19,7 @@ export interface IMovieMemberBook {
     version: string;
     name: string;
 }
+
+export interface IMovieTimeLayer {
+    [key: number]: ILayer;
+}

@@ -99,13 +99,12 @@ export class Movie implements IMovie {
         const { timeLine, layerIndex } = this.getTimelineLayerRef(time, layerId);
         if (layerIndex === undefined || layerIndex === null || !timeLine) return;
 
-        this.updateRepeatedLayers(timeLine, layerIndex, newRepeating);
+        this.updateRepeatedLayers(timeLine, timeLine.layers[layerIndex], newRepeating);
         timeLine.layers[layerIndex].repeating = newRepeating;
     }
 
     // PRIVATE Members
-    private updateRepeatedLayers(timeLine: IMovieTime, layerIndex: number, newRepeating: ILayerRepeat | undefined): void {
-        const layer = timeLine.layers[layerIndex];
+    private updateRepeatedLayers(timeLine: IMovieTime, layer: ILayer, newRepeating: ILayerRepeat | undefined): void {
         const oldRepeating = layer.repeating
 
         // If new repeating is undefined and old is not undefined then delete all

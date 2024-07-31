@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { UtilService } from './util.service';
 import { MemberService } from './member.service';
-import { IMovie } from '../interfaces/timeline-movie';
+import { IMovie, IMovieTimeLayer } from '../interfaces/timeline-movie';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Movie } from '../models/movie';
 import { ILayer, ILayerRepeat } from '../interfaces/movie-layer';
@@ -30,6 +30,9 @@ export class MovieService extends ServiceBase implements OnDestroy {
 
   public selectedLayer?: ILayer;
   public selectedLayerTime?: number;
+  public selectedLayerMember?: Member;
+  public selectedLayerOption?: IMemberOption;
+  public selectedLayerTimeUnits: IMovieTimeLayer = {};
 
   constructor(private utilService: UtilService, public memberService: MemberService, private timelineService: TimelineService) {
     super();
@@ -40,6 +43,8 @@ export class MovieService extends ServiceBase implements OnDestroy {
         next: movie => {
           this.saveMovieToStorage(movie);
           this.timelineService.setMaxPlayTime(this.maxPlayTime);
+          if (this.selectedLayer)
+            this.selectedLayerTimeUnits = this.findTimeUnitsByLayer(this.selectedLayer);
         }
       });
 
@@ -53,19 +58,19 @@ export class MovieService extends ServiceBase implements OnDestroy {
         }
       });
 
-      // Code to delete layers from Indexed DB
-      // setTimeout(() => {
-      //   console.log('this.movie = ',this.movie)
-      //   if (!this.movie) return;
-  
-      //   Object.keys(this.movie.timeline).forEach(t => {
-      //     if (!this.movie) return;
-      //     this.movie.timeline[+t].layers = this.movie.timeline[+t].layers.filter(l => !l.repeating);
-      //     if (this.movie.timeline[+t].layers.length === 0) delete this.movie.timeline[+t]
-      //   });
-      //   console.log('this.movie = ',this.movie)
-      //   this.movieStorageManager.update(this.movie);
-      // }, 1000);
+    // Code to delete layers from Indexed DB
+    // setTimeout(() => {
+    //   console.log('this.movie = ',this.movie)
+    //   if (!this.movie) return;
+
+    //   Object.keys(this.movie.timeline).forEach(t => {
+    //     if (!this.movie) return;
+    //     this.movie.timeline[+t].layers = this.movie.timeline[+t].layers.filter(l => !l.repeating);
+    //     if (this.movie.timeline[+t].layers.length === 0) delete this.movie.timeline[+t]
+    //   });
+    //   console.log('this.movie = ',this.movie)
+    //   this.movieStorageManager.update(this.movie);
+    // }, 1000);
   }
 
   get versionNoString(): string {
@@ -207,6 +212,9 @@ export class MovieService extends ServiceBase implements OnDestroy {
   resetSelectedLayer(): void {
     this.selectedLayer = undefined;
     this.selectedLayerTime = undefined;
+    this.selectedLayerMember = undefined;
+    this.selectedLayerOption = undefined;
+    this.selectedLayerTimeUnits = {};
   }
 
   selectLayer(time: number, layer: ILayer): void {
@@ -216,10 +224,29 @@ export class MovieService extends ServiceBase implements OnDestroy {
       this.selectedLayerTime = time;
       setTimeout(() => {
         this.selectedLayer = layer;
+        const dict = this.dictionaryMemberBook[layer.memberId];
+        this.selectedLayerMember = dict?.member;
+        this.selectedLayerOption = dict?.options[layer.memberOptionId]
+        this.selectedLayerTimeUnits = this.findTimeUnitsByLayer(layer);
       }, 1);
 
     } else {
       this.resetSelectedLayer();
     }
+  }
+
+  findTimeUnitsByLayer(layer: ILayer): IMovieTimeLayer {
+    if (!this.movie) return [];
+
+    const arr: IMovieTimeLayer = {};
+    for (let i = 0; i <= this.maxPlayTime; i++) {
+      const foundLayer: ILayer | undefined = this.movie.timeline[i].layers.find(l => l.layerId === layer.layerId || l.repeating?.layerId === layer.layerId || layer.repeating?.layerId === l.layerId);
+      if (foundLayer) arr[i] = foundLayer;
+    }
+    return arr;
+  }
+
+  isTimeInSelectedLayerUnits(time: number): boolean {
+    return this.selectedLayerTimeUnits[time] !== undefined;
   }
 }

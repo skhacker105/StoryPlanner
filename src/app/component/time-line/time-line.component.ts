@@ -7,6 +7,7 @@ import { RecordingService } from '../../services/recording.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IPlaySpeed } from '../../interfaces/play-speed';
+import { MovieService } from '../../services/movie.service';
 
 const settingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const standardSpeed = control.get('standardSpeed')?.value as number;
@@ -29,7 +30,6 @@ const settingValidator: ValidatorFn = (control: AbstractControl): ValidationErro
 })
 export class TimeLineComponent extends ComponentBase implements OnInit, OnDestroy {
 
-  timeMultiplier = 0;
   arrTime: number[] = [];
   minimumNumDisplayLength = 10;
   dialogRef?: MatDialogRef<any>;
@@ -46,7 +46,8 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
     public recordingService: RecordingService,
     private dialog: MatDialog,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    public movieService: MovieService
   ) {
     super();
   }
@@ -78,12 +79,6 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
       .pipe(takeUntil(this.isComponentActive))
       .subscribe({
         next: percent => this.updateUnitTimeFramePercentStyle(percent)
-      });
-
-    this.timelineService.standardSpeed
-      .pipe(takeUntil(this.isComponentActive))
-      .subscribe({
-        next: standardSpeed => this.timeMultiplier = standardSpeed / 1000
       });
   }
 

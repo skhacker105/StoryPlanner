@@ -10,7 +10,6 @@ import { ILayer, ILayerRepeat } from './interfaces/movie-layer';
 import { ILayerAnimation } from './interfaces/movie-animations';
 import { takeUntil } from 'rxjs';
 import { ComponentBase } from './base/component-base';
-import { RecordingService } from './services/recording.service';
 import { FileService } from './services/file.service';
 
 @Component({
@@ -26,7 +25,6 @@ export class AppComponent extends ComponentBase implements OnInit, OnDestroy {
     public memberService: MemberService,
     public movieService: MovieService,
     public timelineService: TimelineService,
-    private recordingService: RecordingService,
     private fileService: FileService) {
     super();
   }

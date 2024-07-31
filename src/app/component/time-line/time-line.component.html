@@ -8,10 +8,26 @@
                         'max-play-time': time <= timelineService.maxPlayTime,
                         'recorded-time': recordingService.recording.value && time < timelineService.currentTime.value
                     }" (click)="changeCurrentTime(time)">
+
                     @if (time === 0 || time % minimumNumDisplayLength === 0) {
                         <span class="time-label">
-                            {{ (time * timeMultiplier).toFixed(0) }}
+                            {{ (time * timelineService.timeMultiplier).toFixed(0) }}
                         </span>
+                    }
+
+                    @if (movieService.selectedLayer && movieService.selectedLayerOption && movieService.isTimeInSelectedLayerUnits(time)) {
+                        <div class="selected-layer-container" [ngClass]="{
+                            'projected-container': movieService.selectedLayerTimeUnits[time].isProjected,
+                            'projection-start-container': !movieService.selectedLayerTimeUnits[time].isProjected
+                        }">
+                            <div class="selected-layer" [ngClass]="{
+                                'projected': movieService.selectedLayerTimeUnits[time].isProjected,
+                                'projection-start': !movieService.selectedLayerTimeUnits[time].isProjected
+                            }">
+                                <app-image-icon [image]="movieService.selectedLayerOption.image" [matTooltip]="(time * timelineService.timeMultiplier).toFixed(2)">
+                                </app-image-icon>
+                            </div>
+                        </div>
                     }
                 </td>
             }
@@ -23,7 +39,7 @@
     </table>
     <div class="time-line-status">
 
-        <div class="status-blocks">
+        <div class="status-blocks" *ngIf="!movieService.selectedLayer">
 
             <!-- Current Time -->
             <div class="stat-block">
