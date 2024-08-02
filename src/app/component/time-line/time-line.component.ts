@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { TimelineService } from '../../services/timeline.service';
 import { ComponentBase } from '../../base/component-base';
 import { takeUntil } from 'rxjs';
@@ -56,7 +56,8 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
     private dialog: MatDialog,
     private renderer: Renderer2,
     private el: ElementRef,
-    public movieService: MovieService
+    public movieService: MovieService,
+    private changeDetector: ChangeDetectorRef
   ) {
     super();
   }
@@ -139,7 +140,7 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
 
     const time = this.el.nativeElement.querySelector('#time-display');
     if (time)
-    this.renderer.setStyle(time, 'background', `linear-gradient(to right, #dffba5 ${percent}%, white 1%)`);
+      this.renderer.setStyle(time, 'background', `linear-gradient(to right, #dffba5 ${percent}%, white 1%)`);
   }
 
   onDragEntered(event: CdkDragEnter<any>, time: number) {
@@ -152,14 +153,14 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
     } else {
       this.draggedLayer.currentTime = time;
     }
+    this.changeDetector.detectChanges();
   }
 
   setDragedToTime(event: CdkDragDrop<any>, toTime: number) {
-    // call move layer from and to time function
-    // to be implemented
-    console.log('event = ', event, toTime)
-    // const fromTime = event.item.data;
-    // if (!fromTime) return;
+    if (!this.draggedLayer) return;
+
+    this.movieService.moveLayerToTime(this.draggedLayer.startTime, event.item.data?.layer?.layerId, this.draggedLayer.currentTime);
     this.draggedLayer = undefined;
+    this.changeDetector.detectChanges();
   }
 }

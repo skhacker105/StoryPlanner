@@ -23,15 +23,20 @@
                         }
 
                         <!-- Projection of Selected / Repeated / Projected layers -->
-                        @if (movieService.selectedLayer && movieService.selectedLayerOption && movieService.isTimeInSelectedLayerUnits(time)) {
-                            <div *ngIf="!draggedLayer || draggedLayer.startTime === time"
+                        @if (movieService.selectedLayer
+                                && movieService.selectedLayerOption
+                                && movieService.isTimeInSelectedLayerUnits(time)
+                                && (!draggedLayer || draggedLayer.startTime === time)
+                            ) {
+                            <div
                             cdkDrag
                             [cdkDragData]="{time, layer: movieService.selectedLayerTimeUnits[time]?.layer}"
                             cdkDragLockAxis="x"
                             [cdkDragDisabled]="movieService.selectedLayerTimeUnits[time].isProjected || movieService.selectedLayerTimeUnits[time].isRepeated"
                                 class="selected-layer-container" [ngClass]="{
                                 'projected-container': movieService.selectedLayerTimeUnits[time].isProjected,
-                                'projection-start-container': !movieService.selectedLayerTimeUnits[time].isProjected && !movieService.selectedLayerTimeUnits[time].isRepeated
+                                'projection-start-container': !movieService.selectedLayerTimeUnits[time].isProjected && !movieService.selectedLayerTimeUnits[time].isRepeated,
+                                'projection-repeat-start-container': movieService.selectedLayerTimeUnits[time].isRepeated && !movieService.selectedLayerTimeUnits[time].isProjected
                             }">
                                 <div class="selected-layer"
                                 [ngClass]="{

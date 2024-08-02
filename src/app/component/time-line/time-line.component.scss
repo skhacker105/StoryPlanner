@@ -33,6 +33,10 @@
                         z-index: 101000;
                     }
 
+                    &.projection-repeat-start-container {
+                        z-index: 101000;
+                    }
+
                     .selected-layer {
                         width: 20px;
                         height: 20px;
@@ -44,12 +48,12 @@
                         border-radius: 50%;
                         margin-top: -13px;
                         background-color: #dbedd9;
-                        cursor: none;
+                        cursor: pointer;
 
                         &.projected {
                             border-color: #494949;
                             border: dotted;
-                            opacity: 0.1;
+                            opacity: 0.5;
                         }
 
                         &.projection-start {

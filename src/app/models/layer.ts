@@ -56,12 +56,12 @@ export function GetDefaultProperties(time: number): ILayerProperties {
   }
 }
 
-export function CreateRepeatedLayer(newLayerId: string, layer: ILayer, newRepeating: ILayerRepeat, time: number): ILayer {
+export function CreateRepeatedLayer(newLayerId: string, layer: ILayer, newRepeating: ILayerRepeat, newTime: number, projectionStartTime: number): ILayer {
   const obj = {
     ...cloneDeep(layer),
     repeating: newRepeating,
     layerId: newLayerId
   }
-  obj.properties.endTime = time;
+  obj.properties.endTime = newTime + (obj.properties.endTime - projectionStartTime);
   return obj;
 }

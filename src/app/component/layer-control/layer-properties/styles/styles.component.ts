@@ -68,8 +68,8 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
       prop.endTime = +(prop.endTime * this.timeMultiplier).toFixed(2);
       this.propertyForm.patchValue(prop);
       if (this.isProjected) this.disableNonProjectedPropertyControls();
-      this.propertyForm.controls.endTime.addValidators(Validators.min(this.time * this.timeMultiplier));
-      this.propertyForm.controls.endTime.addValidators(Validators.max(this.endTime * this.timeMultiplier));
+      this.propertyForm.controls.endTime.addValidators(Validators.min(+(this.time * this.timeMultiplier).toFixed(2)));
+      this.propertyForm.controls.endTime.addValidators(Validators.max(+(this.endTime * this.timeMultiplier).toFixed(2)));
     }
 
     this.propertyForm.valueChanges

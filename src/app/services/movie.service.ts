@@ -253,4 +253,12 @@ export class MovieService extends ServiceBase implements OnDestroy {
   isTimeInSelectedLayerUnits(time: number): boolean {
     return this.selectedLayerTimeUnits[time] !== undefined;
   }
+
+  moveLayerToTime(time: number, layerId: string, newTime: number): void {
+    if (!this.movie) return;
+
+    this.movie.moveLayerToTime(time, layerId, newTime);
+    this.movieUpdated.next(this.movie);
+    this.timelineService.setNewTime(newTime);
+  }
 }
