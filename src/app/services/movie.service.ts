@@ -241,7 +241,11 @@ export class MovieService extends ServiceBase implements OnDestroy {
     const arr: IMovieTimeLayer = {};
     for (let i = 0; i <= this.maxPlayTime; i++) {
       const foundLayer: ILayer | undefined = this.movie.timeline[i].layers.find(l => l.layerId === layer.layerId || l.repeating?.layerId === layer.layerId || layer.repeating?.layerId === l.layerId);
-      if (foundLayer) arr[i] = foundLayer;
+      if (foundLayer) arr[i] = {
+        layer: foundLayer,
+        isProjected: foundLayer.isProjected,
+        isRepeated: foundLayer.repeating && foundLayer.repeating.repeatingStartTime !== i ? true : false
+      };
     }
     return arr;
   }

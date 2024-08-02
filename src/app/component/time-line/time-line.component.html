@@ -1,45 +1,65 @@
 <div class="time-line-container">
-    <table class="time-line" cellspacing="0" cellpadding="0">
-        <tr>
-            @for (time of arrTime; track time) {
-                <td class="time" [ngClass]="{
-                        'time-with-label': time === 0 || time % minimumNumDisplayLength === 0,
-                        'current-time': timelineService.currentTime.value === time,
-                        'max-play-time': time <= timelineService.maxPlayTime,
-                        'recorded-time': recordingService.recording.value && time < timelineService.currentTime.value
-                    }" (click)="changeCurrentTime(time)">
+    <div class="time-line-table">
+        <table class="time-line" cellspacing="0" cellpadding="0">
+            <tr cdkDropListGroup>
 
-                    @if (time === 0 || time % minimumNumDisplayLength === 0) {
-                        <span class="time-label">
-                            {{ (time * timelineService.timeMultiplier).toFixed(0) }}
-                        </span>
-                    }
+                <!-- One Time Unit -->
+                @for (time of arrTime; track time) {
+                    <td class="time" [matTooltip]="(time * timelineService.timeMultiplier).toFixed(2)"
+                        cdkDropList (cdkDropListDropped)="setDragedToTime($event, time)"
+                        (cdkDropListEntered)="onDragEntered($event, time)"
+                        [ngClass]="{
+                            'time-with-label': time === 0 || time % minimumNumDisplayLength === 0,
+                            'current-time': timelineService.currentTime.value === time,
+                            'max-play-time': time <= timelineService.maxPlayTime,
+                            'recorded-time': recordingService.recording.value && time < timelineService.currentTime.value
+                        }" (click)="changeCurrentTime(time)">
 
-                    @if (movieService.selectedLayer && movieService.selectedLayerOption && movieService.isTimeInSelectedLayerUnits(time)) {
-                        <div class="selected-layer-container" [ngClass]="{
-                            'projected-container': movieService.selectedLayerTimeUnits[time].isProjected,
-                            'projection-start-container': !movieService.selectedLayerTimeUnits[time].isProjected
-                        }">
-                            <div class="selected-layer" [ngClass]="{
-                                'projected': movieService.selectedLayerTimeUnits[time].isProjected,
-                                'projection-start': !movieService.selectedLayerTimeUnits[time].isProjected
+                        <!-- Time Unit Number Label -->
+                        @if (time === 0 || time % minimumNumDisplayLength === 0) {
+                            <span class="time-label">
+                                {{ (time * timelineService.timeMultiplier).toFixed(0) }}
+                            </span>
+                        }
+
+                        <!-- Projection of Selected / Repeated / Projected layers -->
+                        @if (movieService.selectedLayer && movieService.selectedLayerOption && movieService.isTimeInSelectedLayerUnits(time)) {
+                            <div *ngIf="!draggedLayer || draggedLayer.startTime === time"
+                            cdkDrag
+                            [cdkDragData]="{time, layer: movieService.selectedLayerTimeUnits[time]?.layer}"
+                            cdkDragLockAxis="x"
+                            [cdkDragDisabled]="movieService.selectedLayerTimeUnits[time].isProjected || movieService.selectedLayerTimeUnits[time].isRepeated"
+                                class="selected-layer-container" [ngClass]="{
+                                'projected-container': movieService.selectedLayerTimeUnits[time].isProjected,
+                                'projection-start-container': !movieService.selectedLayerTimeUnits[time].isProjected && !movieService.selectedLayerTimeUnits[time].isRepeated
                             }">
-                                <app-image-icon [image]="movieService.selectedLayerOption.image" [matTooltip]="(time * timelineService.timeMultiplier).toFixed(2)">
-                                </app-image-icon>
+                                <div class="selected-layer"
+                                [ngClass]="{
+                                    'projected': movieService.selectedLayerTimeUnits[time].isProjected,
+                                    'projection-start': !movieService.selectedLayerTimeUnits[time].isProjected && !movieService.selectedLayerTimeUnits[time].isRepeated,
+                                    'projection-repeat': movieService.selectedLayerTimeUnits[time].isRepeated
+                                }">
+                                    <app-image-icon [image]="movieService.selectedLayerOption.image">
+                                    </app-image-icon>
+                                    <div class="drag-preview" *cdkDragPreview>
+                                        <app-image-icon [image]="movieService.selectedLayerOption.image">
+                                        </app-image-icon>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td [attr.colspan]="arrTime.length">
                 </td>
-            }
-        </tr>
-        <tr>
-            <td [attr.colspan]="arrTime.length">
-            </td>
-        </tr>
-    </table>
-    <div class="time-line-status">
+            </tr>
+        </table>
+    </div>
+    <div class="time-line-status" *ngIf="!movieService.selectedLayer">
 
-        <div class="status-blocks" *ngIf="!movieService.selectedLayer">
+        <div class="status-blocks">
 
             <!-- Current Time -->
             <div class="stat-block">

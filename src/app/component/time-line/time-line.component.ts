@@ -2,12 +2,13 @@ import { Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewC
 import { TimelineService } from '../../services/timeline.service';
 import { ComponentBase } from '../../base/component-base';
 import { takeUntil } from 'rxjs';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { RecordingService } from '../../services/recording.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IPlaySpeed } from '../../interfaces/play-speed';
 import { MovieService } from '../../services/movie.service';
+import { CdkDragDrop, CdkDragEnter } from '@angular/cdk/drag-drop';
+import { ILayer } from '../../interfaces/movie-layer';
 
 const settingValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const standardSpeed = control.get('standardSpeed')?.value as number;
@@ -23,6 +24,12 @@ const settingValidator: ValidatorFn = (control: AbstractControl): ValidationErro
   return null;
 }
 
+interface IDraggedLayer {
+  startTime: number;
+  currentTime: number;
+  layer: ILayer;
+}
+
 @Component({
   selector: 'app-time-line',
   templateUrl: './time-line.component.html',
@@ -33,6 +40,8 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
   arrTime: number[] = [];
   minimumNumDisplayLength = 10;
   dialogRef?: MatDialogRef<any>;
+  draggedLayer: IDraggedLayer | undefined;
+
   @ViewChild('settings') settings!: TemplateRef<any>;
 
   settingForm = new FormGroup({
@@ -129,6 +138,28 @@ export class TimeLineComponent extends ComponentBase implements OnInit, OnDestro
   updateUnitTimeFramePercentStyle(percent: number): void {
 
     const time = this.el.nativeElement.querySelector('#time-display');
+    if (time)
     this.renderer.setStyle(time, 'background', `linear-gradient(to right, #dffba5 ${percent}%, white 1%)`);
+  }
+
+  onDragEntered(event: CdkDragEnter<any>, time: number) {
+    if (!this.draggedLayer) {
+      this.draggedLayer = {
+        currentTime: time,
+        startTime: event.item.data.time,
+        layer: event.item.data.layer
+      }
+    } else {
+      this.draggedLayer.currentTime = time;
+    }
+  }
+
+  setDragedToTime(event: CdkDragDrop<any>, toTime: number) {
+    // call move layer from and to time function
+    // to be implemented
+    console.log('event = ', event, toTime)
+    // const fromTime = event.item.data;
+    // if (!fromTime) return;
+    this.draggedLayer = undefined;
   }
 }

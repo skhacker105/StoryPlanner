@@ -4,86 +4,97 @@
     width: 100%;
     height: 100%;
     font-size: $time-line-font-size !important;
-    overflow-x: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
-    .time-line {
-        width: 100%;
-        min-height: 50px;
-        position: relative;
+    .time-line-table {
+        overflow-x: auto;
+        height: -webkit-fill-available;
 
-        .time {
-            height: 20px;
-            border-right: solid 1px #808080;
-            cursor: pointer;
+        .time-line {
+            width: 100%;
+            min-height: 50px;
             position: relative;
-            min-width: 3.5px;
 
-            .selected-layer-container {
-                position: absolute;
-                z-index: 100000;
-                left: -1px;
+            .time {
+                height: 20px;
+                border-right: solid 1px #808080;
+                cursor: pointer;
+                position: relative;
+                min-width: 3.5px;
 
-                &.projected-container {
-                    border-left: solid 1px #00000036;
+                .selected-layer-container {
+                    position: absolute;
+                    z-index: 100000;
+                    left: -1px;
+
+                    &.projection-start-container {
+                        z-index: 101000;
+                    }
+
+                    .selected-layer {
+                        width: 20px;
+                        height: 20px;
+                        background-color: transparent;
+                        border: solid;
+                        right: 0;
+                        border-width: 1px !important;
+                        border-color: #000000;
+                        border-radius: 50%;
+                        margin-top: -13px;
+                        background-color: #dbedd9;
+                        cursor: none;
+
+                        &.projected {
+                            border-color: #494949;
+                            border: dotted;
+                            opacity: 0.1;
+                        }
+
+                        &.projection-start {
+                            border-width: 3px !important;
+                            cursor: move;
+                        }
+
+                        &.projection-repeat {
+                            border-width: 3px !important;
+                            border-style: dotted;
+                        }
+                    }
                 }
 
-                &.projection-start-container {
-                    border-left: solid 1px #000000;
+                .time-label {
+                    position: absolute;
+                    z-index: 1;
+                    margin-top: 12px;
                 }
 
-                .selected-layer {
-                    width: 20px;
-                    height: 20px;
-                    background-color: transparent;
-                    border: solid;
-                    right: 0;
-                    border-width: 1px !important;
+                &.time-with-label {
+                    border-width: 1px;
                     border-color: #000000;
-                    border-radius: 50%;
-                    margin-top: 30px;
-    
-                    &.projected {
-                        border-color: #494949;
-                        border: dotted;
-                        opacity: 0.1;
-                    }
-    
-                    &.projection-start {
-                        border-width: 3px !important;
-                    }
                 }
-            }
 
-            .time-label {
-                position: absolute;
-                z-index: 1;
-                margin-top: 12px;
-            }
+                &.current-time {
+                    background-color: red !important;
+                    border-color: red;
+                }
 
-            &.time-with-label {
-                border-width: 1px;
-                border-color: #000000;
-            }
+                &.max-play-time {
+                    background-color: #d7ccff;
+                }
 
-            &.current-time {
-                background-color: red !important;
-                border-color: red;
-            }
-
-            &.max-play-time {
-                background-color: #d7ccff;
-            }
-
-            &.recorded-time {
-                background-color: green;
+                &.recorded-time {
+                    background-color: green;
+                }
             }
         }
     }
 
     .time-line-status {
-        position: absolute;
         display: flex;
-        width: 100%;
+        background-color: #aee4ff;
+        padding: 3px;
 
         .status-blocks {
             margin: auto;
@@ -219,4 +230,10 @@
             }
         }
     }
+}
+
+::ng-deep .drag-preview {
+    height: 20px;
+    width: 20px;
+    overflow: hidden;
 }

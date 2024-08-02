@@ -21,5 +21,5 @@ export interface IMovieMemberBook {
 }
 
 export interface IMovieTimeLayer {
-    [key: number]: ILayer;
+    [key: number]: {layer:ILayer; isProjected: boolean; isRepeated: boolean};
 }
