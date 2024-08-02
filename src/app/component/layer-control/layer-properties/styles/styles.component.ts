@@ -97,6 +97,7 @@ export class StylesComponent extends ComponentBase implements OnInit, OnDestroy 
     else {
       const value = this.propertyForm.value;
       value.endTime = value.endTime ? (value.endTime / this.timeMultiplier) : value.endTime;
+      if (value.endTime) value.endTime = Math.round(value.endTime);
       this.onSave.emit(value as ILayerProperties);
       this.propertyForm.markAsPristine();
     }
