@@ -17,7 +17,8 @@
             [style]="(layer | layerStyleString) + (layer | layerAnimationString) + 'animation-play-state: paused !important; '"
             [ngClass]="{
                 'image-hidden': !layer.properties.isInView,
-                'layer': !timelineService.playing && !recordingService.recording.value
+                'layer': !timelineService.playing && !recordingService.recording.value,
+                'selected-layer': movieService.selectedLayer?.layerId === layer.layerId
             }"
             (click)="handleLayerClick(layer)"
         >

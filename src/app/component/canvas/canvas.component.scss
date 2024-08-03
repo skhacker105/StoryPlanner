@@ -24,6 +24,10 @@
         box-shadow: 0px 2px 49px 0px rgba(48, 122, 112, 0.75) inset;
     }
 
+    .selected-layer {
+        border: solid 5px !important;
+        box-shadow: 0px 2px 100px 0px #18a6cabf inset;
+    } 
 
     .image-hidden {
         opacity: 0 !important;
