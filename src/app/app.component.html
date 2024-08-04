@@ -17,8 +17,8 @@
       <!-- My Book tab -->
       <mat-tab>
         <ng-template mat-tab-label>
-          <div class="control-tab">
-            <div>{{ memberService.memberBookName }}</div>
+          <div class="control-tab" [matTooltip]="memberService.memberBookName">
+            <div><mat-icon color="primary">menu_book</mat-icon></div>
             <div class="version">{{ memberService.versionNoString }}</div>
           </div>
         </ng-template>
@@ -28,8 +28,8 @@
       <!-- Layers of My Movie for Selected Time -->
       <mat-tab label="Movie">
         <ng-template mat-tab-label *ngIf="movieService.movie">
-          <div class="control-tab">
-            <div>{{ movieService.movie.movieName }}</div>
+          <div class="control-tab" [matTooltip]="movieService.movie.movieName">
+            <div><mat-icon color="primary">movie</mat-icon></div>
             <div class="version">{{ movieService.versionNoString }}</div>
           </div>
         </ng-template>
@@ -39,9 +39,9 @@
       <!-- All Videos -->
       <mat-tab label="All Videos">
         <ng-template mat-tab-label>
-          <button mat-icon-button>
-            <mat-icon>list</mat-icon>
-          </button>
+          <div class="control-tab" matTooltip="Library">
+            <mat-icon color="primary">video_library</mat-icon>
+          </div>
         </ng-template>
 
         <app-all-movies></app-all-movies>
