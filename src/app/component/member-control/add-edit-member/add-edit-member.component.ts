@@ -55,14 +55,14 @@ export class AddEditMemberComponent implements OnInit {
   }
 
   getImageControl(index: number): FormControl<ImageControl> {
-    return this.optionsFormArray.controls[index].get('image') as FormControl<ImageControl>;
+    return this.optionsFormArray.controls[index].get('file') as FormControl<ImageControl>;
   }
 
   createNewOptionForm(value?: IMemberOption): FormGroup {
     return new FormGroup({
       optionId: new FormControl<string>(value ? value.optionId : ''),
       name: new FormControl<string>(value ? value.name : '', { validators: Validators.required }),
-      image: new FormControl<ImageControl>(value ? value.image : '', { validators: Validators.required })
+      file: new FormControl<ImageControl>(value ? value.file : '', { validators: Validators.required })
     });
   }
 

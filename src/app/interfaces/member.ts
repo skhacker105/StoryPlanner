@@ -8,5 +8,5 @@ export interface IMember {
 export interface IMemberOption {
     optionId: string;
     name: string;
-    image: string;
+    file: string;
 }

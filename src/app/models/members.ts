@@ -36,7 +36,7 @@ export class Member implements IMember {
         }
 
         existingOption.name = optionData.name;
-        existingOption.image = optionData.image;
+        existingOption.file = optionData.file;
     }
 
     getJSON() {
