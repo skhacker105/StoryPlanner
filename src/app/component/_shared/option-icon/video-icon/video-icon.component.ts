@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { FileControl } from '../../../types/picture.type';
+import { FileControl } from '../../../../types/picture.type';
 
 @Component({
   selector: 'app-video-icon',

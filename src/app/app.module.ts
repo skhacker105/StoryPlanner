@@ -13,7 +13,6 @@ import { AddEditMemberComponent } from './component/member-control/add-edit-memb
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PopupHeaderComponent } from './component/_shared/popup-header/popup-header.component';
 import { FileUploadComponent } from './component/_shared/file-upload/file-upload.component';
-import { ImageIconComponent } from './component/_shared/image-icon/image-icon.component';
 import { MemberDisplayComponent } from './component/member-control/member-display/member-display.component';
 import { ConfirmationDialogComponent } from './component/_shared/confirmation-dialog/confirmation-dialog.component';
 import { SortPipe } from './pipes/sort.pipe';
@@ -37,8 +36,9 @@ import { DescriptionToolTipDirective } from './directives/description-tool-tip.d
 import { DescriptionToolTipComponent } from './component/_shared/description-tool-tip/description-tool-tip.component';
 import { AngularMaterialModule } from './angular.material.module';
 import { OptionTypeIconPipe } from './pipes/option-type-icon.pipe';
-import { VideoIconComponent } from './component/_shared/video-icon/video-icon.component';
-import { AudioIconComponent } from './component/_shared/audio-icon/audio-icon.component';
+import { ImageIconComponent } from './component/_shared/option-icon/image-icon/image-icon.component';
+import { VideoIconComponent } from './component/_shared/option-icon/video-icon/video-icon.component';
+import { AudioIconComponent } from './component/_shared/option-icon/audio-icon/audio-icon.component';
 import { OptionIconComponent } from './component/_shared/option-icon/option-icon.component';
 
 @NgModule({
