@@ -65,8 +65,11 @@ export class MovieService extends ServiceBase implements OnDestroy {
 
     //   Object.keys(this.movie.timeline).forEach(t => {
     //     if (!this.movie) return;
-    //     this.movie.timeline[+t].layers = this.movie.timeline[+t].layers.filter(l => !l.repeating);
-    //     if (this.movie.timeline[+t].layers.length === 0) delete this.movie.timeline[+t]
+    //     this.movie.timeline[+t].layers.forEach(l => {
+    //       l.
+    //     });
+    //     // this.movie.timeline[+t].layers = this.movie.timeline[+t].layers.filter(l => !l.repeating);
+    //     // if (this.movie.timeline[+t].layers.length === 0) delete this.movie.timeline[+t]
     //   });
     //   console.log('this.movie = ',this.movie)
     //   this.movieStorageManager.update(this.movie);

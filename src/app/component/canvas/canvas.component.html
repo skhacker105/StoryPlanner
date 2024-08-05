@@ -13,7 +13,7 @@
         <img
             class="layer"
             [attr.id]="layer.layerId"
-            [src]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.image"
+            [src]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.file"
             [style]="(layer | layerStyleString) + (layer | layerAnimationString) + 'animation-play-state: paused !important; '"
             [ngClass]="{
                 'image-hidden': !layer.properties.isInView,

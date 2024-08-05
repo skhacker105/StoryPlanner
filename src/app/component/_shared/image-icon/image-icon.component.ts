@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ImageControl } from '../../../types/picture.type';
+import { FileControl } from '../../../types/picture.type';
 
 @Component({
   selector: 'app-image-icon',
@@ -7,5 +7,5 @@ import { ImageControl } from '../../../types/picture.type';
   styleUrl: './image-icon.component.scss'
 })
 export class ImageIconComponent {
-  @Input() image?: ImageControl;
+  @Input() image?: FileControl;
 }

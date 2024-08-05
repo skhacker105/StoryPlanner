@@ -7,7 +7,7 @@ import { IVersion } from '../interfaces/version';
 import { IMemberStorage } from '../interfaces/member-storage';
 import { ServiceBase } from '../base/service-base';
 import { IndexedDBManager } from '../storage/indexedDB.manager';
-import { Tables } from '../constants/constant';
+import { DefaultOptionType, Tables } from '../constants/constant';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +40,17 @@ export class MemberService extends ServiceBase implements OnDestroy {
         next: members => this.fireMemberStorageUpdate()
       });
     this.loadSavedMembersFromStorage();
+
+    
+    // Code to delete layers from Indexed DB
+    // setTimeout(() => {
+    //   this.members.value.forEach(member => {
+    //     member.options.forEach((option: any) => {
+    //       option.type = DefaultOptionType;
+    //     });
+    //     this.memberStorageManager.update(member);
+    //   })
+    // }, 1000);
   }
 
   get versionNoString(): string {

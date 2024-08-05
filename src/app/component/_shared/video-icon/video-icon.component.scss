@@ -1,4 +1,4 @@
-.image-icon {
+.video-icon {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -9,5 +9,10 @@
     img {
         width: 100%;
         margin: auto;
+    }
+
+    .mat-mdc-progress-spinner {
+        width: inherit !important;
+        height: inherit !important;
     }
 }

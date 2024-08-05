@@ -1,14 +1,14 @@
 <div class="image-upload-container" *ngIf="pictureFormControl">
 
-    <input #fileInput id="fileInput" type="file" [formControl]="pictureControl" (change)="handlePictureUpload($event)" style="display: none">
+    <input #fileInput id="fileInput" type="file" [formControl]="pictureControl" [accept]="acceptFileTypes" (change)="handlePictureUpload($event)" style="display: none">
 
     @if (pictureFormControl.value) {
         <div class="image-display" *ngIf="pictureFormControl.value" (click)="fileInput.click()">
-            <app-image-icon [image]="pictureFormControl.value"></app-image-icon>
+            <app-option-icon [file]="pictureFormControl.value" [optionType]="optionType"></app-option-icon>
         </div>
     } @else {
         <button mat-icon-button type="button" class="image-display" (click)="fileInput.click()">
-            <mat-icon>add_a_photo</mat-icon>
+            <mat-icon>{{ optionType | optionTypeIcon }}</mat-icon>
         </button>
     }
 </div>

@@ -1,0 +1,16 @@
+@if (file && optionType) {
+    @switch (optionType) {
+
+        @case ('image') {
+            <app-image-icon [image]="file"></app-image-icon>
+        }
+
+        @case ('video') {
+            <app-video-icon [video]="file"></app-video-icon>
+        }
+
+        @case ('audio') {
+            <app-audio-icon [audio]="file"></app-audio-icon>
+        }
+    }
+}

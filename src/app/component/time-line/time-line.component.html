@@ -44,11 +44,11 @@
                                     'projection-start': !movieService.selectedLayerTimeUnits[time].isProjected && !movieService.selectedLayerTimeUnits[time].isRepeated,
                                     'projection-repeat': movieService.selectedLayerTimeUnits[time].isRepeated
                                 }">
-                                    <app-image-icon [image]="movieService.selectedLayerOption.image">
-                                    </app-image-icon>
+                                    <app-option-icon [file]="movieService.selectedLayerOption.file" [optionType]="movieService.selectedLayerOption.type">
+                                    </app-option-icon>
                                     <div class="drag-preview" *cdkDragPreview>
-                                        <app-image-icon [image]="movieService.selectedLayerOption.image">
-                                        </app-image-icon>
+                                        <app-option-icon [file]="movieService.selectedLayerOption.file" [optionType]="movieService.selectedLayerOption.type">
+                                        </app-option-icon>
                                     </div>
                                 </div>
                             </div>

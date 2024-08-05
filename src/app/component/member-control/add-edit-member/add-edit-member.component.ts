@@ -2,9 +2,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IMember, IMemberOption } from '../../../interfaces/member';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ImageControl } from '../../../types/picture.type';
+import { FileControl } from '../../../types/picture.type';
 import { ConfirmationDialogComponent } from '../../_shared/confirmation-dialog/confirmation-dialog.component';
 import { take } from 'rxjs';
+import { OptionType } from '../../../types/member-option.type';
+import { DefaultOptionType } from '../../../constants/constant';
 
 @Component({
   selector: 'app-add-edit-member',
@@ -20,7 +22,7 @@ export class AddEditMemberComponent implements OnInit {
   memberForm = new FormGroup({
     id: new FormControl<string>(''),
     name: new FormControl<string>('', { validators: Validators.required }),
-    image: new FormControl<ImageControl>('', { validators: Validators.required }),
+    image: new FormControl<FileControl>('', { validators: Validators.required }),
     options: new FormArray([] as any[])
   });
 
@@ -32,7 +34,7 @@ export class AddEditMemberComponent implements OnInit {
     return this.memberForm.controls['name'];
   }
 
-  get imageCtrl(): FormControl<ImageControl> {
+  get imageCtrl(): FormControl<FileControl> {
     return this.memberForm.controls['image'];
   }
 
@@ -41,7 +43,7 @@ export class AddEditMemberComponent implements OnInit {
   }
 
   ngOnInit(): void {
-     if (this.data) {
+    if (this.data) {
       this.memberForm.patchValue(this.data);
       if (this.data.options.length > 0) {
         this.data.options.forEach(option => {
@@ -49,35 +51,42 @@ export class AddEditMemberComponent implements OnInit {
           this.optionsFormArray.push(form);
         });
       }
-     } else {
-      this.addNewOption();
-     }
+    } else {
+      this.addNewOption('image');
+      this.addNewOption('audio');
+      this.addNewOption('video');
+    }
   }
 
-  getImageControl(index: number): FormControl<ImageControl> {
-    return this.optionsFormArray.controls[index].get('file') as FormControl<ImageControl>;
+  getFileControl(index: number): FormControl<FileControl> {
+    return this.optionsFormArray.controls[index].get('file') as FormControl<FileControl>;
   }
 
-  createNewOptionForm(value?: IMemberOption): FormGroup {
+  getTypeControl(index: number): FormControl<OptionType> {
+    return this.optionsFormArray.controls[index].get('type') as FormControl<OptionType>;
+  }
+
+  createNewOptionForm(value?: IMemberOption, optionType?: OptionType): FormGroup {
     return new FormGroup({
       optionId: new FormControl<string>(value ? value.optionId : ''),
       name: new FormControl<string>(value ? value.name : '', { validators: Validators.required }),
-      file: new FormControl<ImageControl>(value ? value.file : '', { validators: Validators.required })
+      file: new FormControl<FileControl>(value ? value.file : '', { validators: Validators.required }),
+      type: new FormControl<OptionType>(value && value.type ? value.type : optionType ?? DefaultOptionType, { validators: Validators.required })
     });
   }
 
-  addNewOption(): void {
-    const optionForm = this.createNewOptionForm();
+  addNewOption(optionType: OptionType): void {
+    const optionForm = this.createNewOptionForm(undefined, optionType);
     this.optionsFormArray.push(optionForm);
   }
 
   handleRemoveOptionClick(index: number): void {
     const ref = this.dialog.open(ConfirmationDialogComponent);
     ref.afterClosed()
-    .pipe(take(1))
-    .subscribe({
-      next: result => result ? this.removeOption(index) : null
-    });
+      .pipe(take(1))
+      .subscribe({
+        next: result => result ? this.removeOption(index) : null
+      });
   }
 
   removeOption(index: number): void {

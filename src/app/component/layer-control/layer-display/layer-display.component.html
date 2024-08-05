@@ -5,7 +5,7 @@
     }">
     <div class="image-display">
         @if (!isBroken) {
-            <app-image-icon [image]="layerOption?.file"></app-image-icon>
+            <app-option-icon [file]="layerOption?.file" [optionType]="layerOption?.type"></app-option-icon>
         } @else {
             <mat-icon color="warn">error</mat-icon>
         }

@@ -1,1 +1,1 @@
-export type ImageControl = string | ArrayBuffer | null
+export type FileControl = string | ArrayBuffer | null
