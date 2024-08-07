@@ -23,11 +23,11 @@
 
         <div class="place-holder-layer" *cdkDragPlaceholder></div>
         
-        @for (layer of movieService.movie.timeline[currentTime].layers; track layer;) {
+        @for (layer of movieService.movie.timeline[currentTime].layers; track layer; let index = $index;) {
             <app-layer-display cdkDrag [layer]="layer" [isSelected]="movieService.compareSelectedLayer(layer)"
             [layerMember]="movieService.dictionaryMemberBook[layer.memberId]?.member" 
             [layerOption]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]"
-            (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)"
+            (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)" (onIconCLick)="handleIconClick(index)"
             (onGoToProjectionStart)="gotoProjectionStart(layer)">
             </app-layer-display>
         }

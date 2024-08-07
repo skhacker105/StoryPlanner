@@ -18,10 +18,12 @@ export class LayerDisplayComponent extends ComponentBase implements OnInit, OnDe
   @Output() onEdit = new EventEmitter<ILayer>();
   @Output() onDelete = new EventEmitter<ILayer>();
   @Output() onCLick = new EventEmitter<ILayer>();
+  @Output() onIconCLick = new EventEmitter<void>();
   @Output() onGoToProjectionStart = new EventEmitter<ILayer>();
 
   hasNoMatch = false;
   isBroken = false;
+  iconClicked = false;
 
   constructor() {
     super();
@@ -38,5 +40,18 @@ export class LayerDisplayComponent extends ComponentBase implements OnInit, OnDe
   handleDeleteClick(layer: ILayer, e: any): void {
     e.stopPropagation();
     this.onDelete.emit(layer);
+  }
+
+  handleCLick(): void {
+    if (this.iconClicked) {
+      this.iconClicked = false;
+      return;
+    }
+    this.onCLick.emit();
+  }
+
+  handleIconClick(): void {
+    this.iconClicked = true;
+    this.onIconCLick.emit();
   }
 }

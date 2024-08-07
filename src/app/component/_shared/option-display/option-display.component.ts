@@ -43,7 +43,6 @@ export class OptionDisplayComponent extends ComponentBase implements OnInit, OnD
       .pipe(takeUntil(this.isComponentActive))
       .subscribe({
         next: () => {
-          console.log('next')
           if (!this.data) return;
           this.displayItem(this.data.selectedIndex + 1)
         }

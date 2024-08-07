@@ -7,6 +7,9 @@ import { ILayer } from '../../interfaces/movie-layer';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../_shared/confirmation-dialog/confirmation-dialog.component';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { MemberService } from '../../services/member.service';
+import { IMemberOptionItem } from '../../interfaces/member';
+import { DisplayService } from '../../services/display.service';
 
 
 
@@ -18,10 +21,11 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 export class LayerControlComponent extends ComponentBase implements OnInit, OnDestroy {
 
   readonly dialog = inject(MatDialog);
+  readonly displayService = inject(DisplayService);
 
   currentTime: number = 0;
 
-  constructor(public movieService: MovieService, public timelineService: TimelineService) {
+  constructor(public movieService: MovieService, public timelineService: TimelineService, public memberService: MemberService) {
     super();
   }
 
@@ -70,5 +74,32 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
     this.timelineService.setNewTime(layer.projectionStartTime);
     const projectionStartLayerRef = this.movieService.movie.timeline[layer.projectionStartTime].layers.find(l => l.layerId === layer.layerId);
     if (projectionStartLayerRef) this.movieService.selectLayer(this.timelineService.currentTime.value, projectionStartLayerRef)
+  }
+
+  handleIconClick(index: number): void {
+    if (!this.movieService.movie) return;
+
+    let calculatedIndex = index;
+    const items: IMemberOptionItem[] = this.movieService.movie.timeline[this.currentTime].layers
+      ?.reduce((arr, layer, i) => {
+        let found = false;
+        const member = this.movieService.dictionaryMemberBook[layer.memberId];
+        if (member) {
+          const memberOption = member.options[layer.memberOptionId];
+          if (memberOption) {
+            found = true;
+            arr.push({
+              file: memberOption.file,
+              type: memberOption.type
+            });
+          }
+        }
+
+        if (!found && i <= index) calculatedIndex--;
+        
+        return arr;
+      }, [] as IMemberOptionItem[]);
+
+    this.displayService.display(items, calculatedIndex);
   }
 }
