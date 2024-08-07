@@ -1,6 +1,7 @@
 <div class="option-display-container" *ngIf="option" matRipple>
     <div class="image-display">
-        <app-option-icon [file]="option.file" [optionType]="option.type"></app-option-icon>
+        <app-option-icon [file]="option.file" [optionType]="option.type" (onIconClick)="onIconClick.emit()">
+        </app-option-icon>
     </div>
     <div class="option-name">
         {{ option.name }}

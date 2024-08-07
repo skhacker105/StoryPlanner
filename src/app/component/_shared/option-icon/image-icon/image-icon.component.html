@@ -1,3 +1,3 @@
-    <div class="image-icon" *ngIf="image">
+    <div class="image-icon" *ngIf="image" (click)="onIconClick.emit()">
         <img [src]="image">
     </div>

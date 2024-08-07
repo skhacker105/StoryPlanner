@@ -12,6 +12,7 @@ export class MemberDisplayComponent {
   @Output() onEdit = new EventEmitter<Member>();
   @Output() onDelete = new EventEmitter<Member>();
   @Output() onCLick = new EventEmitter<Member>();
+  @Output() onIconClick = new EventEmitter<void>();
 
   handleEditClick(member: Member, e: any) {
     e.stopPropagation();

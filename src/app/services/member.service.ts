@@ -8,6 +8,7 @@ import { IMemberStorage } from '../interfaces/member-storage';
 import { ServiceBase } from '../base/service-base';
 import { IndexedDBManager } from '../storage/indexedDB.manager';
 import { DefaultOptionType, Tables } from '../constants/constant';
+import { DisplayService } from './display.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class MemberService extends ServiceBase implements OnDestroy {
   memberBookDetail = new Subject<IMemberStorage>();
   memberStorageManager = new IndexedDBManager<IMember>(Tables.MemberStorage, 'id');
 
-  constructor(private utilService: UtilService) {
+  constructor(private utilService: UtilService, private displayService: DisplayService) {
     super();
     this.memberBookDetail
       .pipe(takeUntil(this.isServiceActive))
@@ -39,6 +40,12 @@ export class MemberService extends ServiceBase implements OnDestroy {
       .subscribe({
         next: members => this.fireMemberStorageUpdate()
       });
+
+      this.displayService.dialogOpened
+        .pipe(takeUntil(this.isServiceActive))
+        .subscribe({
+          next: () => this.resetSelectedRecord()
+        });
     this.loadSavedMembersFromStorage();
 
     

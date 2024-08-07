@@ -2,15 +2,15 @@
     @switch (optionType) {
 
         @case ('image') {
-            <app-image-icon [image]="file"></app-image-icon>
+            <app-image-icon [image]="file" (onIconClick)="onIconClick.emit()"></app-image-icon>
         }
 
         @case ('video') {
-            <app-video-icon [video]="file"></app-video-icon>
+            <app-video-icon [video]="file" (onIconClick)="onIconClick.emit()"></app-video-icon>
         }
 
         @case ('audio') {
-            <app-audio-icon [audio]="file"></app-audio-icon>
+            <app-audio-icon [audio]="file" (onIconClick)="onIconClick.emit()"></app-audio-icon>
         }
     }
 }

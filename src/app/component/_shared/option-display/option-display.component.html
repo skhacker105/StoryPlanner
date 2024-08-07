@@ -1,0 +1,41 @@
+@if (loadedOption && data) {
+    <div class="option-display-overlay">
+
+        <div class="display-container">
+            <div class="overlay-content">
+                @switch (loadedOption.type) {
+
+                    @case ('image') {
+                        <app-image-display [file]="loadedOption.file"></app-image-display>
+                    }
+
+                    @case ('video') {
+                        <app-vid-display [file]="loadedOption.file"></app-vid-display>
+                    }
+
+                    @case ('audio') {
+                        <app-audio-display [file]="loadedOption.file"></app-audio-display>
+                    }
+                }
+            </div>
+
+            <button mat-icon-button class="close-button" (click)="closeClicked.next()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <div class="control-container">
+            <div class="control-list">
+                @for(item of data.items; track item; let index = $index) {
+                    <div class="control-item" [ngClass]="{
+                        'displayed': index === data.selectedIndex
+                    }" [attr.id]="'icon_' + index">
+                        <app-option-icon [file]="item.file" [optionType]="item.type" (onIconClick)="displayItem(index)">
+                        </app-option-icon>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+<div class="overlay-background"></div>

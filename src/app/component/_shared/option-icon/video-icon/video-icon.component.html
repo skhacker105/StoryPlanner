@@ -1,13 +1,13 @@
 @if (thumbnailSrc) {
-    <div class="video-icon">
+    <div class="video-icon" (click)="onIconClick.emit()">
         <img [src]="thumbnailSrc">
-        <!-- <mat-spinner class="video-icon" color="primary"></mat-spinner> -->
     </div>
 } @else {
     <div class="video-icon">
         <mat-spinner color="primary"></mat-spinner>
     </div>
 }
-
-<video #videoPlayer style="display:none;"></video>
-<canvas #canvas style="display:none;"></canvas>
+<ng-container *ngIf="loading">
+    <video #videoPlayer style="display:none;" muted="muted"></video>
+    <canvas #canvas style="display:none;"></canvas>
+</ng-container>

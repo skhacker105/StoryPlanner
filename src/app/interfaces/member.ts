@@ -7,9 +7,12 @@ export interface IMember {
     options: IMemberOption[];
 }
 
-export interface IMemberOption {
+export interface IMemberOption extends IMemberOptionItem {
     optionId: string;
     name: string;
+}
+
+export interface IMemberOptionItem {
     file: string;
     type: OptionType;
 }

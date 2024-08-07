@@ -15,6 +15,7 @@ import { ILayerAnimation } from '../interfaces/movie-animations';
 import { IndexedDBManager } from '../storage/indexedDB.manager';
 import { Tables } from '../constants/constant';
 import { TimelineService } from './timeline.service';
+import { DisplayService } from './display.service';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,11 @@ export class MovieService extends ServiceBase implements OnDestroy {
   public selectedLayerOption?: IMemberOption;
   public selectedLayerTimeUnits: IMovieTimeLayer = {};
 
-  constructor(private utilService: UtilService, public memberService: MemberService, private timelineService: TimelineService) {
+  constructor(
+    private utilService: UtilService,
+    public memberService: MemberService,
+    private timelineService: TimelineService,
+    private displayService: DisplayService) {
     super();
 
     this.movieUpdated
@@ -56,6 +61,12 @@ export class MovieService extends ServiceBase implements OnDestroy {
           this.dictionaryMemberBook = this.getMemberOptionDictionary(members);
           if (!this.movie) this.loadMovieFromStorage();
         }
+      });
+
+    this.displayService.dialogOpened
+      .pipe(takeUntil(this.isServiceActive))
+      .subscribe({
+        next: () => this.resetSelectedLayer()
       });
 
     // Code to delete layers from Indexed DB

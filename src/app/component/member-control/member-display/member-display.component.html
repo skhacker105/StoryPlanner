@@ -3,7 +3,7 @@
         'selected': isSelected
     }">
     <div class="image-display">
-        <app-option-icon [file]="member.image" optionType="image"></app-option-icon>
+        <app-option-icon [file]="member.image" optionType="image" (onIconClick)="onIconClick.emit()"></app-option-icon>
     </div>
     <div class="member-name">
         <sub> ({{ member.options.length }}) </sub>

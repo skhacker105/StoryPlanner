@@ -9,4 +9,6 @@ import { IMemberOption } from '../../../interfaces/member';
 export class MemberOptionDisplayComponent {
   @Input() option?: IMemberOption;
   @Output() addToTimeLine = new EventEmitter<IMemberOption>();
+  @Output() onClick = new EventEmitter<void>();
+  @Output() onIconClick = new EventEmitter<void>();
 }

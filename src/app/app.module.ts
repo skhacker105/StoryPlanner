@@ -7,7 +7,7 @@ import { PlayerComponent } from './component/_shared/player/player.component';
 import { TimeLineComponent } from './component/time-line/time-line.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { TimelineKeyHandlerDirective } from './directives/timeline-key-handler.directive';
+import { KeyHandlerDirective } from './directives/timeline-key-handler.directive';
 import { MemberControlComponent } from './component/member-control/member-control.component';
 import { AddEditMemberComponent } from './component/member-control/add-edit-member/add-edit-member.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,19 +34,23 @@ import { VideoDisplayComponent } from './component/all-movies/video-display/vide
 import { RepeatComponent } from './component/layer-control/layer-properties/repeat/repeat.component';
 import { DescriptionToolTipDirective } from './directives/description-tool-tip.directive';
 import { DescriptionToolTipComponent } from './component/_shared/description-tool-tip/description-tool-tip.component';
-import { AngularMaterialModule } from './angular.material.module';
+import { AngularMaterialModule } from './modules/angular.material.module';
 import { OptionTypeIconPipe } from './pipes/option-type-icon.pipe';
 import { ImageIconComponent } from './component/_shared/option-icon/image-icon/image-icon.component';
 import { VideoIconComponent } from './component/_shared/option-icon/video-icon/video-icon.component';
 import { AudioIconComponent } from './component/_shared/option-icon/audio-icon/audio-icon.component';
 import { OptionIconComponent } from './component/_shared/option-icon/option-icon.component';
+import { OptionDisplayComponent } from './component/_shared/option-display/option-display.component';
+import { ImageDisplayComponent } from './component/_shared/option-display/image-display/image-display.component';
+import { AudioDisplayComponent } from './component/_shared/option-display/audio-display/audio-display.component';
+import { VidDisplayComponent } from './component/_shared/option-display/video-display/video-display.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlayerComponent,
     TimeLineComponent,
-    TimelineKeyHandlerDirective,
+    KeyHandlerDirective,
     AddEditMemberComponent,
     PopupHeaderComponent,
     FileUploadComponent,
@@ -76,7 +80,11 @@ import { OptionIconComponent } from './component/_shared/option-icon/option-icon
     OptionTypeIconPipe,
     VideoIconComponent,
     AudioIconComponent,
-    OptionIconComponent
+    OptionIconComponent,
+    OptionDisplayComponent,
+    ImageDisplayComponent,
+    AudioDisplayComponent,
+    VidDisplayComponent
   ],
   imports: [
     BrowserModule,

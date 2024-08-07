@@ -4,13 +4,14 @@ import { MovieService } from './services/movie.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { TimelineService } from './services/timeline.service';
 import { Member } from './models/members';
-import { IMemberOption } from './interfaces/member';
+import { IMemberOption, IMemberOptionItem } from './interfaces/member';
 import { ILayerProperties } from './interfaces/movie-properties';
 import { ILayer, ILayerRepeat } from './interfaces/movie-layer';
 import { ILayerAnimation } from './interfaces/movie-animations';
 import { takeUntil } from 'rxjs';
 import { ComponentBase } from './base/component-base';
 import { FileService } from './services/file.service';
+import { DisplayService } from './services/display.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent extends ComponentBase implements OnInit, OnDestroy {
     public memberService: MemberService,
     public movieService: MovieService,
     public timelineService: TimelineService,
-    private fileService: FileService) {
+    private fileService: FileService,
+    private displayService: DisplayService) {
     super();
   }
 
@@ -74,5 +76,14 @@ export class AppComponent extends ComponentBase implements OnInit, OnDestroy {
 
   saveRepeat(layer: ILayer, repeating: ILayerRepeat | undefined): void {
     this.movieService.updateRepeat(this.timelineService.currentTime.value, layer.layerId, repeating)
+  }
+
+  handleIconClick(index: number): void {
+    if (!this.memberService.selectedMember) return;
+
+    const items: IMemberOptionItem[] = this.memberService.selectedMember.options
+      .map(option => ({ file: option.file, type: option.type } as IMemberOptionItem));
+
+    this.displayService.display(items, index);
   }
 }

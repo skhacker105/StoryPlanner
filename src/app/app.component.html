@@ -55,8 +55,8 @@
   [title]="memberService.selectedMember.name" (onCloseTrigger)="memberService.resetSelectedRecord()">
   </app-popup-header>
   <div  class="list-container" control2 *ngIf="memberService.selectedMember">
-      @for (option of memberService.selectedMember.options; track option) {
-          <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(memberService.selectedMember, option)">
+      @for (option of memberService.selectedMember.options; track option; let index = $index;) {
+          <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(memberService.selectedMember, option)" (onIconClick)="handleIconClick(index)">
           </app-member-option-display>
       }
   </div>

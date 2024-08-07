@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FileControl } from '../../../../types/picture.type';
 
 @Component({
@@ -8,11 +8,13 @@ import { FileControl } from '../../../../types/picture.type';
 })
 export class VideoIconComponent implements OnChanges {
   @Input() video?: FileControl;
+  @Output() onIconClick = new EventEmitter<void>();
 
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
 
   thumbnailSrc: string = '';
+  loading = true;
 
   ngOnChanges(changes: SimpleChanges): void {
     setTimeout(() => {
@@ -27,8 +29,9 @@ export class VideoIconComponent implements OnChanges {
     }
 
     const video = this.videoPlayer.nativeElement;
-    video.src = this.video; //URL.createObjectURL(videoBlob);
+    video.src = this.video;
     video.load();
+    video.muted = true;
     video.play();
 
     video.onloadeddata = () => {
@@ -47,6 +50,7 @@ export class VideoIconComponent implements OnChanges {
   
         // Optionally stop video playback
         video.pause();
+        this.loading = false;
       }
     }
 

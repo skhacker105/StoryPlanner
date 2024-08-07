@@ -3,7 +3,7 @@
     <input #fileInput id="fileInput" type="file" [formControl]="pictureControl" [accept]="acceptFileTypes" (change)="handlePictureUpload($event)" style="display: none">
 
     @if (pictureFormControl.value) {
-        <div class="image-display" *ngIf="pictureFormControl.value" (click)="fileInput.click()">
+        <div class="image-display" (click)="fileInput.click()">
             <app-option-icon [file]="pictureFormControl.value" [optionType]="optionType"></app-option-icon>
         </div>
     } @else {

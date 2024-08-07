@@ -2,13 +2,14 @@ import { Directive, HostListener } from '@angular/core';
 import { TimelineService } from '../services/timeline.service';
 import { MovieService } from '../services/movie.service';
 import { RecordingService } from '../services/recording.service';
+import { DisplayService } from '../services/display.service';
 
 @Directive({
-  selector: '[appTimelineKeyHandler]'
+  selector: '[appKeyHandler]'
 })
-export class TimelineKeyHandlerDirective {
+export class KeyHandlerDirective {
 
-  constructor(private timelineService: TimelineService, private movieService: MovieService, private recordingService: RecordingService) { }
+  constructor(private timelineService: TimelineService,private recordingService: RecordingService, private displayService: DisplayService) { }
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent): void {
@@ -21,6 +22,9 @@ export class TimelineKeyHandlerDirective {
       case 'r':
         event.altKey ? this.recordingService.toggleRecording() : null;
         break;
+      case 'escape': this.displayService.closeDisplay.next(); break;
+      case 'arrowleft': this.displayService.loadPrevItem.next(); break;
+      case 'arrowright': this.displayService.loadNextItem.next(); break;
     }
   }
 

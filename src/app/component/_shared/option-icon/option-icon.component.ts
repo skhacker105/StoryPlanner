@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FileControl } from '../../../types/picture.type';
 import { OptionType } from '../../../types/member-option.type';
 
@@ -10,4 +10,5 @@ import { OptionType } from '../../../types/member-option.type';
 export class OptionIconComponent {
   @Input() file?: FileControl;
   @Input() optionType?: OptionType;
+  @Output() onIconClick = new EventEmitter<void>();
 }

@@ -1,14 +1,15 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditMemberComponent } from './add-edit-member/add-edit-member.component';
-import { IMember, IMemberOption } from '../../interfaces/member';
+import { IMember, IMemberOption, IMemberOptionItem } from '../../interfaces/member';
 import { take } from 'rxjs';
 import { MemberService } from '../../services/member.service';
 import { ConfirmationDialogComponent } from '../_shared/confirmation-dialog/confirmation-dialog.component';
 import { Member } from '../../models/members';
 import { ComponentBase } from '../../base/component-base';
 import { MovieService } from '../../services/movie.service';
-import { TimelineService } from '../../services/timeline.service';
+import { DisplayService } from '../../services/display.service';
+import { DefaultOptionType } from '../../constants/constant';
 
 @Component({
   selector: 'app-member-control',
@@ -18,8 +19,11 @@ import { TimelineService } from '../../services/timeline.service';
 export class MemberControlComponent extends ComponentBase implements OnDestroy {
 
   readonly dialog = inject(MatDialog);
+  readonly displayService = inject(DisplayService);
+  
+  iconClicked = false;
 
-  constructor(public memberService: MemberService, public movieService: MovieService, private timeLineService: TimelineService) {
+  constructor(public memberService: MemberService, public movieService: MovieService) {
     super();
   }
 
@@ -85,10 +89,22 @@ export class MemberControlComponent extends ComponentBase implements OnDestroy {
   }
 
   handleMemberClick(member: Member): void {
+    if (this.iconClicked) {
+      this.iconClicked = false;
+      return;
+    }
     if (!this.compareSelectedMembers(member)) {
       this.memberService.selectRecord(member)
     } else {
       this.memberService.resetSelectedRecord();
     }
+  }
+
+  handleIconClick(index: number): void {
+    this.iconClicked = true;
+    const items: IMemberOptionItem[] = this.memberService.members.value
+      .map(member => ({ file: member.image, type: DefaultOptionType } as IMemberOptionItem));
+
+    this.displayService.display(items, index);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FileControl } from '../../../../types/picture.type';
 
 @Component({
@@ -8,4 +8,5 @@ import { FileControl } from '../../../../types/picture.type';
 })
 export class AudioIconComponent {
   @Input() audio?: FileControl;
+  @Output() onIconClick = new EventEmitter<void>();
 }
