@@ -97,12 +97,15 @@
 
     .time-line-status {
         display: flex;
-        background-color: #aee4ff;
+        background-color: #3f51b5;
         padding: 3px;
 
         .status-blocks {
             margin: auto;
             display: flex;
+            padding-left: 10px;
+            padding-right: 10px;
+            background-color: white;
 
             .stat-block {
                 display: flex;
