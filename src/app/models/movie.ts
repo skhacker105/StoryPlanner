@@ -1,5 +1,5 @@
 import { moveItemInArray } from "@angular/cdk/drag-drop";
-import { ILayer, ILayerRepeat } from "../interfaces/movie-layer";
+import { ILayer } from "../interfaces/movie-layer";
 import { IMovie, IMovieMemberBook, IMovieTime } from "../interfaces/timeline-movie";
 import { IVersion } from "../interfaces/version";
 import { cloneDeep } from 'lodash';
@@ -7,6 +7,7 @@ import { ILayerProperties } from "../interfaces/movie-properties";
 import { ILayerAnimation } from "../interfaces/movie-animations";
 import { UtilService } from "../services/util.service";
 import { CreateRepeatedLayer } from "./layer";
+import { ILayerRepeat } from "../interfaces/movie-layer-repeat";
 
 export class Movie implements IMovie {
     id: string;

@@ -13,8 +13,10 @@ export class AudioDisplayComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.audioCtrl?.nativeElement.play();
-    }, 500);
+      if (this.audioCtrl) {
+        this.audioCtrl.nativeElement.play();
+      }
+    }, 100);
   }
 
   ngOnDestroy(): void {

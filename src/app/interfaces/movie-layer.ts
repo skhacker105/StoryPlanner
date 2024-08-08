@@ -1,4 +1,5 @@
 import { ILayerAnimation } from "./movie-animations";
+import { ILayerRepeat } from "./movie-layer-repeat";
 import { ILayerProperties } from "./movie-properties";
 
 export interface ILayer {
@@ -15,12 +16,4 @@ export interface ILayer {
     // Projection
     isProjected: boolean;
     projectionStartTime: number;
-}
-
-
-export interface ILayerRepeat {
-    layerId: string;
-    repeatingStartTime: number;
-    interval: number;
-    count: number;
 }

@@ -44,6 +44,7 @@ import { OptionDisplayComponent } from './component/_shared/option-display/optio
 import { ImageDisplayComponent } from './component/_shared/option-display/image-display/image-display.component';
 import { AudioDisplayComponent } from './component/_shared/option-display/audio-display/audio-display.component';
 import { VidDisplayComponent } from './component/_shared/option-display/video-display/video-display.component';
+import { MediaComponent } from './component/layer-control/layer-properties/media/media.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { VidDisplayComponent } from './component/_shared/option-display/video-di
     OptionDisplayComponent,
     ImageDisplayComponent,
     AudioDisplayComponent,
-    VidDisplayComponent
+    VidDisplayComponent,
+    MediaComponent
   ],
   imports: [
     BrowserModule,
