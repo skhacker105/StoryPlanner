@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ComponentBase } from '../../../../base/component-base';
 import { ILayerProperties } from '../../../../interfaces/movie-properties';
-import { ILayerRepeat } from '../../../../interfaces/movie-layer';
+import { ILayerRepeat } from '../../../../interfaces/movie-layer-repeat';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, takeUntil } from 'rxjs';
 

@@ -6,12 +6,13 @@ import { TimelineService } from './services/timeline.service';
 import { Member } from './models/members';
 import { IMemberOption, IMemberOptionItem } from './interfaces/member';
 import { ILayerProperties } from './interfaces/movie-properties';
-import { ILayer, ILayerRepeat } from './interfaces/movie-layer';
+import { ILayer } from './interfaces/movie-layer';
 import { ILayerAnimation } from './interfaces/movie-animations';
 import { takeUntil } from 'rxjs';
 import { ComponentBase } from './base/component-base';
 import { FileService } from './services/file.service';
 import { DisplayService } from './services/display.service';
+import { ILayerRepeat } from './interfaces/movie-layer-repeat';
 
 @Component({
   selector: 'app-root',

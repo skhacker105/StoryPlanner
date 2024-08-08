@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash";
-import { ILayer, ILayerRepeat } from "../interfaces/movie-layer";
+import { ILayer } from "../interfaces/movie-layer";
 import { ILayerProperties } from "../interfaces/movie-properties";
+import { ILayerRepeat } from "../interfaces/movie-layer-repeat";
 
 export function CreateLayerWithDefaultProperties(layerId: string, time: number, memberId: string, memberOptionId: string): ILayer {
   return {

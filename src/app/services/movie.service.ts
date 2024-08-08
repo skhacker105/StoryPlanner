@@ -4,7 +4,7 @@ import { MemberService } from './member.service';
 import { IMovie, IMovieTimeLayer } from '../interfaces/timeline-movie';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Movie } from '../models/movie';
-import { ILayer, ILayerRepeat } from '../interfaces/movie-layer';
+import { ILayer } from '../interfaces/movie-layer';
 import { ServiceBase } from '../base/service-base';
 import { IMemberBookDictionary, IMemberOptionDictionary } from '../interfaces/member-dictionary';
 import { Member } from '../models/members';
@@ -16,6 +16,7 @@ import { IndexedDBManager } from '../storage/indexedDB.manager';
 import { Tables } from '../constants/constant';
 import { TimelineService } from './timeline.service';
 import { DisplayService } from './display.service';
+import { ILayerRepeat } from '../interfaces/movie-layer-repeat';
 
 @Injectable({
   providedIn: 'root'
