@@ -72,14 +72,14 @@ export class Movie implements IMovie {
         layer.animation = cloneDeep(newAnimation);
     }
 
-    updateLayer(time: number, newLayer: ILayer, holdProjectionUpdate: boolean = false): void {
-        const { movieTime, layerIndex, layer } = this.getTimelineLayerRef(time, newLayer.layerId);
+    updateLayer(time: number, updatedLayer: ILayer, holdProjectionUpdate: boolean = false): void {
+        const { movieTime, layerIndex, layer } = this.getTimelineLayerRef(time, updatedLayer.layerId);
         if (layerIndex === undefined || layerIndex === null || !layer || !movieTime) return;
 
         const prevStackPosition = layer.properties.stackPosition;
         // const prevIsInView = timeLine.layers[layerIndex].properties.isInView;
-        movieTime.layers[layerIndex] = { ...layer, ...newLayer };
-        movieTime.layers[layerIndex].properties.stackPosition = holdProjectionUpdate ? prevStackPosition : newLayer.properties.stackPosition;
+        movieTime.layers[layerIndex] = { ...layer, ...updatedLayer };
+        movieTime.layers[layerIndex].properties.stackPosition = holdProjectionUpdate ? prevStackPosition : updatedLayer.properties.stackPosition;
     }
 
     moveLayers(time: number, previousIndex: number, newIndex: number): void {
@@ -125,9 +125,9 @@ export class Movie implements IMovie {
         } else {
             const copyLayer = cloneDeep(layer);
             copyLayer.properties.endTime = time + +((media.endTime - media.startTime) / timeMultiplier).toFixed(2);
+            copyLayer.media = media;
             this.updateAllProjectedLayers(time, layer, copyLayer);
-            layer.media = media;
-            layer.properties.endTime = copyLayer.properties.endTime;
+            this.timeline[time].layers[layerIndex] = copyLayer;
         }
     }
 
@@ -150,12 +150,12 @@ export class Movie implements IMovie {
 
             // If interval is changed then delete all and recreate new layers
             if (oldRepeating.interval !== newRepeating.interval) {
-
                 this.deleteAllRepeatingLayers(movieTime, layer, oldRepeating);
                 this.addAllRepeatingLayers(movieTime.time, layer, newRepeating);
-            } else {
 
-                this.updateAllRepeatingLayers(movieTime, layer, oldRepeating, newRepeating)
+            } else {
+                this.updateAllRepeatingLayers(movieTime, layer, oldRepeating, newRepeating);
+
             }
         }
     }
@@ -202,8 +202,11 @@ export class Movie implements IMovie {
 
 
             // if layer is present in newTime and both old and new end times are in range then update
-            else if (existRepeatedLayerInTimeLine && oldInRange && newInRange)
-                this.updateLayer(newTime, existRepeatedLayerInTimeLine, true);
+            else if (existRepeatedLayerInTimeLine && oldInRange && newInRange) {
+                const updatedLayer = cloneDeep(layer);
+                updatedLayer.repeating = newRepeating;
+                this.updateLayer(newTime, updatedLayer, true);
+            }
         }
     }
 

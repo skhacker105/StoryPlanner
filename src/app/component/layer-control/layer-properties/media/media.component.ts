@@ -38,6 +38,7 @@ export class MediaComponent extends ComponentBase implements OnInit, OnDestroy {
     }
     if (this.media) {
       this.mediaForm.patchValue(this.media);
+      if (this.isProjected) this.mediaForm.disable();
     } else {
       this.mediaForm.disable();
     }

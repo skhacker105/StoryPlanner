@@ -51,9 +51,11 @@ export class MovieService extends ServiceBase implements OnDestroy {
           this.saveMovieToStorage(movie);
           this.timelineService.setMaxPlayTime(this.maxPlayTime);
           if (this.selectedLayer) {
-            const selectedLayer = this.selectedLayer;
+            const selectedLayerId = this.selectedLayer.layerId;
             this.resetSelectedLayer();
-            this.selectLayer(this.timelineService.currentTime.value, selectedLayer)
+            const selectedLayer = this.movie?.timeline[this.timelineService.currentTime.value].layers.find(l => l.layerId === selectedLayerId)
+            if (selectedLayer)
+              this.selectLayer(this.timelineService.currentTime.value, selectedLayer)
           }
         }
       });
