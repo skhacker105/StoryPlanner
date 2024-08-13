@@ -6,7 +6,7 @@
         }
 
         @case ('video') {
-            <app-video-icon [video]="file" (onIconClick)="onIconClick.emit()"></app-video-icon>
+            <app-video-icon [video]="file" [thumbnail]="thumbnail" (onIconClick)="onIconClick.emit()"></app-video-icon>
         }
 
         @case ('audio') {

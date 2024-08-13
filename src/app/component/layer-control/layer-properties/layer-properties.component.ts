@@ -7,6 +7,8 @@ import { ILayerProperties } from '../../../interfaces/movie-properties';
 import { ILayerAnimation } from '../../../interfaces/movie-animations';
 import { OptionType } from '../../../types/member-option.type';
 import { ILayerRepeat } from '../../../interfaces/movie-layer-repeat';
+import { IlayerMedia } from '../../../interfaces/movie-media';
+import { MovieService } from '../../../services/movie.service';
 
 @Component({
   selector: 'app-layer-properties',
@@ -25,13 +27,14 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   @Output() onStyleSave = new EventEmitter<ILayerProperties>();
   @Output() onAnimationSave = new EventEmitter<ILayerAnimation | undefined>();
   @Output() onRepeatSave = new EventEmitter<ILayerRepeat | undefined>();
-  
+  @Output() onMediaSave = new EventEmitter<IlayerMedia | undefined>();
+
   styleIsVisible = false;
   animationIsVisible = false;
   repeatIsVisible = false;
   mediaIsVisible = false;
 
-  constructor() {
+  constructor(public movieService: MovieService) {
     super();
   }
 
@@ -40,14 +43,14 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
       this.activatePropertyTabFor(this.layerOption.type);
     }
   }
-  
+
   ngOnDestroy(): void {
     this.onDestroy();
   }
 
   activatePropertyTabFor(optionType: OptionType): void {
     this.disableAllPropertyTabs();
-    switch(optionType) {
+    switch (optionType) {
       case 'image': this.enableImagePropertyTabs(); break;
       case 'audio': this.enableAudioPropertyTabs(); break;
       case 'video': this.enableVideoPropertyTabs(); break;

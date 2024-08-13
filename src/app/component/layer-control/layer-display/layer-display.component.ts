@@ -15,6 +15,7 @@ export class LayerDisplayComponent extends ComponentBase implements OnInit, OnDe
   @Input() isSelected = false;
   @Input() layerMember?: Member;
   @Input() layerOption?: IMemberOption;
+  @Input() thumbnail: string | undefined;
   @Output() onEdit = new EventEmitter<ILayer>();
   @Output() onDelete = new EventEmitter<ILayer>();
   @Output() onCLick = new EventEmitter<ILayer>();

@@ -13,6 +13,7 @@ import { ComponentBase } from './base/component-base';
 import { FileService } from './services/file.service';
 import { DisplayService } from './services/display.service';
 import { ILayerRepeat } from './interfaces/movie-layer-repeat';
+import { IlayerMedia } from './interfaces/movie-media';
 
 @Component({
   selector: 'app-root',
@@ -72,11 +73,15 @@ export class AppComponent extends ComponentBase implements OnInit, OnDestroy {
   }
 
   addOptionToMovieTimeLine(member: Member, option: IMemberOption): void {
-    this.movieService.addMemberOptionToTime(this.timelineService.currentTime.value, member.id, option.optionId);
+    this.movieService.addMemberOptionToTime(this.timelineService.currentTime.value, member, option);
   }
 
   saveRepeat(layer: ILayer, repeating: ILayerRepeat | undefined): void {
     this.movieService.updateRepeat(this.timelineService.currentTime.value, layer.layerId, repeating)
+  }
+
+  saveMedia(layer: ILayer, media: IlayerMedia | undefined): void {
+    this.movieService.updateMedia(this.timelineService.currentTime.value, layer.layerId, media )
   }
 
   handleIconClick(index: number): void {

@@ -7,7 +7,6 @@ import { ILayer } from '../../interfaces/movie-layer';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../_shared/confirmation-dialog/confirmation-dialog.component';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { MemberService } from '../../services/member.service';
 import { IMemberOptionItem } from '../../interfaces/member';
 import { DisplayService } from '../../services/display.service';
 
@@ -25,7 +24,7 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
 
   currentTime: number = 0;
 
-  constructor(public movieService: MovieService, public timelineService: TimelineService, public memberService: MemberService) {
+  constructor(public movieService: MovieService, public timelineService: TimelineService) {
     super();
   }
 
@@ -90,7 +89,8 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
             found = true;
             arr.push({
               file: memberOption.file,
-              type: memberOption.type
+              type: memberOption.type,
+              length: memberOption.length
             });
           }
         }

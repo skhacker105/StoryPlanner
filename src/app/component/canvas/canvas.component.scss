@@ -4,6 +4,18 @@
     overflow: hidden;
     position: relative;
 
+    &:after {
+        content: "No Image added to this time yet.";
+        position: absolute;
+        margin: auto;
+        left: 50%;
+        top: 50%;
+        font-size: 57px;
+        color: gray;
+        transform: translate(-50%, -50%);
+        font-style: italic;
+    }
+
     .progress-spinner-container {
         position: absolute;
         z-index: 21000000;
@@ -27,7 +39,7 @@
     .selected-layer {
         border: solid 5px !important;
         box-shadow: 0px 2px 100px 0px #18a6cabf inset;
-    } 
+    }
 
     .image-hidden {
         opacity: 0 !important;

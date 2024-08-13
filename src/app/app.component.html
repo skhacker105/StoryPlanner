@@ -76,7 +76,8 @@
       (onCancel)="movieService.resetSelectedLayer()"
       (onStyleSave)="saveProperty(movieService.selectedLayer, $event)"
       (onAnimationSave)="saveAnimation(movieService.selectedLayer, $event)"
-      (onRepeatSave)="saveRepeat(movieService.selectedLayer, $event)">
+      (onRepeatSave)="saveRepeat(movieService.selectedLayer, $event)"
+      (onMediaSave)="saveMedia(movieService.selectedLayer, $event)">
       </app-layer-properties>
   </div>
 

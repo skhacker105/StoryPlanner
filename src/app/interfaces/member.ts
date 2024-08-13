@@ -15,4 +15,6 @@ export interface IMemberOption extends IMemberOptionItem {
 export interface IMemberOptionItem {
     file: string;
     type: OptionType;
+    length: number;
+    thumbnail?: string;
 }

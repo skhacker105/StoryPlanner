@@ -1,23 +1,26 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IMember, IMemberOption } from '../../../interfaces/member';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FileControl } from '../../../types/picture.type';
 import { ConfirmationDialogComponent } from '../../_shared/confirmation-dialog/confirmation-dialog.component';
-import { take } from 'rxjs';
+import { take, takeUntil } from 'rxjs';
 import { OptionType } from '../../../types/member-option.type';
 import { DefaultOptionType } from '../../../constants/constant';
+import { ComponentBase } from '../../../base/component-base';
+import { UtilService } from '../../../services/util.service';
 
 @Component({
   selector: 'app-add-edit-member',
   templateUrl: './add-edit-member.component.html',
   styleUrl: './add-edit-member.component.scss'
 })
-export class AddEditMemberComponent implements OnInit {
+export class AddEditMemberComponent extends ComponentBase implements OnInit, OnDestroy {
 
   readonly dialogRef = inject(MatDialogRef<AddEditMemberComponent>);
   readonly data = inject<IMember | undefined>(MAT_DIALOG_DATA);
   readonly dialog = inject(MatDialog);
+  readonly utilService = inject(UtilService);
 
   memberForm = new FormGroup({
     id: new FormControl<string>(''),
@@ -42,6 +45,10 @@ export class AddEditMemberComponent implements OnInit {
     return this.memberForm.controls['options'] as FormArray<any>;
   }
 
+  constructor() {
+    super();
+  }
+
   ngOnInit(): void {
     if (this.data) {
       this.memberForm.patchValue(this.data);
@@ -58,6 +65,10 @@ export class AddEditMemberComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.onDestroy();
+  }
+
   getFileControl(index: number): FormControl<FileControl> {
     return this.optionsFormArray.controls[index].get('file') as FormControl<FileControl>;
   }
@@ -67,12 +78,34 @@ export class AddEditMemberComponent implements OnInit {
   }
 
   createNewOptionForm(value?: IMemberOption, optionType?: OptionType): FormGroup {
-    return new FormGroup({
+    const optionFormGroup = new FormGroup({
       optionId: new FormControl<string>(value ? value.optionId : ''),
-      name: new FormControl<string>(value ? value.name : '', { validators: Validators.required }),
-      file: new FormControl<FileControl>(value ? value.file : '', { validators: Validators.required }),
-      type: new FormControl<OptionType>(value && value.type ? value.type : optionType ?? DefaultOptionType, { validators: Validators.required })
+      name: new FormControl<string>(value ? value.name : '', [Validators.required]),
+      file: new FormControl<FileControl>(value ? value.file : '', [Validators.required]),
+      type: new FormControl<OptionType>(value && value.type ? value.type : optionType ?? DefaultOptionType, [Validators.required]),
+      length: new FormControl<number>(value && value.length ? value.length : -1),
+      thumbnail: new FormControl<string>(value && value.thumbnail ? value.thumbnail : '')
     });
+
+    // Subscribe to file changes and get media length and video thumbnail
+    optionFormGroup.controls['file'].valueChanges
+    .pipe(takeUntil(this.isComponentActive))
+      .subscribe({
+        next: async (file) => {
+          if (!file) return;
+
+          // Get Media Length
+          const len = await this.utilService.getMediaLength(file, optionType ?? DefaultOptionType)
+          optionFormGroup.controls['length'].setValue(len);
+
+          //Get Video thumbnail
+          if (optionType === 'video') {
+            const thumbnail = await this.utilService.getVideoThumbnail(file);
+            optionFormGroup.controls['thumbnail'].setValue(thumbnail);
+          }
+        }
+      });
+    return optionFormGroup;
   }
 
   addNewOption(optionType: OptionType): void {

@@ -1,1 +1,65 @@
-<p>media works!</p>
+<!-- @if (media) { -->
+    <div class="media-container">
+
+        <form [formGroup]="mediaForm" (ngSubmit)="submitForm()">
+
+            <div class="fields-container">
+
+                <!-- Auto Save, Is Muted -->
+                <div class="property-box">
+
+                    <!-- Auto Save -->
+                    <app-form-field label="Auto Save" class="property-box-half">
+                        <ng-container formFieldControl>
+                            <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control"
+                            [(ngModel)]="autoSave"
+                            [disabled]="mediaForm.disabled">
+                        </ng-container>
+                    </app-form-field>
+                    
+                    <!-- Is Muted -->
+                    <app-form-field label="Is Muted" class="property-box-half">
+                        <ng-container formFieldControl>
+                            <input type="checkbox" formControlName="isMuted">
+                        </ng-container>
+                    </app-form-field>
+
+                </div>
+
+                <!-- Form Controls -->
+                <div class="property-box">
+
+                    
+                    <app-form-field label="Start Time" class="property-box-half">
+                        <ng-container formFieldControl>
+                            <input type="number" formControlName="startTime">
+                        </ng-container>
+                    </app-form-field>
+
+                    <app-form-field label="End Time" class="property-box-half">
+                        <ng-container formFieldControl>
+                            <input type="number" formControlName="endTime">
+                        </ng-container>
+                    </app-form-field>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="action">
+                <button mat-raised-button type="button" (click)="onCancel.emit()">
+                    Cancel
+                </button>
+                &nbsp;
+                <button mat-raised-button color="primary" [disabled]="!mediaForm.dirty || !mediaForm.valid">
+                    Save
+                </button>
+            </div>
+
+            
+        </form>
+    </div>
+
+<!-- } -->

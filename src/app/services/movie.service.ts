@@ -8,7 +8,7 @@ import { ILayer } from '../interfaces/movie-layer';
 import { ServiceBase } from '../base/service-base';
 import { IMemberBookDictionary, IMemberOptionDictionary } from '../interfaces/member-dictionary';
 import { Member } from '../models/members';
-import { IMemberOption } from '../interfaces/member';
+import { IMember, IMemberOption } from '../interfaces/member';
 import { CreateLayerWithDefaultProperties } from '../models/layer';
 import { ILayerProperties } from '../interfaces/movie-properties';
 import { ILayerAnimation } from '../interfaces/movie-animations';
@@ -17,6 +17,7 @@ import { Tables } from '../constants/constant';
 import { TimelineService } from './timeline.service';
 import { DisplayService } from './display.service';
 import { ILayerRepeat } from '../interfaces/movie-layer-repeat';
+import { IlayerMedia } from '../interfaces/movie-media';
 
 @Injectable({
   providedIn: 'root'
@@ -174,14 +175,14 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.movieStorageManager.update(movie);
   }
 
-  addMemberOptionToTime(time: number, id: string, memberOptionId: string): void {
+  addMemberOptionToTime(time: number, member: IMember, memberOption: IMemberOption): void {
     if (!this.movie) {
       console.log('No movie to add layer');
       return;
     }
-
-    const newLayer: ILayer = CreateLayerWithDefaultProperties(this.utilService.generateNewId(), time, id, memberOptionId);
-    this.movie.addMemberOptionToTime(time, id, memberOptionId, newLayer);
+    
+    const newLayer: ILayer = CreateLayerWithDefaultProperties(this.utilService.generateNewId(), time, member.id, memberOption, this.timelineService.timeMultiplier);
+    this.movie.addNewLayer(time, newLayer);
     this.movieUpdated.next(this.movie);
   }
 
@@ -202,7 +203,14 @@ export class MovieService extends ServiceBase implements OnDestroy {
   updateRepeat(time: number, layerId: string, newRepeating: ILayerRepeat | undefined): void {
     if (!this.movie) return;
 
-    this.movie.updateRepeat(time, layerId, newRepeating)
+    this.movie.updateRepeat(time, layerId, newRepeating);
+    this.movieUpdated.next(this.movie);
+  }
+
+  updateMedia(time: number, layerId: string, media: IlayerMedia | undefined): void {
+    if (!this.movie) return;
+
+    this.movie.updateMedia(time, layerId, media, this.timelineService.timeMultiplier);
     this.movieUpdated.next(this.movie);
   }
 
@@ -241,7 +249,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
         this.selectedLayer = layer;
         const dict = this.dictionaryMemberBook[layer.memberId];
         this.selectedLayerMember = dict?.member;
-        this.selectedLayerOption = dict?.options[layer.memberOptionId]
+        this.selectedLayerOption = dict?.options[layer.memberOptionId];
         this.selectedLayerTimeUnits = this.findTimeUnitsByLayer(layer);
       }, 1);
 

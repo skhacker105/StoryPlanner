@@ -19,7 +19,7 @@
                     }
                 </mat-form-field>
 
-                <app-file-upload [pictureFormControl]="imageCtrl" optionType="image"></app-file-upload>
+                <app-file-upload [fileFormControl]="imageCtrl" optionType="image"></app-file-upload>
             </div>
 
             <!-- Options for Layers -->
@@ -54,7 +54,7 @@
                                 </mat-form-field>
 
                                 
-                                <app-file-upload [pictureFormControl]="getFileControl(idx)" [optionType]="getTypeControl(idx).value">
+                                <app-file-upload [fileFormControl]="getFileControl(idx)" [optionType]="getTypeControl(idx).value" [thumbnail]="optionControl.value.thumbnail">
                                 </app-file-upload>
 
                                 <button mat-icon-button type="button" (click)="optionControl.value.optionId ? handleRemoveOptionClick(idx) : removeOption(idx)">

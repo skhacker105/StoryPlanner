@@ -5,7 +5,12 @@
     }">
     <div class="image-display">
         @if (!isBroken) {
-            <app-option-icon [file]="layerOption?.file" [optionType]="layerOption?.type" (onIconClick)="handleIconClick()"></app-option-icon>
+            <app-option-icon
+                [file]="layerOption?.file"
+                [optionType]="layerOption?.type"
+                [thumbnail]="thumbnail ? thumbnail : ''"
+                (onIconClick)="handleIconClick()">
+            </app-option-icon>
         } @else {
             <mat-icon color="warn">error</mat-icon>
         }

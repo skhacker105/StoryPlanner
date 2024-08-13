@@ -8,6 +8,7 @@ import { ILayerAnimation } from "../interfaces/movie-animations";
 import { UtilService } from "../services/util.service";
 import { CreateRepeatedLayer } from "./layer";
 import { ILayerRepeat } from "../interfaces/movie-layer-repeat";
+import { IlayerMedia } from "../interfaces/movie-media";
 
 export class Movie implements IMovie {
     id: string;
@@ -24,27 +25,17 @@ export class Movie implements IMovie {
         this.memberBook = movie.memberBook;
     }
 
-    addMemberOptionToTime(time: number, memberId: string, memberOptionId: string, newLayer: ILayer, isProjected: boolean = false, projectionStartTime = 0): void {
+    addNewLayer(time: number, newLayer: ILayer): void {
         this.checkAndCreateTimeline(time);
 
-        // update existing layers stack position to +1
-        this.timeline[time].layers.forEach(layer => layer.properties.stackPosition = layer.properties.stackPosition + 1);
-        newLayer.properties.stackPosition = 1;
-        if (!isProjected) this.timeline[time].layers.push(newLayer);
-        else {
-            const newLayerCopy = cloneDeep(newLayer);
-            newLayerCopy.isProjected = true;
-            newLayerCopy.projectionStartTime = projectionStartTime;
-            this.timeline[time].layers.push(newLayerCopy);
-        }
+        this.timeline[time].layers.push(newLayer);
+        this.resetStackPositionNumbers(time);
 
-        if (!isProjected) {
-            this.addMemberProjetedOption(time, memberId, memberOptionId, newLayer);
-        }
+        if (!newLayer.isProjected)
+            this.addAllProjectedLayers(time, newLayer);
 
-        if (newLayer.repeating && newLayer.repeating.repeatingStartTime === time) {
-            this.addNewRepeating(time, newLayer, newLayer.repeating);
-        }
+        if (newLayer.repeating && newLayer.repeating.repeatingStartTime === time)
+            this.addAllRepeatingLayers(time, newLayer, newLayer.repeating);
     }
 
     removeLayer(time: number, layerId: string): void {
@@ -55,16 +46,13 @@ export class Movie implements IMovie {
         const deletedLayer = movieTime.layers.splice(layerIndex, 1);
         if (deletedLayer && deletedLayer.length > 0) {
             if (!deletedLayer[0].isProjected)
-                this.deleteProjectedLayer(time, deletedLayer[0]);
+                this.deleteAllProjectedLayer(time, deletedLayer[0]);
             if (deletedLayer[0].repeating && deletedLayer[0].repeating.repeatingStartTime === time)
-                this.deleteOldRepeating(movieTime, deletedLayer[0], deletedLayer[0].repeating);
+                this.deleteAllRepeatingLayers(movieTime, deletedLayer[0], deletedLayer[0].repeating);
         }
 
         // update stack positions of layers above deleted layer
-        movieTime.layers.forEach(layer => {
-            if (layer.properties.stackPosition > deletedLayer[0].properties.stackPosition)
-                layer.properties.stackPosition -= 1;
-        });
+        this.resetStackPositionNumbers(time);
     }
 
     updateProperties(time: number, layerId: string, newProperties: ILayerProperties): void {
@@ -73,7 +61,7 @@ export class Movie implements IMovie {
 
         const updatedProperties = Object.assign({}, layer.properties, newProperties);
         const newLayer = { ...layer, properties: updatedProperties };
-        if (!newLayer.isProjected) this.updateProjectedLayers(time, layer, newLayer);
+        if (!newLayer.isProjected) this.updateAllProjectedLayers(time, layer, newLayer);
         movieTime.layers[layerIndex] = newLayer;
     }
 
@@ -108,7 +96,7 @@ export class Movie implements IMovie {
         const { movieTime, layerIndex, layer } = this.getTimelineLayerRef(time, layerId);
         if (layerIndex === undefined || layerIndex === null || !layer || !movieTime) return;
 
-        this.updateRepeatedLayers(movieTime, layer, newRepeating);
+        this.updateLayerRepeatProperty(movieTime, layer, newRepeating);
         movieTime.layers[layerIndex].repeating = newRepeating;
     }
 
@@ -124,19 +112,38 @@ export class Movie implements IMovie {
         if (layer.repeating) layer.repeating.repeatingStartTime = newTime;
 
         // Create new layer at newTime
-        this.addMemberOptionToTime(newTime, layer.memberId, layer.memberOptionId, layer);
+        this.addNewLayer(newTime, layer);
 
     }
 
+    updateMedia(time: number, layerId: string, media: IlayerMedia | undefined, timeMultiplier: number): void {
+        const { movieTime, layerIndex, layer } = this.getTimelineLayerRef(time, layerId);
+        if (layerIndex === undefined || layerIndex === null || !layer || !movieTime) return;
+
+        if (!media) {
+            layer.media = undefined;
+        } else {
+            const copyLayer = cloneDeep(layer);
+            copyLayer.properties.endTime = time + +((media.endTime - media.startTime) / timeMultiplier).toFixed(2);
+            this.updateAllProjectedLayers(time, layer, copyLayer);
+            layer.media = media;
+            layer.properties.endTime = copyLayer.properties.endTime;
+        }
+    }
+
     // PRIVATE Members
-    private updateRepeatedLayers(movieTime: IMovieTime, layer: ILayer, newRepeating: ILayerRepeat | undefined): void {
-        const oldRepeating = layer.repeating
+    private resetStackPositionNumbers(time: number): void {
+        this.timeline[time].layers.forEach((layer, index) => layer.properties.stackPosition = index + 1);
+    }
+
+    private updateLayerRepeatProperty(movieTime: IMovieTime, layer: ILayer, newRepeating: ILayerRepeat | undefined): void {
+        const oldRepeating = layer.repeating;
 
         // If new repeating is undefined and old is not undefined then delete all
-        if (oldRepeating && !newRepeating) this.deleteOldRepeating(movieTime, layer, oldRepeating);
+        if (oldRepeating && !newRepeating) this.deleteAllRepeatingLayers(movieTime, layer, oldRepeating);
 
         // If old repeat is undefined and new repeat is defined then add all new repeated layers
-        else if (!oldRepeating && newRepeating) this.addNewRepeating(movieTime.time, layer, newRepeating);
+        else if (!oldRepeating && newRepeating) this.addAllRepeatingLayers(movieTime.time, layer, newRepeating);
 
         // If both are set then update
         else if (oldRepeating && newRepeating) {
@@ -144,16 +151,16 @@ export class Movie implements IMovie {
             // If interval is changed then delete all and recreate new layers
             if (oldRepeating.interval !== newRepeating.interval) {
 
-                this.deleteOldRepeating(movieTime, layer, oldRepeating);
-                this.addNewRepeating(movieTime.time, layer, newRepeating);
+                this.deleteAllRepeatingLayers(movieTime, layer, oldRepeating);
+                this.addAllRepeatingLayers(movieTime.time, layer, newRepeating);
             } else {
 
-                this.updateExistingRepeating(movieTime, layer, oldRepeating, newRepeating)
+                this.updateAllRepeatingLayers(movieTime, layer, oldRepeating, newRepeating)
             }
         }
     }
 
-    private deleteOldRepeating(movieTime: IMovieTime, layer: ILayer, oldRepeating: ILayerRepeat): void {
+    private deleteAllRepeatingLayers(movieTime: IMovieTime, layer: ILayer, oldRepeating: ILayerRepeat): void {
         const arrRepeatedTime = (new Array(oldRepeating.count)).fill(0).map((val, index) => movieTime.time + (oldRepeating.interval * (index + 1)));
         arrRepeatedTime.forEach(time => {
             const movieTime = this.timeline[time];
@@ -164,19 +171,21 @@ export class Movie implements IMovie {
         });
     }
 
-    private addNewRepeating(startTime: number, layer: ILayer, newRepeating: ILayerRepeat): void {
+    private addAllRepeatingLayers(startTime: number, layer: ILayer, newRepeating: ILayerRepeat): void {
         const arrRepeatedTime = (new Array(newRepeating.count)).fill(0).map((val, index) => startTime + (newRepeating.interval * (index + 1)));
         arrRepeatedTime.forEach(time => {
             const newLayer: ILayer = CreateRepeatedLayer(this.utilService.generateNewId(), layer, newRepeating, time, startTime);
-            this.addMemberOptionToTime(time, layer.memberId, layer.memberOptionId, newLayer);
+            this.addNewLayer(time, newLayer);
         });
     }
 
-    private updateExistingRepeating(movieTime: IMovieTime, layer: ILayer, oldRepeating: ILayerRepeat, newRepeating: ILayerRepeat): void {
+    private updateAllRepeatingLayers(movieTime: IMovieTime, layer: ILayer, oldRepeating: ILayerRepeat, newRepeating: ILayerRepeat): void {
         const maxCount = Math.max(oldRepeating.count, newRepeating.count);
 
         for (let i = 1; i <= maxCount; i++) {
             const newTime = movieTime.time + (oldRepeating.interval * i);
+
+            // Checking existence
             const oldInRange = oldRepeating.count >= i;
             const newInRange = newRepeating.count >= i;
             const existRepeatedLayerInTimeLine = this.timeline[newTime]?.layers?.find(l => l.repeating && l.repeating.layerId === layer.layerId);
@@ -184,7 +193,7 @@ export class Movie implements IMovie {
             // if layer do not exists in newTime and is in new range then add it
             if (!existRepeatedLayerInTimeLine && newInRange) {
                 const newLayer: ILayer = CreateRepeatedLayer(this.utilService.generateNewId(), layer, newRepeating, newTime, movieTime.time);
-                this.addMemberOptionToTime(newTime, newLayer.memberId, newLayer.memberOptionId, newLayer);
+                this.addNewLayer(newTime, newLayer);
             }
 
             // if layer is present in newTime and not present in range of endTime of newLayer then delete
@@ -207,27 +216,35 @@ export class Movie implements IMovie {
         }
     }
 
-    private addMemberProjetedOption(time: number, memberId: string, memberOptionId: string, newLayer: ILayer): void {
+    private addAllProjectedLayers(time: number, newLayer: ILayer): void {
         let newTime = time + 1;
         while (newTime <= newLayer.properties.endTime) {
-            this.addMemberOptionToTime(newTime, memberId, memberOptionId, newLayer, true, time);
+            const copyLayer = cloneDeep(newLayer);
+            copyLayer.isProjected = true;
+            copyLayer.projectionStartTime = time;
+            this.addNewLayer(newTime, copyLayer);
             newTime++;
         }
     }
 
-    private updateProjectedLayers(time: number, oldLayer: ILayer, newLayer: ILayer): void {
+    private updateAllProjectedLayers(time: number, oldLayer: ILayer, newLayer: ILayer): void {
         const maxTime = Math.max(oldLayer.properties.endTime, newLayer.properties.endTime);
-        const updatedNewLayer = cloneDeep(newLayer);
-        updatedNewLayer.isProjected = true;
         let newTime = time + 1;
         while (newTime <= maxTime) {
+
+            // Cloning layer
+            const updatedNewLayer = cloneDeep(newLayer);
+            updatedNewLayer.isProjected = true;
+            updatedNewLayer.projectionStartTime = time;
+
+            // Check existence
             const oldInRange = oldLayer.properties.endTime >= newTime;
             const newInRange = updatedNewLayer.properties.endTime >= newTime;
             const existProjectedLayerInTimeline = !!this.timeline[newTime]?.layers?.some(l => l.layerId === updatedNewLayer.layerId);
 
             // if layer do not exists in newTime and is in new range then add it
             if (!existProjectedLayerInTimeline && newInRange)
-                this.addMemberOptionToTime(newTime, updatedNewLayer.memberId, updatedNewLayer.memberOptionId, updatedNewLayer, true, time);
+                this.addNewLayer(newTime, updatedNewLayer);
 
             // if layer is present in newTime and both old and new end times are in range then update
             else if (existProjectedLayerInTimeline && oldInRange && newInRange)
@@ -241,7 +258,7 @@ export class Movie implements IMovie {
         }
     }
 
-    private deleteProjectedLayer(time: number, deletedLayer: ILayer): void {
+    private deleteAllProjectedLayer(time: number, deletedLayer: ILayer): void {
         let newTime = time + 1;
         while (newTime <= deletedLayer.properties.endTime) {
             this.removeLayer(newTime, deletedLayer.layerId);

@@ -10,5 +10,6 @@ import { OptionType } from '../../../types/member-option.type';
 export class OptionIconComponent {
   @Input() file?: FileControl;
   @Input() optionType?: OptionType;
+  @Input() thumbnail: string = '';
   @Output() onIconClick = new EventEmitter<void>();
 }

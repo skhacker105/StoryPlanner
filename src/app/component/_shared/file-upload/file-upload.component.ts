@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FileControl } from '../../../types/picture.type';
 import { OptionType } from '../../../types/member-option.type';
 import { DefaultOptionType, FileTypes } from '../../../constants/constant';
+import { UtilService } from '../../../services/util.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -10,11 +11,15 @@ import { DefaultOptionType, FileTypes } from '../../../constants/constant';
   styleUrl: './file-upload.component.scss'
 })
 export class FileUploadComponent implements OnChanges {
+
+  @Input() thumbnail: string = '';
   @Input() optionType: OptionType = DefaultOptionType;
-  @Input() pictureFormControl?: FormControl<FileControl>;
+  @Input() fileFormControl?: FormControl<FileControl>;
+
+  utilService = inject(UtilService);
 
   acceptFileTypes: string = '';
-  pictureControl = new FormControl<any>('');
+  fileControl = new FormControl<any>('');
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['optionType']) {
@@ -22,7 +27,7 @@ export class FileUploadComponent implements OnChanges {
     }
   }
 
-  updateAcceptFileValue(type: OptionType): void {
+  updateAcceptFileValue(type: OptionType) {
     switch (type) {
 
       case 'image':
@@ -39,21 +44,21 @@ export class FileUploadComponent implements OnChanges {
     }
   }
 
-  handlePictureUpload(event: any): void {
+  handleFileUpload(event: any): void {
     const file: File = event.target.files[0];
 
     if (file) {
-      this.resetPictureControl();
+      this.resetFileControl();
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.pictureFormControl?.setValue(reader.result);
+      reader.onload = async () => {
+        this.fileFormControl?.setValue(reader.result);
       };
     }
   }
 
-  resetPictureControl(): void {
-    this.pictureControl.setValue(null);
-    this.pictureFormControl?.setValue(null);
+  resetFileControl(): void {
+    this.fileControl.setValue(null);
+    this.fileFormControl?.setValue(null);
   }
 }

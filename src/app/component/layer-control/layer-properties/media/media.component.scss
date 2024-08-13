@@ -1,0 +1,75 @@
+@import '../../../../styles/style-constants.scss';
+
+.media-container {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    padding: 10px;
+
+    form {
+        width: 100%;
+        height: calc(100% - 10px);
+        display: flex;
+        flex-direction: column;
+
+        .fields-container {
+            flex: 1 auto;
+
+            .property-header-box {
+                font-size: $form-control-header;
+                padding-top: 15px;
+                letter-spacing: 1px;
+                color: #0207e9;
+                line-height: 10px;
+            }
+    
+            .property-box {
+                display: flex;
+    
+                .property-box-by-3 {
+                    width: 33%;
+                }
+    
+                .property-box-half {
+                    width: 50%;
+                }
+    
+                .property-item-full {
+                    width: calc(100% - 20px);
+                }
+    
+                .property-item-100 {
+                    width: 100%;
+                }
+
+                .property-mini-half {
+                    width: 50px;
+                }
+            }
+
+            .property-group-box {
+                display: flex;
+
+                .group-property {
+                    display: flex;
+                    flex-direction: column;
+
+                    &.group-by-2 {
+                        width: 50%;
+                    }
+    
+                    &.group-by-3 {
+                        width: 30%;
+                    }
+
+                    .property-box {
+                        flex-direction: column;
+                    }
+                }
+            }
+        }
+
+        .action {
+            text-align: end;
+        }
+    }
+}

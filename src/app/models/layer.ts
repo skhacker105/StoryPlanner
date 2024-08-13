@@ -2,32 +2,46 @@ import { cloneDeep } from "lodash";
 import { ILayer } from "../interfaces/movie-layer";
 import { ILayerProperties } from "../interfaces/movie-properties";
 import { ILayerRepeat } from "../interfaces/movie-layer-repeat";
+import { IMemberOption } from "../interfaces/member";
 
-export function CreateLayerWithDefaultProperties(layerId: string, time: number, memberId: string, memberOptionId: string): ILayer {
+export function CreateLayerWithDefaultProperties(
+  layerId: string,
+  time: number,
+  memberId: string,
+  memberOption: IMemberOption,
+  timeMultiplier: number,
+  isProjected?: boolean,
+  projectionStartTime?: number): ILayer {
+
   return {
     layerId,
     memberId,
-    memberOptionId,
-    isProjected: false,
-    projectionStartTime: time,
+    memberOptionId: memberOption.optionId,
+    isProjected: isProjected ?? false,
+    projectionStartTime: projectionStartTime ?? time,
+
     animations: [],
     repeating: undefined,
+    animation: undefined,
+    media: memberOption.type === 'audio' || memberOption.type === 'video'
+    ? { isMuted: false, startTime: 0, endTime: memberOption.length }
+    : undefined,
 
-    properties: GetDefaultProperties(time),
+    properties: memberOption.type === 'audio' || memberOption.type === 'video'
+      ? GetDefaultProperties(time + (memberOption.length / timeMultiplier))
+      : GetDefaultProperties(time)
 
-    // Animation
-    animation: undefined
   } as ILayer
 }
 
-export function GetDefaultProperties(time: number): ILayerProperties {
+export function GetDefaultProperties(endTime: number): ILayerProperties {
   return {
     // Generic
     stackPosition: 0,
     isInView: true,
     isFullScreen: false,
     opacity: 1.0,
-    endTime: time,
+    endTime,
 
     // Dimension
     relativeWidth: 100,

@@ -1,5 +1,6 @@
 import { ILayerAnimation } from "./movie-animations";
 import { ILayerRepeat } from "./movie-layer-repeat";
+import { IlayerMedia } from "./movie-media";
 import { ILayerProperties } from "./movie-properties";
 
 export interface ILayer {
@@ -12,6 +13,7 @@ export interface ILayer {
     properties: ILayerProperties
     animation?: ILayerAnimation;
     repeating?: ILayerRepeat;
+    media?: IlayerMedia;
     
     // Projection
     isProjected: boolean;

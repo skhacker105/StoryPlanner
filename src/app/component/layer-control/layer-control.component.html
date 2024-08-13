@@ -25,8 +25,9 @@
         
         @for (layer of movieService.movie.timeline[currentTime].layers; track layer; let index = $index;) {
             <app-layer-display cdkDrag [layer]="layer" [isSelected]="movieService.compareSelectedLayer(layer)"
-            [layerMember]="movieService.dictionaryMemberBook[layer.memberId]?.member" 
+            [layerMember]="movieService.dictionaryMemberBook[layer.memberId]?.member"
             [layerOption]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]"
+            [thumbnail]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.thumbnail"
             (onCLick)="handleLayerClick(layer)" (onDelete)="handleDeleteConfirmationPopup(layer)" (onIconCLick)="handleIconClick(index)"
             (onGoToProjectionStart)="gotoProjectionStart(layer)">
             </app-layer-display>
