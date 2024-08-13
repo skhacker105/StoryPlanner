@@ -34,10 +34,10 @@ export class StyleService {
 
     let r = '';
     if (properties.isFullScreen) {
-      r += 'widht: 100%; height: 100%; ';
+      r += 'widht: 100vw; height: 100vh; ';
     } else {
-      if (properties.relativeWidth) r += `width: ${properties.relativeWidth}%; `;
-      if (properties.relativeHeight) r += `height: ${properties.relativeHeight}%; `;
+      if (properties.relativeWidth) r += `width: ${properties.relativeWidth}vw; `;
+      if (properties.relativeHeight) r += `height: ${properties.relativeHeight}vh; `;
     }
     return r;
   }

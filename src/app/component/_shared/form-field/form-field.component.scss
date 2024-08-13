@@ -6,13 +6,22 @@
     display: flex;
     flex-direction: column;
 
-    .label {
+    .label-container {
         color: gray;
-        width: 100%;
+        width: 90%;
         white-space: nowrap;
         text-overflow: ellipsis;
         line-height: 10px;
         padding-top: 7px;
+        display: flex;
+
+        .label {
+            flex: 1 auto;
+        }
+
+        .label-info {
+            font-size: smaller;
+        }
     }
 
     .form-control {

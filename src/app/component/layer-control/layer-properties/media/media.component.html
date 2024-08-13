@@ -28,13 +28,13 @@
             <div class="property-box">
 
 
-                <app-form-field label="Start Time" class="property-box-half">
+                <app-form-field label="Start Time" class="property-box-half" info="Seconds" [shortInfoNeeded]="true">
                     <ng-container formFieldControl>
                         <input type="number" formControlName="startTime">
                     </ng-container>
                 </app-form-field>
 
-                <app-form-field label="End Time" class="property-box-half">
+                <app-form-field label="End Time" class="property-box-half" info="Seconds" [shortInfoNeeded]="true">
                     <ng-container formFieldControl>
                         <input type="number" formControlName="endTime">
                     </ng-container>

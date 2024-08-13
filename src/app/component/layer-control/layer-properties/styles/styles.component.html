@@ -37,13 +37,13 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="Relative Width">
+                        <app-form-field label="Relative Width" info="View Width" [shortInfoNeeded]="true">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="relativeWidth">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Relative Height">
+                        <app-form-field label="Relative Height" info="View Width" [shortInfoNeeded]="true">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="relativeHeight">
                             </ng-container>
@@ -60,13 +60,13 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="Relative Left">
+                        <app-form-field label="Relative Left" info="%">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="relativeLeft">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Relative Top">
+                        <app-form-field label="Relative Top" info="%">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="relativeTop">
                             </ng-container>
@@ -91,7 +91,7 @@
                 <input matSliderThumb [formControl]="propertyForm.controls['endTime']" [value]="propertyForm.controls['endTime'].value" #slider>
                 </mat-slider>
 
-                <app-form-field label=" ">
+                <app-form-field label=" " info="Unit Time" [shortInfoNeeded]="true">
                     <ng-container formFieldControl>
                         <input type="number" class="property-mini-half" formControlName="endTime" [value]="propertyForm.controls['endTime'].value">
                     </ng-container>
@@ -108,19 +108,19 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="X Axis">
+                        <app-form-field label="X Axis" info="Pixels" infoShortForm="px">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="translateX">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Y Axis">
+                        <app-form-field label="Y Axis" info="Pixels" infoShortForm="px">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="translateY">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Z Axis">
+                        <app-form-field label="Z Axis" info="Pixels" infoShortForm="px">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="translateZ">
                             </ng-container>
@@ -137,19 +137,19 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="X Axis">
+                        <app-form-field label="X Axis" info="Degrees" infoShortForm="deg">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="rotateX">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Y Axis">
+                        <app-form-field label="Y Axis" info="Degrees" infoShortForm="deg">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="rotateY">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Z Axis">
+                        <app-form-field label="Z Axis" info="Degrees" infoShortForm="deg">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="rotateZ">
                             </ng-container>
@@ -214,13 +214,13 @@
                     </div>
                     <div class="property-box">
 
-                        <app-form-field label="X Axis">
+                        <app-form-field label="X Axis" info="Degrees" infoShortForm="deg">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="skewX">
                             </ng-container>
                         </app-form-field>
 
-                        <app-form-field label="Y Axis">
+                        <app-form-field label="Y Axis" info="Degrees" infoShortForm="deg">
                             <ng-container formFieldControl>
                                 <input type="number" formControlName="skewY">
                             </ng-container>

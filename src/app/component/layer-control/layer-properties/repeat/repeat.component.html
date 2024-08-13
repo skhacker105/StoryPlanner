@@ -30,7 +30,7 @@
             <!-- Form Controls -->
             <div class="property-box">
 
-                <app-form-field label="Interval" class="property-box-half">
+                <app-form-field label="Interval" class="property-box-half" info="Unit Time" [shortInfoNeeded]="true">
                     <ng-container formFieldControl>
                         <input type="number" formControlName="interval">
                     </ng-container>
