@@ -1,4 +1,4 @@
-<mat-tab-group animationDuration="500ms" class="control-tab-group" *ngIf="layer">
+<mat-tab-group animationDuration="500ms" class="control-tab-group" *ngIf="layer" [(selectedIndex)]="selectedTabIndex">
 
         <!--  Styles-->
         @if (styleIsVisible) {

@@ -50,8 +50,11 @@ export class MovieService extends ServiceBase implements OnDestroy {
         next: movie => {
           this.saveMovieToStorage(movie);
           this.timelineService.setMaxPlayTime(this.maxPlayTime);
-          if (this.selectedLayer)
-            this.selectedLayerTimeUnits = this.findTimeUnitsByLayer(this.selectedLayer);
+          if (this.selectedLayer) {
+            const selectedLayer = this.selectedLayer;
+            this.resetSelectedLayer();
+            this.selectLayer(this.timelineService.currentTime.value, selectedLayer)
+          }
         }
       });
 
@@ -180,7 +183,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
       console.log('No movie to add layer');
       return;
     }
-    
+
     const newLayer: ILayer = CreateLayerWithDefaultProperties(this.utilService.generateNewId(), time, member.id, memberOption, this.timelineService.timeMultiplier);
     this.movie.addNewLayer(time, newLayer);
     this.movieUpdated.next(this.movie);

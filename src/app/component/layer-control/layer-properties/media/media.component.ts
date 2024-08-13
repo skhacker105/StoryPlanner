@@ -27,7 +27,7 @@ export class MediaComponent extends ComponentBase implements OnInit, OnDestroy {
     endTime: new FormControl<number>(0, [Validators.required, Validators.min(0)])
   });
 
-  constructor(private timelineService: TimelineService) {
+  constructor(public timelineService: TimelineService) {
     super();
   }
 
@@ -46,7 +46,7 @@ export class MediaComponent extends ComponentBase implements OnInit, OnDestroy {
       .pipe(takeUntil(this.isComponentActive), debounceTime(500))
       .subscribe({
         next: val => this.autoSave ? this.submitForm() : null
-      })
+      });
   }
 
   ngOnDestroy(): void {

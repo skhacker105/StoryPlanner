@@ -1,65 +1,72 @@
-<!-- @if (media) { -->
-    <div class="media-container">
+<div class="media-container">
 
-        <form [formGroup]="mediaForm" (ngSubmit)="submitForm()">
+    <form [formGroup]="mediaForm" (ngSubmit)="submitForm()">
 
-            <div class="fields-container">
+        <div class="fields-container">
 
-                <!-- Auto Save, Is Muted -->
-                <div class="property-box">
+            <!-- Auto Save, Is Muted -->
+            <div class="property-box">
 
-                    <!-- Auto Save -->
-                    <app-form-field label="Auto Save" class="property-box-half">
-                        <ng-container formFieldControl>
-                            <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control"
-                            [(ngModel)]="autoSave"
-                            [disabled]="mediaForm.disabled">
-                        </ng-container>
-                    </app-form-field>
-                    
-                    <!-- Is Muted -->
-                    <app-form-field label="Is Muted" class="property-box-half">
-                        <ng-container formFieldControl>
-                            <input type="checkbox" formControlName="isMuted">
-                        </ng-container>
-                    </app-form-field>
+                <!-- Auto Save -->
+                <app-form-field label="Auto Save" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input [ngModelOptions]="{standalone: true}" type="checkbox" class="non-form-control"
+                            [(ngModel)]="autoSave" [disabled]="mediaForm.disabled">
+                    </ng-container>
+                </app-form-field>
 
-                </div>
-
-                <!-- Form Controls -->
-                <div class="property-box">
-
-                    
-                    <app-form-field label="Start Time" class="property-box-half">
-                        <ng-container formFieldControl>
-                            <input type="number" formControlName="startTime">
-                        </ng-container>
-                    </app-form-field>
-
-                    <app-form-field label="End Time" class="property-box-half">
-                        <ng-container formFieldControl>
-                            <input type="number" formControlName="endTime">
-                        </ng-container>
-                    </app-form-field>
-
-                </div>
+                <!-- Is Muted -->
+                <app-form-field label="Is Muted" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input type="checkbox" formControlName="isMuted">
+                    </ng-container>
+                </app-form-field>
 
             </div>
 
-            <br>
+            <!-- Form Controls -->
+            <div class="property-box">
 
-            <div class="action">
-                <button mat-raised-button type="button" (click)="onCancel.emit()">
-                    Cancel
-                </button>
-                &nbsp;
-                <button mat-raised-button color="primary" [disabled]="!mediaForm.dirty || !mediaForm.valid">
-                    Save
-                </button>
+
+                <app-form-field label="Start Time" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input type="number" formControlName="startTime">
+                    </ng-container>
+                </app-form-field>
+
+                <app-form-field label="End Time" class="property-box-half">
+                    <ng-container formFieldControl>
+                        <input type="number" formControlName="endTime">
+                    </ng-container>
+                </app-form-field>
+
             </div>
 
-            
-        </form>
-    </div>
+            <div class="property-header-box">
+                Play End Time
+            </div>
+            <div class="property-box">
+                <mat-slider class="spacer" [max]="mediaLength" [min]="0" [step]="timelineService.timeMultiplier"
+                    [discrete]="true">
+                    <input [formControl]="mediaForm.controls['startTime']" [value]="mediaForm.controls['startTime'].value" matSliderStartThumb>
+                    <input [formControl]="mediaForm.controls['endTime']" [value]="mediaForm.controls['endTime'].value" matSliderEndThumb>
+                </mat-slider>
+            </div>
 
-<!-- } -->
+        </div>
+
+        <br>
+
+        <div class="action">
+            <button mat-raised-button type="button" (click)="onCancel.emit()">
+                Cancel
+            </button>
+            &nbsp;
+            <button mat-raised-button color="primary" [disabled]="!mediaForm.dirty || !mediaForm.valid">
+                Save
+            </button>
+        </div>
+
+
+    </form>
+</div>

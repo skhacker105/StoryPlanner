@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TimelineService } from './timeline.service';
 import { BehaviorSubject, takeUntil } from 'rxjs';
-import { MovieService } from './movie.service';
 import { ServiceBase } from '../base/service-base';
 import html2canvas from 'html2canvas';
 import { FileService } from './file.service';
@@ -24,7 +23,7 @@ export class RecordingService extends ServiceBase {
   unitTimeRecordingPercent = new BehaviorSubject<number>(0);
   canvasContainerId = 'canvas-container';
 
-  constructor(private timelineService: TimelineService, private movieService: MovieService, private fileService: FileService) {
+  constructor(private timelineService: TimelineService, private fileService: FileService) {
     super();
     this.loadVideosFromStorage();
 

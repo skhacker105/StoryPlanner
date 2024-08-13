@@ -86,7 +86,7 @@
                     class="spacer"
                     [max]="endTime * this.timeMultiplier"
                     [min]="time * this.timeMultiplier"
-                    [step]="1 * timeMultiplier"
+                    [step]="timeMultiplier"
                     [discrete]="true">
                 <input matSliderThumb [formControl]="propertyForm.controls['endTime']" [value]="propertyForm.controls['endTime'].value" #slider>
                 </mat-slider>

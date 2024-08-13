@@ -29,6 +29,9 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
   @Output() onRepeatSave = new EventEmitter<ILayerRepeat | undefined>();
   @Output() onMediaSave = new EventEmitter<IlayerMedia | undefined>();
 
+  selectedTabIndex = 0;
+  localStorageTabIndexKey = 'layerProperties_'
+
   styleIsVisible = false;
   animationIsVisible = false;
   repeatIsVisible = false;
@@ -42,10 +45,18 @@ export class LayerPropertiesComponent extends ComponentBase implements OnInit, O
     if (this.layerOption) {
       this.activatePropertyTabFor(this.layerOption.type);
     }
+    if (this.layer) {
+      this.localStorageTabIndexKey += this.layer.layerId;
+    }
+    const storedTabIndexStr = localStorage.getItem(this.localStorageTabIndexKey);
+    if (storedTabIndexStr) {
+      this.selectedTabIndex = +storedTabIndexStr;
+    }
   }
 
   ngOnDestroy(): void {
     this.onDestroy();
+    localStorage.setItem(this.localStorageTabIndexKey, this.selectedTabIndex.toString());
   }
 
   activatePropertyTabFor(optionType: OptionType): void {
