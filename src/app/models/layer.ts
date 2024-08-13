@@ -24,11 +24,11 @@ export function CreateLayerWithDefaultProperties(
     repeating: undefined,
     animation: undefined,
     media: memberOption.type === 'audio' || memberOption.type === 'video'
-    ? { isMuted: false, startTime: 0, endTime: memberOption.length }
+    ? { isMuted: false, startTime: 0, endTime: +memberOption.length.toFixed(2) }
     : undefined,
 
     properties: memberOption.type === 'audio' || memberOption.type === 'video'
-      ? GetDefaultProperties(time + (memberOption.length / timeMultiplier))
+      ? GetDefaultProperties(time + +(memberOption.length / timeMultiplier).toFixed(2))
       : GetDefaultProperties(time)
 
   } as ILayer
