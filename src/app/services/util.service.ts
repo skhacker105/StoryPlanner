@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { IJSONDiff, IKeyDifference } from '../interfaces/json-diff';
 import { FileControl } from '../types/picture.type';
 import { OptionType } from '../types/member-option.type';
+import { Observable } from 'rxjs';
+import { ILayer, ILayersById } from '../interfaces/movie-layer';
+import { cloneDeep } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +47,7 @@ export class UtilService {
       }
     }
 
-    const differencesInString = '{ ' + differences.map(d =>  `${d.key}: ${d.newValue} `) + ' }';
+    const differencesInString = '{ ' + differences.map(d => `${d.key}: ${d.newValue} `) + ' }';
 
     return { keys: Array.from(allKeys), differences, differencesInString };
   }
@@ -58,7 +61,7 @@ export class UtilService {
         window.URL.revokeObjectURL(element.src);
         resolve(element.duration);
       }
-  
+
       element.onerror = (err) => {
         reject('Could not load media.');
         element.remove();
@@ -83,17 +86,17 @@ export class UtilService {
       video.onloadeddata = () => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-  
+
         if (ctx) {
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
-    
+
           // Draw the current frame of the video on the canvas
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
+
           // Create a data URL of the image
           resolve(canvas.toDataURL('image/png'));
-    
+
           // Optionally stop video playback
           video.pause();
           window.URL.revokeObjectURL(video.src);
@@ -101,11 +104,70 @@ export class UtilService {
           canvas.remove();
         }
       }
-  
+
       video.onerror = (err) => {
         reject('Could not load video.');
         video.remove();
       }
     });
+  }
+
+  getAudioFromVideo(videoFile: FileControl): Observable<AudioBuffer | undefined> {
+    if (!videoFile || typeof videoFile !== 'string') {
+      return new Observable(observer => observer.next(undefined));
+    }
+    const audioContext = new window.AudioContext();
+    return new Observable<AudioBuffer | undefined>(observer => {
+      if (ArrayBuffer.isView(videoFile) && typeof videoFile !== 'string') {
+        audioContext.decodeAudioData(videoFile, (audioFile) => {
+          observer.next(audioFile);
+        }, err => {
+          console.log('Failed to load video file');
+          observer.error(err);
+        })
+      }
+      return observer.next(undefined);
+    });
+  }
+
+  convertLayersById(layers: ILayer[]): ILayersById {
+    return layers.reduce((ob: ILayersById, layer: ILayer) => {
+      ob[layer.layerId] = layer;
+      return ob;
+    }, {} as ILayersById);
+  }
+
+  categorizeLayers(incomingLayers: ILayer[], existingLayers: ILayer[]): { layersToAdd: ILayer[], layersToUpdate: ILayer[], layersToDelete: ILayer[] } {
+    const incomingLayersById = this.convertLayersById(incomingLayers);
+    const objExistingLayersById = this.convertLayersById(existingLayers);
+    return {
+      layersToAdd: this.filterLayersToAdd(incomingLayers, objExistingLayersById),
+      layersToUpdate: this.filterLayersToUpdate(existingLayers, incomingLayersById),
+      layersToDelete: this.filterLayersToDelete(existingLayers, incomingLayersById)
+    }
+  }
+
+  filterLayersToAdd(incomingLayers: ILayer[], objExistingLayersById: ILayersById): ILayer[] {
+    return cloneDeep(incomingLayers.filter(sl =>
+      !sl.isProjected || !objExistingLayersById[sl.layerId]
+        ? true : false
+    ));
+  }
+
+  filterLayersToUpdate(existingLayers: ILayer[], incomingLayersById: ILayersById): ILayer[] {
+    return existingLayers
+      .filter(l => incomingLayersById[l.layerId]?.isProjected === true)
+      .map(l => {
+        l.isProjected = true;
+        l.properties.stackPosition = incomingLayersById[l.layerId].properties.stackPosition;
+        l.projectionStartTime = incomingLayersById[l.layerId].projectionStartTime;
+        l.properties.isInView = incomingLayersById[l.layerId].properties.isInView;
+        return l;
+      });
+  }
+
+  filterLayersToDelete(existingLayers: ILayer[], incomingLayersById: ILayersById): ILayer[] {
+    return existingLayers
+      .filter(l => !incomingLayersById[l.layerId]);
   }
 }

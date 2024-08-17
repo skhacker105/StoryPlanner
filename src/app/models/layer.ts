@@ -3,6 +3,7 @@ import { ILayer } from "../interfaces/movie-layer";
 import { ILayerProperties } from "../interfaces/movie-properties";
 import { ILayerRepeat } from "../interfaces/movie-layer-repeat";
 import { IMemberOption } from "../interfaces/member";
+import { ILayerAudio } from "../interfaces/movie-audios";
 
 export function CreateLayerWithDefaultProperties(
   layerId: string,
@@ -79,4 +80,16 @@ export function CreateRepeatedLayer(newLayerId: string, layer: ILayer, newRepeat
   }
   obj.properties.endTime = newTime + (obj.properties.endTime - projectionStartTime);
   return obj;
+}
+
+export function ConvertToLayerAudio(time: number, audioLayer: ILayer, memberOption: IMemberOption,  timeMultiplier: number): ILayerAudio {
+  return {
+    layerId: audioLayer.layerId,
+    memberId: audioLayer.memberId,
+    memberOptionId: audioLayer.memberOptionId,
+    startTime: time,
+    endTime: time + (memberOption.length / timeMultiplier),
+    length: memberOption.length,
+    file: memberOption.file
+  };
 }

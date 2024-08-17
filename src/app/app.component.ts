@@ -72,8 +72,8 @@ export class AppComponent extends ComponentBase implements OnInit, OnDestroy {
     this.movieService.updateAnimation(this.timelineService.currentTime.value, layer.layerId, newAnimation)
   }
 
-  addOptionToMovieTimeLine(member: Member, option: IMemberOption): void {
-    this.movieService.addMemberOptionToTime(this.timelineService.currentTime.value, member, option);
+  addMemberToCurrentTimeLayer(member: Member, option: IMemberOption): void {
+    this.movieService.addMemberToCurrentTimeLayer(this.timelineService.currentTime.value, member, option);
   }
 
   saveRepeat(layer: ILayer, repeating: ILayerRepeat | undefined): void {

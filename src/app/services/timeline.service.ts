@@ -1,7 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, filter, take, takeUntil } from 'rxjs';
 import { IPlaySpeed } from '../interfaces/play-speed';
 import { ServiceBase } from '../base/service-base';
+import { ILayerAudio } from '../interfaces/movie-audios';
+
+type movieAudioState = 'requested' | 'preparing' | 'ready' | 'error';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +32,7 @@ export class TimelineService extends ServiceBase implements OnDestroy {
   maxFPSAllowed = 20;
   framesPerUnitTime = new BehaviorSubject<number>(4);
   playingStateChange = new Subject<boolean>();
+  movieAudioLayers = new Subject<{ state: movieAudioState, audioLayers?: ILayerAudio[], currentTimeInRange?: boolean }>()
 
   settingStorageKey = 'settingStorage';
 
@@ -132,9 +136,16 @@ export class TimelineService extends ServiceBase implements OnDestroy {
   play(): void {
     if (!this.hasNextTime()) this.timeToZero();
 
-    this.playing = true;
-    this.playingStateChange.next(true);
-    this.runWhilePlaying();
+    this.movieAudioLayers
+      .pipe(filter(request => request.state === 'ready'), take(1))
+      .subscribe({
+        next: () => {
+          this.playing = true;
+          this.playingStateChange.next(true);
+          this.runWhilePlaying();
+        }
+      });
+    this.movieAudioLayers.next({ state: 'requested' })
   }
 
   runWhilePlaying(): void {
@@ -162,5 +173,6 @@ export class TimelineService extends ServiceBase implements OnDestroy {
   pause(): void {
     this.playing = false;
     this.playingStateChange.next(false);
+    this.movieAudioLayers.next({ state: 'ready' })
   }
 }

@@ -19,7 +19,7 @@
                         <!-- Time Unit Number Label -->
                         @if (time === 0 || time % minimumNumDisplayLength === 0) {
                             <span class="time-label">
-                                {{ (time * timelineService.timeMultiplier).toFixed(0) }}
+                                {{ +(time * timelineService.timeMultiplier).toFixed(1) }}
                             </span>
                         }
 

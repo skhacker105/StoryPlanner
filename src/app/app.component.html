@@ -56,7 +56,10 @@
   </app-popup-header>
   <div  class="list-container" control2 *ngIf="memberService.selectedMember">
       @for (option of memberService.selectedMember.options; track option; let index = $index;) {
-          <app-member-option-display [option]="option" (addToTimeLine)="addOptionToMovieTimeLine(memberService.selectedMember, option)" (onIconClick)="handleIconClick(index)">
+          <app-member-option-display
+            [option]="option"
+            (addToTimeLine)="addMemberToCurrentTimeLayer(memberService.selectedMember, option)"
+            (onIconClick)="handleIconClick(index)">
           </app-member-option-display>
       }
   </div>
@@ -71,8 +74,8 @@
       [endTime]="timelineService.endTime.value"
       [timeMultiplier]="timelineService.timeMultiplier"
       [layer]="movieService.selectedLayer"
-      [layerMember]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].member" 
-      [layerOption]="movieService.dictionaryMemberBook[movieService.selectedLayer.memberId].options[movieService.selectedLayer.memberOptionId]"
+      [layerMember]="movieService.dictionaryMemberBook?.getMember(movieService.selectedLayer)" 
+      [layerOption]="movieService.dictionaryMemberBook?.getOption(movieService.selectedLayer)"
       (onCancel)="movieService.resetSelectedLayer()"
       (onStyleSave)="saveProperty(movieService.selectedLayer, $event)"
       (onAnimationSave)="saveAnimation(movieService.selectedLayer, $event)"

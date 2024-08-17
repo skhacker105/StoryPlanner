@@ -82,9 +82,7 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
     const items: IMemberOptionItem[] = this.movieService.movie.timeline[this.currentTime].layers
       ?.reduce((arr, layer, i) => {
         let found = false;
-        const member = this.movieService.dictionaryMemberBook[layer.memberId];
-        if (member) {
-          const memberOption = member.options[layer.memberOptionId];
+          const memberOption = this.movieService.dictionaryMemberBook?.getOption(layer);
           if (memberOption) {
             found = true;
             arr.push({
@@ -93,7 +91,6 @@ export class LayerControlComponent extends ComponentBase implements OnInit, OnDe
               length: memberOption.length
             });
           }
-        }
 
         if (!found && i <= index) calculatedIndex--;
         

@@ -2,14 +2,14 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { UtilService } from './util.service';
 import { MemberService } from './member.service';
 import { IMovie, IMovieTimeLayer } from '../interfaces/timeline-movie';
-import { Subject, take, takeUntil } from 'rxjs';
+import { filter, Subject, take, takeUntil } from 'rxjs';
 import { Movie } from '../models/movie';
 import { ILayer } from '../interfaces/movie-layer';
 import { ServiceBase } from '../base/service-base';
 import { IMemberBookDictionary, IMemberOptionDictionary } from '../interfaces/member-dictionary';
 import { Member } from '../models/members';
 import { IMember, IMemberOption } from '../interfaces/member';
-import { CreateLayerWithDefaultProperties } from '../models/layer';
+import { ConvertToLayerAudio, CreateLayerWithDefaultProperties } from '../models/layer';
 import { ILayerProperties } from '../interfaces/movie-properties';
 import { ILayerAnimation } from '../interfaces/movie-animations';
 import { IndexedDBManager } from '../storage/indexedDB.manager';
@@ -18,6 +18,8 @@ import { TimelineService } from './timeline.service';
 import { DisplayService } from './display.service';
 import { ILayerRepeat } from '../interfaces/movie-layer-repeat';
 import { IlayerMedia } from '../interfaces/movie-media';
+import { MemberBookDictionary } from '../models/member-dictionary';
+import { ILayerAudio } from '../interfaces/movie-audios';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +30,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
 
   movie?: Movie;
   movieUpdated = new Subject<IMovie>();
-  dictionaryMemberBook: IMemberBookDictionary = {};
+  dictionaryMemberBook: MemberBookDictionary | undefined;
   movieStorageManager = new IndexedDBManager<IMovie>(Tables.MovieStorage, 'id');
 
   public selectedLayer?: ILayer;
@@ -65,7 +67,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
       .subscribe({
         next: members => {
           if (members.length === 0) return;
-          this.dictionaryMemberBook = this.getMemberOptionDictionary(members);
+          this.updateMemberOptionDictionary(members);
           if (!this.movie) this.loadMovieFromStorage();
         }
       });
@@ -74,6 +76,12 @@ export class MovieService extends ServiceBase implements OnDestroy {
       .pipe(takeUntil(this.isServiceActive))
       .subscribe({
         next: () => this.resetSelectedLayer()
+      });
+
+    this.timelineService.movieAudioLayers
+      .pipe(filter(request => request.state === 'requested'), takeUntil(this.isServiceActive))
+      .subscribe({
+        next: () => this.prepareAudioFileForAllTimes()
       });
 
     // Code to delete layers from Indexed DB
@@ -119,23 +127,10 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.onDestroy();
   }
 
-  getMemberOptionDictionary(members: Member[]): IMemberBookDictionary {
-    const dict = members.reduce(
-      (objMember: IMemberBookDictionary, member: Member) => {
+  updateMemberOptionDictionary(members: Member[]): void {
+    if (this.dictionaryMemberBook) delete this.dictionaryMemberBook;
 
-        if (!objMember[member.id]) objMember[member.id] = { member, options: {} }
-
-        member.options.reduce(
-          (objOption: IMemberOptionDictionary, option: IMemberOption) => {
-
-            if (!objOption[option.optionId]) objOption[option.optionId] = option;
-            return objOption;
-          },
-          objMember[member.id].options)
-        return objMember;
-      },
-      {} as IMemberBookDictionary)
-    return dict;
+    this.dictionaryMemberBook = new MemberBookDictionary(members);
   }
 
   createDefaultMovie(): void {
@@ -180,7 +175,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.movieStorageManager.update(movie);
   }
 
-  addMemberOptionToTime(time: number, member: IMember, memberOption: IMemberOption): void {
+  addMemberToCurrentTimeLayer(time: number, member: IMember, memberOption: IMemberOption): void {
     if (!this.movie) {
       console.log('No movie to add layer');
       return;
@@ -252,7 +247,7 @@ export class MovieService extends ServiceBase implements OnDestroy {
       this.selectedLayerTime = time;
       setTimeout(() => {
         this.selectedLayer = layer;
-        const dict = this.dictionaryMemberBook[layer.memberId];
+        const dict = this.dictionaryMemberBook?.getLayer(layer);
         this.selectedLayerMember = dict?.member;
         this.selectedLayerOption = dict?.options[layer.memberOptionId];
         this.selectedLayerTimeUnits = this.findTimeUnitsByLayer(layer);
@@ -288,5 +283,34 @@ export class MovieService extends ServiceBase implements OnDestroy {
     this.movie.moveLayerToTime(time, layerId, newTime);
     this.movieUpdated.next(this.movie);
     this.timelineService.setNewTime(newTime);
+  }
+
+  async prepareAudioFileForAllTimes() {
+    if (!this.movie) return;
+
+    let timeLayers: ILayer[] = [];
+    let arrAudios: ILayerAudio[] = [];
+
+    for (let time = 0; time <= this.timelineService.maxPlayTime; time++) {
+      const movieTime = this.movie.timeline[time];
+      const { layersToAdd, layersToUpdate } = this.utilService.categorizeLayers(movieTime.layers, timeLayers);
+
+      const videoLayers = layersToAdd.filter(layer => this.dictionaryMemberBook?.getOption(layer).type === 'video');
+      const audioLayers = layersToAdd.filter(layer => this.dictionaryMemberBook?.getOption(layer).type === 'audio');
+
+      // if (videoLayers.length > 0) {
+      //   console.log('time = ', time, '\t audio layer = ', audioLayers)
+      // }
+
+      const newAudios = audioLayers.reduce((arrAudioLayers: ILayerAudio[], audioLayer: ILayer) => {
+        const option = this.dictionaryMemberBook?.getOption(audioLayer)
+        if (option) arrAudioLayers.push(ConvertToLayerAudio(time, audioLayer, option, this.timelineService.timeMultiplier));
+
+        return arrAudioLayers;
+      }, [] as ILayerAudio[]);
+      arrAudios = [...arrAudios, ...newAudios];
+      timeLayers = [...layersToAdd, ...layersToUpdate];
+    }
+    this.timelineService.movieAudioLayers.next({ state: 'ready', audioLayers: arrAudios });
   }
 }

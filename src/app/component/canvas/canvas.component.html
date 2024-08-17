@@ -1,4 +1,6 @@
-<div class="canvas-container" id="canvas-container">
+<div class="canvas-container" id="canvas-container" [ngClass]="{
+    'no-image-painted': paintedLayers.length === 0
+}">
 
     <div class="progress-spinner-container" *ngIf="fileService.fileProcessing">
         <mat-progress-spinner
@@ -9,14 +11,14 @@
         </mat-progress-spinner>
     </div>
 
-    @for (layer of paintedLayers | sort:'byLayerStack'; track layer;) {
+    @for (layer of paintedLayers | sort:'byLayerStack'; track layer.layerId;) {
         
-        @switch (movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.type) {
+        @switch (movieService.dictionaryMemberBook?.getOption(layer)?.type) {
             @case ('image') {
                 <img
                     class="layer"
                     [attr.id]="layer.layerId"
-                    [src]="movieService.dictionaryMemberBook[layer.memberId]?.options?.[layer.memberOptionId]?.file"
+                    [src]="movieService.dictionaryMemberBook?.getOption(layer)?.file"
                     [style]="(layer | layerStyleString) + (layer | layerAnimationString) + 'animation-play-state: paused !important; '"
                     [ngClass]="{
                         'image-hidden': !layer.properties.isInView,
@@ -25,6 +27,21 @@
                     }"
                     (click)="handleLayerClick(layer)"
                 >
+            }
+
+            @case ('video') {
+                <video
+                    class="layer"
+                    [attr.id]="layer.layerId"
+                    [src]="movieService.dictionaryMemberBook?.getOption(layer)?.file"
+                    [style]="(layer | layerStyleString) + (layer | layerAnimationString) + 'animation-play-state: paused !important; '"
+                    [ngClass]="{
+                        'image-hidden': !layer.properties.isInView,
+                        'layer': !timelineService.playing && !recordingService.recording.value,
+                        'selected-layer': movieService.selectedLayer?.layerId === layer.layerId
+                    }"
+                    (click)="handleLayerClick(layer)">
+                </video>
             }
         }
     }
@@ -36,3 +53,18 @@
         <video [src]="videoURLToPlay" controls></video>
     </div>
 </div>
+
+@for(audioOption of audioLayers; track audioOption.layerId; let index = $index;) {
+    @if (audioOption.currentTimeInRange) {
+        <div style="position: fixed; z-index: 1000000; left: 100;" [style.top.px]="50 * index">
+            <audio #audioCtrl
+                [attr.id]="audioOption.layerId"
+                [src]="audioOption.file"
+                controls autoplay=""
+                webkit-playsinline="true"
+                playsinline="true"
+                muted="muted">
+            </audio>
+        </div>
+    }
+}

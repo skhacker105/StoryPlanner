@@ -4,7 +4,7 @@
     overflow: hidden;
     position: relative;
 
-    &:after {
+    &.no-image-painted:after {
         content: "No Image added to this time yet.";
         position: absolute;
         margin: auto;

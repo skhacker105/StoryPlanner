@@ -19,3 +19,6 @@ export interface ILayer {
     isProjected: boolean;
     projectionStartTime: number;
 }
+
+
+export interface ILayersById { [key: string]: ILayer }
