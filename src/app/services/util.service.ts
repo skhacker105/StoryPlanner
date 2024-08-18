@@ -13,6 +13,7 @@ export class UtilService {
 
   constructor() { }
 
+  // MISC
   generateNewId() {
     const length = 32;
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -70,6 +71,9 @@ export class UtilService {
     });
   }
 
+
+
+  // Files
   getVideoThumbnail(videoFile: FileControl): Promise<string> {
     if (!videoFile || typeof videoFile !== 'string') {
       return new Promise(resolve => resolve(''));
@@ -129,7 +133,124 @@ export class UtilService {
       return observer.next(undefined);
     });
   }
+  
+  async extractAudioPart(base64Data: string, startTime: number, endTime: number): Promise<string> {
+    const binaryData = this.base64ToArrayBuffer(base64Data);
+    const audioContext = new AudioContext();
+    const audioBuffer = await audioContext.decodeAudioData(binaryData);
+    const sampleRate = audioBuffer.sampleRate;
+    const startSample = Math.floor(startTime * sampleRate);
+    const endSample = Math.floor(endTime * sampleRate);
+    const numberOfSamples = endSample - startSample;
 
+    // Create a new AudioBuffer with the extracted samples
+    const newAudioBuffer = audioContext.createBuffer(
+      audioBuffer.numberOfChannels,
+      numberOfSamples,
+      sampleRate
+    );
+
+    for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
+      const oldBuffer = audioBuffer.getChannelData(channel);
+      const newBuffer = newAudioBuffer.getChannelData(channel);
+      newBuffer.set(oldBuffer.slice(startSample, endSample));
+    }
+
+    // Encode the new AudioBuffer to Base64
+    const extractedAudioData = await this.encodeAudioBuffer(newAudioBuffer);
+    return `data:audio/mpeg;base64,${extractedAudioData}`;
+  }
+
+  // Convert Base64 string to ArrayBuffer
+  private base64ToArrayBuffer(base64: string): ArrayBuffer {
+    const binaryString = window.atob(base64.split(',')[1]);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  // Encode AudioBuffer to Base64
+  private async encodeAudioBuffer(audioBuffer: AudioBuffer): Promise<string> {
+    const offlineContext = new OfflineAudioContext(
+      audioBuffer.numberOfChannels,
+      audioBuffer.length,
+      audioBuffer.sampleRate
+    );
+    const bufferSource = offlineContext.createBufferSource();
+    bufferSource.buffer = audioBuffer;
+    bufferSource.connect(offlineContext.destination);
+    bufferSource.start(0);
+
+    const renderedBuffer = await offlineContext.startRendering();
+    const wavData = this.audioBufferToWav(renderedBuffer);
+    return this.arrayBufferToBase64(wavData);
+  }
+
+  // Convert ArrayBuffer to Base64 string
+  private arrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
+    const bytes = new Uint8Array(arrayBuffer);
+    const binary = bytes.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+    return window.btoa(binary);
+  }
+
+  // Convert AudioBuffer to WAV format (simplified, consider using a library for real use)
+  private audioBufferToWav(buffer: AudioBuffer): ArrayBuffer {
+    const numOfChan = buffer.numberOfChannels,
+          length = buffer.length * numOfChan * 2 + 44,
+          bufferView = new DataView(new ArrayBuffer(length)),
+          channels = [],
+          sampleRate = buffer.sampleRate,
+          offset = 0,
+          bitsPerSample = 16;
+
+    const writeString = (view: DataView, offset: number, string: string) => {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    };
+
+    const floatTo16BitPCM = (view: DataView, offset: number, input: Float32Array) => {
+      for (let i = 0; i < input.length; i++, offset += 2) {
+        const s = Math.max(-1, Math.min(1, input[i]));
+        view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      }
+    };
+
+    writeString(bufferView, 0, 'RIFF');
+    bufferView.setUint32(4, 36 + length - 8, true);
+    writeString(bufferView, 8, 'WAVE');
+    writeString(bufferView, 12, 'fmt ');
+    bufferView.setUint32(16, 16, true);
+    bufferView.setUint16(20, 1, true);
+    bufferView.setUint16(22, numOfChan, true);
+    bufferView.setUint32(24, sampleRate, true);
+    bufferView.setUint32(28, sampleRate * numOfChan * bitsPerSample / 8, true);
+    bufferView.setUint16(32, numOfChan * bitsPerSample / 8, true);
+    bufferView.setUint16(34, bitsPerSample, true);
+    writeString(bufferView, 36, 'data');
+    bufferView.setUint32(40, length - 44, true);
+
+    for (let i = 0; i < numOfChan; i++) {
+      channels.push(buffer.getChannelData(i));
+    }
+
+    let index = 44;
+    for (let i = 0; i < channels[0].length; i++) {
+      for (let j = 0; j < numOfChan; j++) {
+        floatTo16BitPCM(bufferView, index, channels[j].slice(i, i + 1));
+        index += 2;
+      }
+    }
+
+    return bufferView.buffer;
+  }
+
+
+
+  // Categorization
   convertLayersById(layers: ILayer[]): ILayersById {
     return layers.reduce((ob: ILayersById, layer: ILayer) => {
       ob[layer.layerId] = layer;

@@ -82,7 +82,7 @@ export function CreateRepeatedLayer(newLayerId: string, layer: ILayer, newRepeat
   return obj;
 }
 
-export function ConvertToLayerAudio(time: number, audioLayer: ILayer, memberOption: IMemberOption,  timeMultiplier: number): ILayerAudio {
+export function ConvertToLayerAudio(time: number, audioLayer: ILayer, memberOption: IMemberOption, file: string,  timeMultiplier: number): ILayerAudio {
   return {
     layerId: audioLayer.layerId,
     memberId: audioLayer.memberId,
@@ -90,6 +90,6 @@ export function ConvertToLayerAudio(time: number, audioLayer: ILayer, memberOpti
     startTime: time,
     endTime: time + (memberOption.length / timeMultiplier),
     length: memberOption.length,
-    file: memberOption.file
+    file: file
   };
 }

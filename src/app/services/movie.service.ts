@@ -298,19 +298,22 @@ export class MovieService extends ServiceBase implements OnDestroy {
       const videoLayers = layersToAdd.filter(layer => this.dictionaryMemberBook?.getOption(layer).type === 'video');
       const audioLayers = layersToAdd.filter(layer => this.dictionaryMemberBook?.getOption(layer).type === 'audio');
 
-      // if (videoLayers.length > 0) {
-      //   console.log('time = ', time, '\t audio layer = ', audioLayers)
-      // }
-
-      const newAudios = audioLayers.reduce((arrAudioLayers: ILayerAudio[], audioLayer: ILayer) => {
-        const option = this.dictionaryMemberBook?.getOption(audioLayer)
-        if (option) arrAudioLayers.push(ConvertToLayerAudio(time, audioLayer, option, this.timelineService.timeMultiplier));
-
-        return arrAudioLayers;
-      }, [] as ILayerAudio[]);
-      arrAudios = [...arrAudios, ...newAudios];
+      arrAudios = [...arrAudios, ...(await this.prepareAudioOptions(audioLayers, time))];
       timeLayers = [...layersToAdd, ...layersToUpdate];
     }
     this.timelineService.movieAudioLayers.next({ state: 'ready', audioLayers: arrAudios });
+  }
+
+  async prepareAudioOptions(audioLayers: ILayer[], time: number) {
+    const newAudios: ILayerAudio[] = [];
+    for (let audioLayer of audioLayers) {
+      const option = this.dictionaryMemberBook?.getOption(audioLayer)
+
+      if (option && audioLayer.media) {
+        const slicedAudioFile = await this.utilService.extractAudioPart(option.file, audioLayer.media.startTime, audioLayer.media.endTime)
+        newAudios.push(ConvertToLayerAudio(time, audioLayer, option, slicedAudioFile, this.timelineService.timeMultiplier));
+      }
+    }
+    return newAudios;
   }
 }
